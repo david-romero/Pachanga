@@ -190,5 +190,20 @@ public class GestionUsuariosController {
 
 		return res;
 	}
+	
+	@RequestMapping(value = "/notificaciones", method = RequestMethod.GET, headers = "Accept=application/json")
+	public String getNotificaciones(Model model) {
+		String res = "";
+
+		try {
+			//TODO - DRA - Notificaciones
+			res = "notificaciones";
+		} catch (Exception e) {
+			model.addAttribute("errorweb", e);
+			res = "errorweb";
+		}
+
+		return res;
+	}
 
 }

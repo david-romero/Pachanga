@@ -65,64 +65,65 @@
         <div class="block-header">
 	        <ul class="actions">
 	            <li>
-	                <a href="">
+	                <a href="/P/app">
 	                    <i class="md md-cached"></i>
 	                </a>
 	            </li>
 	        </ul>        
         </div>
-        
-        <div class="mini-charts">
-             <div class="row">
-                 <div class="col-sm-6 col-md-3">
-                     <div class="mini-charts-item bgm-cyan">
-                         <div class="clearfix">
-                             <div class="chart stats-bar"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
-                             <div class="count">
-                                 <small>Website Traffics</small>
-                                 <h2>987,459</h2>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 
-                 <div class="col-sm-6 col-md-3">
-                     <div class="mini-charts-item bgm-lightgreen">
-                         <div class="clearfix">
-                             <div class="chart stats-bar-2"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
-                             <div class="count">
-                                 <small>Website Impressions</small>
-                                 <h2>356,785K</h2>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 
-                 <div class="col-sm-6 col-md-3">
-                     <div class="mini-charts-item bgm-orange">
-                         <div class="clearfix">
-                             <div class="chart stats-line"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
-                             <div class="count">
-                                 <small>Total Sales</small>
-                                 <h2>$ 458,778</h2>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 
-                 <div class="col-sm-6 col-md-3">
-                     <div class="mini-charts-item bgm-bluegray">
-                         <div class="clearfix">
-                             <div class="chart stats-line-2"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
-                             <div class="count">
-                                 <small>Support Tickets</small>
-                                 <h2>23,856</h2>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
+        <sec:authorize access="isAuthenticated()" >
+	        <div class="mini-charts">
+	             <div class="row">
+	                 <div class="col-sm-6 col-md-3">
+	                     <div class="mini-charts-item bgm-cyan">
+	                         <div class="clearfix">
+	                             <div class="chart stats-bar"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
+	                             <div class="count">
+	                                 <small>Website Traffics</small>
+	                                 <h2>987,459</h2>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	                 
+	                 <div class="col-sm-6 col-md-3">
+	                     <div class="mini-charts-item bgm-lightgreen">
+	                         <div class="clearfix">
+	                             <div class="chart stats-bar-2"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
+	                             <div class="count">
+	                                 <small>Website Impressions</small>
+	                                 <h2>356,785K</h2>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	                 
+	                 <div class="col-sm-6 col-md-3">
+	                     <div class="mini-charts-item bgm-orange">
+	                         <div class="clearfix">
+	                             <div class="chart stats-line"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
+	                             <div class="count">
+	                                 <small>Total Sales</small>
+	                                 <h2>$ 458,778</h2>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	                 
+	                 <div class="col-sm-6 col-md-3">
+	                     <div class="mini-charts-item bgm-bluegray">
+	                         <div class="clearfix">
+	                             <div class="chart stats-line-2"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
+	                             <div class="count">
+	                                 <small>Support Tickets</small>
+	                                 <h2>23,856</h2>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>
+	             </div>
+	         </div>
+         </sec:authorize>
         
         <div class="row">
         
@@ -240,29 +241,36 @@
             <div class="row" >
             	<div class="col-lg-12" ><!-- Items -->
                     <div ng-repeat='partido in partidos' class="col-md-3 col-sm-6" >
-                                <div  id="best-selling" class="dash-widget-item">
-                                    <div class="dash-widget-header">
-                                        <div class="dash-widget-title">Best Sellings</div>
-                                        <img src="/P/resources/imgs/indice.png" alt="">
+                                <div  id="best-selling" class="dash-widget-item card">
+                                    <div class="dash-widget-header card-header" style="padding: 0;">
+                                        <div class="dash-widget-title">{{partido.titulo}}</div>
+                                        <img src="{{partido.urlImagen}}" alt="">
                                         <div class="main-item">
-                                            <small>Samsung Galaxy Alpha</small>
-                                            <h2>$799.99</h2>
+                                            <small>{{partido.lugar.titulo}}</small>
+                                            <h2>{{partido.precio}}&euro;</h2>
                                         </div>
+                                        <button ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-person-add"></i></button>
                                     </div>
                                 
                                     <div class="listview p-t-5">
-                                        <a class="lv-item" href="">
+                                        <a class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
                                             <div class="media">
                                                 <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/widgets/note4.jpg" alt="">
+                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.email}" alt="">
                                                 </div>
                                                 <div class="media-body">
-                                                    <div class="lv-title">Samsung Galaxy Note 4</div>
-                                                    <small class="lv-small">$850.00 - $1199.99</small>
+                                                    <div class="lv-title">{{jugador.email}}</div>
+                                                    <small class="lv-small">
+                                                    	<i class="md md-star"></i>
+                                                    	<i class="md md-star"></i>
+                                                    	<i class="md md-star"></i>
+                                                    	<i class="md md-star-outline"></i>
+                                                    	<i class="md md-star-outline"></i>
+                                                    </small>
                                                 </div>
                                             </div>
                                         </a>
-                                        <a class="lv-item" href="">
+                                        <!-- <a class="lv-item" href="">
                                             <div class="media">
                                                 <div class="pull-left">
                                                     <img class="lv-img-sm" src="img/widgets/mate7.jpg" alt="">
@@ -283,10 +291,10 @@
                                                     <small class="lv-small">$189.99 - $250.00</small>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </a> -->
                                         
                                         <a class="lv-footer" href="">
-                                            View All
+                                            Ver detalles
                                         </a>
                                     </div>
                                 </div>
@@ -302,117 +310,120 @@
                       </div>
 
                 </div><!-- End Items -->
-            
-            	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-               	<div class="col-sm-6 col-xs-12">
-                           <!-- Calendar -->
-                           <div class="fc fc-ltr ui-widget" id="calendar-widget">
-                           </div>
-                           
-                </div>
-                
-                <div class="col-sm-6 col-xs-12">
-                                                        
-                            <!-- Recent Posts -->
-                            <div class="card">
-                                <div class="card-header ch-alt m-b-20">
-                                    <h2>Recent Posts <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
-                                    <ul class="actions">
-                                        <li>
-                                            <a href="">
-                                                <i class="md md-cached"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="">
-                                                <i class="md md-file-download"></i>
-                                            </a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
-                                            </a>
-                                            
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a href="">Change Date Range</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">Change Graph Type</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">Other Settings</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                    
-                                    <button class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-add"></i></button>
-                                </div>
-                                
-                                <div class="card-body">
-                                    <div class="listview">
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">David Belle</div>
-                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Jonathan Morris</div>
-                                                    <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Fredric Mitchell Jr.</div>
-                                                    <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Glenn Jecobs</div>
-                                                    <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Bill Phillips</div>
-                                                    <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-footer" href="">View All</a>
-                                    </div>
-                                </div>
-                            </div><!-- Card -->
-                        </div><!-- Col Recent Post -->
-			</div>
+                <sec:authorize access="isAuthenticated()" >
+            	<div class="row">
+	            	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	               	<div class="col-sm-6 col-xs-12">
+	                           <!-- Calendar -->
+	                           <div class="fc fc-ltr ui-widget" id="calendar-widget">
+	                           </div>
+	                           
+	                </div>
+	                
+	                <div class="col-sm-6 col-xs-12">
+	                                                        
+	                            <!-- Recent Posts -->
+	                            <div class="card">
+	                                <div class="card-header ch-alt m-b-20">
+	                                    <h2>Recent Posts <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
+	                                    <ul class="actions">
+	                                        <li>
+	                                            <a href="">
+	                                                <i class="md md-cached"></i>
+	                                            </a>
+	                                        </li>
+	                                        <li>
+	                                            <a href="">
+	                                                <i class="md md-file-download"></i>
+	                                            </a>
+	                                        </li>
+	                                        <li class="dropdown">
+	                                            <a href="" data-toggle="dropdown">
+	                                                <i class="md md-more-vert"></i>
+	                                            </a>
+	                                            
+	                                            <ul class="dropdown-menu dropdown-menu-right">
+	                                                <li>
+	                                                    <a href="">Change Date Range</a>
+	                                                </li>
+	                                                <li>
+	                                                    <a href="">Change Graph Type</a>
+	                                                </li>
+	                                                <li>
+	                                                    <a href="">Other Settings</a>
+	                                                </li>
+	                                            </ul>
+	                                        </li>
+	                                    </ul>
+	                                    
+	                                    <button class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-add"></i></button>
+	                                </div>
+	                                
+	                                <div class="card-body">
+	                                    <div class="listview">
+	                                        <a class="lv-item" href="">
+	                                            <div class="media">
+	                                                <div class="pull-left">
+	                                                    <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+	                                                </div>
+	                                                <div class="media-body">
+	                                                    <div class="lv-title">David Belle</div>
+	                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
+	                                                </div>
+	                                            </div>
+	                                        </a>
+	                                        <a class="lv-item" href="">
+	                                            <div class="media">
+	                                                <div class="pull-left">
+	                                                    <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
+	                                                </div>
+	                                                <div class="media-body">
+	                                                    <div class="lv-title">Jonathan Morris</div>
+	                                                    <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
+	                                                </div>
+	                                            </div>
+	                                        </a>
+	                                        <a class="lv-item" href="">
+	                                            <div class="media">
+	                                                <div class="pull-left">
+	                                                    <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
+	                                                </div>
+	                                                <div class="media-body">
+	                                                    <div class="lv-title">Fredric Mitchell Jr.</div>
+	                                                    <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
+	                                                </div>
+	                                            </div>
+	                                        </a>
+	                                        <a class="lv-item" href="">
+	                                            <div class="media">
+	                                                <div class="pull-left">
+	                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+	                                                </div>
+	                                                <div class="media-body">
+	                                                    <div class="lv-title">Glenn Jecobs</div>
+	                                                    <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
+	                                                </div>
+	                                            </div>
+	                                        </a>
+	                                        <a class="lv-item" href="">
+	                                            <div class="media">
+	                                                <div class="pull-left">
+	                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+	                                                </div>
+	                                                <div class="media-body">
+	                                                    <div class="lv-title">Bill Phillips</div>
+	                                                    <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
+	                                                </div>
+	                                            </div>
+	                                        </a>
+	                                        <a class="lv-footer" href="">View All</a>
+	                                    </div>
+	                                </div>
+	                            </div><!-- Card -->
+	                        </div><!-- Col Recent Post -->
+					</div>
+				</div>
+				</sec:authorize>
         </div><!-- ROW -->
 
     </div>

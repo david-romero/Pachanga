@@ -48,14 +48,25 @@ public class User extends BaseEntity<Long> {
 	 */
 	private byte[] imagen;
     
+    @Column(name = "karma_points")
+    private Integer[] karmaPoints = new Integer[]{0,0,0,0,0};
+    
     @Transient
     private boolean tieneAvatar;
     
-    
-    
+    @Transient
+    private float karma;
     
  
-    public User() {
+    public Integer[] getKarmaPoints() {
+		return karmaPoints;
+	}
+
+	public void setKarmaPoints(Integer[] karmaPoints) {
+		this.karmaPoints = karmaPoints;
+	}
+
+	public User() {
  
     }
 
@@ -141,6 +152,13 @@ public class User extends BaseEntity<Long> {
 	public void setTieneAvatar(boolean tieneAvatar) {
 		this.tieneAvatar = tieneAvatar;
 	}
+
+	public float getKarma() {
+		
+		return karma;
+	}
+	
+	
     
 
 }

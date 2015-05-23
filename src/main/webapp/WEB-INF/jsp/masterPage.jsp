@@ -226,7 +226,7 @@
                                     </a>
                                 </div>
                     
-                                <a class="lv-footer" href="">View Previous</a>
+                                <a href="/P/usuarios/notificaciones" class="lv-footer" href="">Ver todas</a>
                             </div>
                     
                         <div style="width: 0px; z-index: 9; cursor: default; position: absolute; top: 0px; left: 298px; height: 275px; display: block; opacity: 0;" class="nicescroll-rails nicescroll-rails-vr" id="ascrail2003"><div class="nicescroll-cursors" style="position: relative; top: 0px; float: right; width: 0px; height: 271px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div><div style="height: 0px; z-index: 9; top: 275px; left: 0px; position: absolute; cursor: default; display: none; width: 298px; opacity: 0;" class="nicescroll-rails nicescroll-rails-hr" id="ascrail2003-hr"><div class="nicescroll-cursors" style="position: absolute; top: 0px; height: 0px; width: 298px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div></div>

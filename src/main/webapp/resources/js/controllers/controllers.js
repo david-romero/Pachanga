@@ -10,23 +10,31 @@ app.controller('InitController', [ '$scope', '$http',
 	function($scope, $http) {
 		$scope.inicio = function() {
 			$scope.partidos = [];
-			$http.get('/P/rest/inicio').success(function(data) {
+			$http.get('/P/rest/partido/inicio').success(function(data) {
 				console.log(data);
-				$scope.partidos.push(data[0])
-				$scope.partidos.push(data[1])
-				$scope.partidos.push(data[2])
-				$scope.partidos.push(data[3])
+				for (var i=0; i<data.length; i++){
+					$scope.partidos.push(data[i])
+				}
 			});
 		}
 	
 		$scope.loadMorePartidos = function() {
-			$http.get('/P/rest/loadMorePartidos').success(function(data) {
-				$scope.msg = 'Pelicula creada correctamente';
+			$http.get('/P/rest/partido/loadMorePartidos').success(function(data) {
 				$scope.showMorePartidos(data);
 			}).error(function(data) {
 				console.log(data);
-				$scope.msg = 'Se ha producido un error';
 			});
+		}
+		
+		$scope.apuntarseAPartido = function(partidoId){
+			  $http.post('/P/rest/partido/apuntarse/'+partidoId)
+			  .success(function(partido) {
+				  alert("Alistado!");
+			   })
+			  .error(function(data, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+			   });
 		}
 	
 		$scope.showMorePartidos = function(data) {
@@ -167,6 +175,44 @@ app.controller('MensajeController', [ '$scope', '$http' ,
 		}
 ]);
 
+app.controller('NotificacionController', 
+		[ '$scope', '$http' ,
+		  function($scope, $http) {
+				$scope.notificaciones = [];
+				$scope.paginas = [];
+				$scope.numeroPaginas = 1;
+				$scope.paginaActual = 1;
+				$scope.loadNotificaciones = function(pagina) {
+					$scope.notificaciones = [];
+					$scope.paginaActual  = pagina;
+					$http.get('/P/rest/notificacion/obtenerTodas/'+$scope.paginaActual).success(function(data) {
+						for (var i=0; i<data.length; i++){
+							$scope.notificaciones.push(data[i])
+						}
+						console.log(data);
+					});
+					$http.get('/P/rest/notificacion/obtenerNumeroPaginas').success(function(data) {
+						console.log(data);
+						console.log(parseInt(data));
+						$scope.numeroPaginas = parseInt(data);
+						for (var i=0; i<$scope.numeroPaginas; i++){
+							$scope.paginas.push(i);
+						}
+						console.log($scope.paginas);
+					});
+				}
+				
+				$scope.getPaginacionClass = function(pagina){
+					var cssClass = "";
+					if ( $scope.paginaActual = pagina ){
+						cssClass = "active";
+					}
+					return cssClass;
+				}
+			
+			}
+		]
+);
 app.directive('scroll', function($timeout) {
 	  return {
 	    restrict: 'A',
