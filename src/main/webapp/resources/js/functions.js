@@ -556,7 +556,9 @@ $(document).ready(function(){
     
     //Date Time Picker
     if ($('.date-time-picker')[0]) {
-	   $('.date-time-picker').datetimepicker();
+	   $('.date-time-picker').datetimepicker({
+		   keepOpen : true
+	   });
     }
     
     //Time
@@ -569,7 +571,8 @@ $(document).ready(function(){
     //Date
     if ($('.date-picker')[0]) {
     	$('.date-picker').datetimepicker({
-    	    format: 'DD/MM/YYYY'
+    	    format: 'DD/MM/YYYY',
+    	    keepOpen : true
     	});
     }
 

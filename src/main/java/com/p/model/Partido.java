@@ -1,27 +1,41 @@
 package com.p.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import com.google.common.collect.Sets;
+@Entity
 public class Partido extends BaseEntity<Long> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -181161949409988033L;
-
-	protected List<User> jugadores;
-
+	
+	public Partido(){
+		jugadores = Sets.newHashSet();
+	}
+	@ManyToMany(mappedBy="partidos")
+	@Valid
+	protected Set<User> jugadores;
+	@NotNull
 	protected Date fecha;
-
+	@NotNull
 	protected String titulo;
-
+	@NotNull
 	protected Double precio;
-
+	@NotNull
+	@Valid
+	@ManyToOne()
 	protected Lugar lugar;
 
 	@Lob
@@ -32,12 +46,12 @@ public class Partido extends BaseEntity<Long> {
 	private byte[] imagen;
 	
 	protected String urlImagen;
-
-	public List<User> getJugadores() {
+	
+	public Set<User> getJugadores() {
 		return jugadores;
 	}
 
-	public void setJugadores(List<User> jugadores) {
+	public void setJugadores(Set<User> jugadores) {
 		this.jugadores = jugadores;
 	}
 

@@ -131,9 +131,9 @@
             <!--  <div class="col-md-3">
                 <p class="lead">Deportes</p>
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Fútbol</a>
-					<a href="#" class="list-group-item">Fútbol 7</a>
-					<a href="#" class="list-group-item">Fútbol Sala</a>
+                    <a href="#" class="list-group-item">FÃºtbol</a>
+					<a href="#" class="list-group-item">FÃºtbol 7</a>
+					<a href="#" class="list-group-item">FÃºtbol Sala</a>
                     <a href="#" class="list-group-item">Paddel</a>
                     <a href="#" class="list-group-item">Baloncesto</a>
                 </div>
@@ -323,18 +323,13 @@
 	                <div class="col-sm-6 col-xs-12">
 	                                                        
 	                            <!-- Recent Posts -->
-	                            <div class="card">
-	                                <div class="card-header ch-alt m-b-20">
-	                                    <h2>Recent Posts <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
+	                            <div class="card" id="profile-main" style="  min-height: initial;">
+	                                <div class="card-header ch-alt m-b-20 pmo-pic" style="  margin: 0;">
+	                                    <h2>Partidos Recientes <small>&Uacute;ltimos partidos jugados</small></h2>
 	                                    <ul class="actions">
 	                                        <li>
-	                                            <a href="">
+	                                            <a href="" ng-click="obtenerMisPartidos()">
 	                                                <i class="md md-cached"></i>
-	                                            </a>
-	                                        </li>
-	                                        <li>
-	                                            <a href="">
-	                                                <i class="md md-file-download"></i>
 	                                            </a>
 	                                        </li>
 	                                        <li class="dropdown">
@@ -356,23 +351,43 @@
 	                                        </li>
 	                                    </ul>
 	                                    
-	                                    <button class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-add"></i></button>
+	                                    <!--<button class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-add"></i></button>-->
+	                                    <!-- --> <div class="dropdown pmop-message" style="bottom: 0px;  left: 100%;">
+                                        <a data-toggle="dropdown" href="" class="btn bgm-cyan btn-float z-depth-1 waves-effect waves-button waves-float">
+                                            <i class="md md-add"></i>
+                                        </a>
+                                        
+                                        <div class="dropdown-menu" style="left: -250px;  height: 270px;" ng-app="pachanga-app">
+                                        	<form  ng-submit="createPartido()" name="form" novalidate="" ng-controller="PartidoController">
+                                            <textarea ng-model="titulo" name="username" required="" ng-minlength="6" placeholder="T&iacute;tulo del partido..."></textarea>
+                                            <div class="fg-line" style="margin-left: 20px; margin-right: 20px;width: 80%;">
+                                            	<input type="text" ng-model="fecha"  class="form-control input-mask" data-mask="00/00/0000 00:00" placeholder="eg: 23/05/2014 22:00" maxlength="10" autocomplete="off">
+                                            </div>
+                                            <div class="fg-line" style="margin-left: 20px;  margin-right: 20px;width: 80%;">
+                                            	<input type="number" ng-model="precio" class="form-control input-mask" data-mask="000.000.000.000.000,00" placeholder="eg: 0,90" maxlength="22" autocomplete="off" step="0.01">
+                                            </div>
+                                            <textarea placeholder="Lugar..." ng-model="lugar"></textarea>
+                                            <button class="btn bgm-green btn-icon waves-effect waves-button waves-float"><i class="md md-send"></i></button>
+                                            </form>
+                                        </div>
+                                        
+                                    </div>
 	                                </div>
 	                                
 	                                <div class="card-body">
 	                                    <div class="listview">
-	                                        <a class="lv-item" href="">
+	                                        <a class="lv-item" href="" ng-repeat='partido in misPartidos'>
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="{{partido.urlImagen}}" alt="">
 	                                                </div>
 	                                                <div class="media-body">
-	                                                    <div class="lv-title">David Belle</div>
-	                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
+	                                                    <div class="lv-title">{{partido.titulo}}</div>
+	                                                    <small class="lv-small">Jugado en {{partido.lugar.titulo}} a {{partido.precio}} &euro;</small>
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-item" href="">
+	                                        <!--  <a class="lv-item" href="">
 	                                            <div class="media">
 	                                                <div class="pull-left">
 	                                                    <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
@@ -415,8 +430,8 @@
 	                                                    <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
 	                                                </div>
 	                                            </div>
-	                                        </a>
-	                                        <a class="lv-footer" href="">View All</a>
+	                                        </a>-->
+	                                        <a class="lv-footer" href="">Ver Todos</a>
 	                                    </div>
 	                                </div>
 	                            </div><!-- Card -->

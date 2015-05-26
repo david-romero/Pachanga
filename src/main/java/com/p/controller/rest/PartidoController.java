@@ -2,15 +2,20 @@ package com.p.controller.rest;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.p.model.Lugar;
+import com.p.model.Mensaje;
 import com.p.model.Partido;
 import com.p.model.User;
 
@@ -33,7 +38,7 @@ public class PartidoController {
 			p.setLugar(lg);
 			p.setFecha(new Date(System.currentTimeMillis()));
 			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
+			Set<User> usuarios = Sets.newHashSet();
 			User user = new User();
 			user.setEmail("bent@test.com");
 			user.setId(1L);
@@ -49,32 +54,7 @@ public class PartidoController {
 			user.setId(3L);
 			user.setTieneAvatar(false);
 			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
+			p.setJugadores(usuarios);
 			objetos.add(p);
 		}
 
@@ -94,7 +74,7 @@ public class PartidoController {
 			p.setLugar(lg);
 			p.setFecha(new Date(System.currentTimeMillis()));
 			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
+			Set<User> usuarios = Sets.newHashSet();
 			User user = new User();
 			user.setEmail("bent@test.com");
 			user.setId(1L);
@@ -110,32 +90,9 @@ public class PartidoController {
 			user.setId(3L);
 			user.setTieneAvatar(false);
 			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
+
+
+			p.setJugadores(usuarios);
 			objetos.add(p);
 		}
 
@@ -155,12 +112,55 @@ public class PartidoController {
 		userConversationSigned.setEmail(userSigned.getUsername());
 		userConversationSigned.setId(999L);
 		
-		p.setJugadores((List<User>) Lists.newArrayList(userConversationSigned));
+		p.setJugadores((Set<User>) Sets.newHashSet(userConversationSigned));
 		
 		return p;
 		
 		
 		
+	}
+	
+
+	@RequestMapping(value = "/jugados", method = RequestMethod.GET)
+	public List<Partido> partidosJugados() {
+		List<Partido> objetos = Lists.newArrayList();
+
+		for (int i = 0; i < 4; i++) {
+			Partido p = new Partido();
+			p.setId(new Long(i));
+			p.setPrecio(0.7);
+			Lugar lg = new Lugar();
+			lg.setTitulo("Hytasa");
+			p.setLugar(lg);
+			p.setFecha(new Date(System.currentTimeMillis()));
+			p.setTitulo("Partido semanal");
+			Set<User> usuarios = Sets.newHashSet();
+			User user = new User();
+			user.setEmail("bent@test.com");
+			user.setId(1L);
+			user.setTieneAvatar(false);
+			usuarios.add(user);
+			user = new User();
+			user.setEmail("bent@test.com");
+			user.setId(2L);
+			user.setTieneAvatar(true);
+			usuarios.add(user);
+			user = new User();
+			user.setEmail("bent@test.com");
+			user.setId(3L);
+			user.setTieneAvatar(false);
+			usuarios.add(user);
+			p.setJugadores(usuarios);
+			objetos.add(p);
+		}
+
+		return objetos;
+	}
+	
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public Partido save(Model model,
+			@RequestBody Partido partido) {
+		return partido;
 	}
 
 }

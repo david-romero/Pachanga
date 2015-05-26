@@ -9,7 +9,7 @@
 	<div class="container" id="content">
                     
                     <div class="block-header">
-                        <h2>Malinda Hollaway <small>Web/UI Developer, Dubai, United Arab Emirates</small></h2>
+                        <h2>${user.username} <small>Eyyyyyyyyyyyy  </small></h2>
                         
                     </div>
                     

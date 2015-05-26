@@ -8,12 +8,25 @@ var app = angular.module('pachanga', [ "ngResource" ]);
 app.controller('InitController', [ '$scope', '$http',
 
 	function($scope, $http) {
+		$scope.partidos = [];
+		$scope.misPartidos = [];
 		$scope.inicio = function() {
-			$scope.partidos = [];
+			
 			$http.get('/P/rest/partido/inicio').success(function(data) {
-				console.log(data);
 				for (var i=0; i<data.length; i++){
 					$scope.partidos.push(data[i])
+				}
+			});
+			
+			$scope.obtenerMisPartidos();
+			
+		}
+		
+		$scope.obtenerMisPartidos = function(){
+			$scope.misPartidos = [];
+			$http.get('/P/rest/partido/jugados').success(function(data) {
+				for (var i=0; i<data.length; i++){
+					$scope.misPartidos.push(data[i])
 				}
 			});
 		}
@@ -47,6 +60,37 @@ app.controller('InitController', [ '$scope', '$http',
 		}
 	} 
 ]);
+
+app.controller('PartidoController', [ '$scope', '$http' ,
+                                  	function($scope, $http) {
+	$scope.createPartido = function () {
+        console.log('Attempting login with username ' + $scope.titulo + ' and password ' + $scope.precio);
+
+        if ($scope.form.$invalid) {
+            return;
+        }
+        
+        $http.post(
+				  '/P/rest/partido/save/', 
+				  {
+					  titulo:$scope.titulo,
+					  precio:$scope.precio,
+					  fecha:$scope.fecha,
+					  lugar: $scope.lugar
+				  }
+			    )
+	  .success(function(data) {
+		  alert("64445645asdasdasdasd");
+	   })
+	  .error(function(data, status, headers, config) {
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+	   });
+
+        alert("asdasd");
+
+    };
+}]);
 
 app.controller('MensajeController', [ '$scope', '$http' ,
 	function($scope, $http) {
