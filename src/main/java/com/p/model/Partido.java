@@ -9,8 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.google.common.collect.Sets;
 @Entity
@@ -27,7 +31,9 @@ public class Partido extends BaseEntity<Long> {
 	@ManyToMany(mappedBy="partidos")
 	@Valid
 	protected Set<User> jugadores;
+	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	protected Date fecha;
 	@NotNull
 	protected String titulo;
@@ -37,6 +43,10 @@ public class Partido extends BaseEntity<Long> {
 	@Valid
 	@ManyToOne()
 	protected Lugar lugar;
+	@Valid
+	@NotNull
+	@ManyToOne(optional=false)
+	protected Categoria categoria;
 
 	@Lob
 	@Column(name = "imagen")
@@ -107,6 +117,14 @@ public class Partido extends BaseEntity<Long> {
 
 	public void setUrlImagen(String urlImagen) {
 		this.urlImagen = urlImagen;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 	
 	

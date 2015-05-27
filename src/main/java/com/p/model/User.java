@@ -3,15 +3,21 @@ package com.p.model;
 import java.util.Arrays;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import com.google.common.collect.Sets;
 import com.p.service.SocialMediaService;
@@ -22,6 +28,7 @@ public class User extends BaseEntity<Long> {
  
 	public User(){
 		partidos = Sets.newHashSet();
+		grupos = Sets.newHashSet();
 	}
 	
     /**
@@ -62,6 +69,24 @@ public class User extends BaseEntity<Long> {
     @ManyToMany()
     @Valid
 	protected Set<Partido> partidos;
+    
+    @ManyToMany()
+	@Valid
+	protected Set<Grupo> grupos;
+    
+    @NotNull
+	@OneToMany(mappedBy = "emisor", cascade = { CascadeType.REMOVE })
+	@Sort(type = SortType.NATURAL)
+	@Valid
+	protected Set<Mensaje> mensajeEnviados;
+    
+    @NotNull
+	@OneToMany(mappedBy = "receptor", cascade = { CascadeType.REMOVE })
+	@Sort(type = SortType.NATURAL)
+	@Valid
+	protected Set<Mensaje> mensajeRecibidos;
+    @Transient
+    protected Set<Mensaje> mensajes;
     
     @Transient
     private boolean tieneAvatar;
@@ -173,8 +198,35 @@ public class User extends BaseEntity<Long> {
 	public void setPartidos(Set<Partido> partidos) {
 		this.partidos = partidos;
 	}
-	
-	
-    
+
+	public Set<Grupo> getGrupos() {
+		return grupos;
+	}
+
+	public void setGrupos(Set<Grupo> grupos) {
+		this.grupos = grupos;
+	}
+
+	public Set<Mensaje> getMensajeEnviados() {
+		return mensajeEnviados;
+	}
+
+	public void setMensajeEnviados(Set<Mensaje> mensajeEnviados) {
+		this.mensajeEnviados = mensajeEnviados;
+	}
+
+	public Set<Mensaje> getMensajeRecibidos() {
+		return mensajeRecibidos;
+	}
+
+	public void setMensajeRecibidos(Set<Mensaje> mensajeRecibidos) {
+		this.mensajeRecibidos = mensajeRecibidos;
+	}
+
+	public Set<Mensaje> getMensajes() {
+		Set<Mensaje>  msjs = Sets.newHashSet(mensajeEnviados);
+		msjs.addAll(mensajeRecibidos);
+		return msjs;
+	}
 
 }
