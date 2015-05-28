@@ -46,6 +46,16 @@
     	.load-more {
 		    margin-bottom: 30px;
 		}
+		#todo-lists .card-body {
+		    font-family: roboto;
+		    font-size: 13px;
+		}
+		#todo-lists .lv-footer{
+			margin-top: 0px !important;
+		}
+		#todo-lists .lv-small{
+			color: #686565;
+		}
 		@media (min-width: 1200px){
 			.top-menu #toggle-width .toggle-switch {
 			  margin: -12px 30px 0 0 !important;
@@ -75,12 +85,12 @@
 	        <div class="mini-charts">
 	             <div class="row">
 	                 <div class="col-sm-6 col-md-3">
-	                     <div class="mini-charts-item bgm-cyan">
+	                     <div class="mini-charts-item bgm-cyan" ng-click="showGrupo(0)">
 	                         <div class="clearfix">
 	                             <div class="chart stats-bar"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
 	                             <div class="count">
-	                                 <small>Website Traffics</small>
-	                                 <h2>987,459</h2>
+	                                 <small>Steaua del Grifo</small>
+	                                 <h2>12</h2>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -91,8 +101,8 @@
 	                         <div class="clearfix">
 	                             <div class="chart stats-bar-2"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
 	                             <div class="count">
-	                                 <small>Website Impressions</small>
-	                                 <h2>356,785K</h2>
+	                                 <small>Joga Bonito</small>
+	                                 <h2>35</h2>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -103,8 +113,8 @@
 	                         <div class="clearfix">
 	                             <div class="chart stats-line"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
 	                             <div class="count">
-	                                 <small>Total Sales</small>
-	                                 <h2>$ 458,778</h2>
+	                                 <small>Arcilasis</small>
+	                                 <h2>8</h2>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -115,8 +125,8 @@
 	                         <div class="clearfix">
 	                             <div class="chart stats-line-2"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
 	                             <div class="count">
-	                                 <small>Support Tickets</small>
-	                                 <h2>23,856</h2>
+	                                 <small>Vengadores</small>
+	                                 <h2>23</h2>
 	                             </div>
 	                         </div>
 	                     </div>
@@ -127,17 +137,6 @@
         
         <div class="row">
         
-
-            <!--  <div class="col-md-3">
-                <p class="lead">Deportes</p>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">Fútbol</a>
-					<a href="#" class="list-group-item">Fútbol 7</a>
-					<a href="#" class="list-group-item">Fútbol Sala</a>
-                    <a href="#" class="list-group-item">Paddel</a>
-                    <a href="#" class="list-group-item">Baloncesto</a>
-                </div>
-            </div>-->
             <div id="categorias" class="col-md-3 col-sm-6">
 	            <div id="site-visits" class="dash-widget-item bgm-teal listview lv-bordered lv-lg">
 	                
@@ -199,7 +198,7 @@
 	            
 	        </div>
 
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-6">
 
                 <div class="row carousel-holder">
 
@@ -242,7 +241,7 @@
             	<div class="col-lg-12" ><!-- Items -->
                     <div ng-repeat='partido in partidos' class="col-md-3 col-sm-6" >
                                 <div  id="best-selling" class="dash-widget-item card">
-                                    <div class="dash-widget-header card-header" style="padding: 0;">
+                                    <div class="dash-widget-header card-header" style="padding: 0;" ng-click="showPartido(partido.id)">
                                         <div class="dash-widget-title">{{partido.titulo}}</div>
                                         <img src="{{partido.urlImagen}}" alt="">
                                         <div class="main-item">
@@ -261,7 +260,7 @@
                                         <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
                                             <div class="media">
                                                 <div class="pull-left">
-                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.email}" alt="">
+                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.email}}" alt="">
                                                 </div>
                                                 <div class="media-body">
                                                     <div class="lv-title">{{jugador.email}}</div>
@@ -275,28 +274,6 @@
                                                 </div>
                                             </div>
                                         </a>
-                                        <!-- <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/widgets/mate7.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Huawei Ascend Mate</div>
-                                                    <small class="lv-small">$649.59 - $749.99</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/widgets/535.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Nokia Lumia 535</div>
-                                                    <small class="lv-small">$189.99 - $250.00</small>
-                                                </div>
-                                            </div>
-                                        </a> -->
                                         
                                         <a class="lv-footer" href="">
                                             Ver detalles
@@ -323,25 +300,23 @@
 	                           <div class="fc fc-ltr ui-widget" id="calendar-widget">
 	                           </div>
 	                           
+	                           
+	                           
 	                </div>
 	                
 	                <div class="col-sm-6 col-xs-12">
 	                                                        
 	                            <!-- Recent Posts -->
-	                            <div class="card">
-	                                <div class="card-header ch-alt m-b-20">
-	                                    <h2>Recent Posts <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
+	                            <div class="card" id="todo-lists">
+	                                <div class="card-header ch-alt" >
+	                                    <h2>&Uacute;ltimos Partidos <small>Partidos creados o a los que te has apuntado</small></h2>
 	                                    <ul class="actions">
 	                                        <li>
 	                                            <a href="">
 	                                                <i class="md md-cached"></i>
 	                                            </a>
 	                                        </li>
-	                                        <li>
-	                                            <a href="">
-	                                                <i class="md md-file-download"></i>
-	                                            </a>
-	                                        </li>
+
 	                                        <li class="dropdown">
 	                                            <a href="" data-toggle="dropdown">
 	                                                <i class="md md-more-vert"></i>
@@ -361,15 +336,27 @@
 	                                        </li>
 	                                    </ul>
 	                                    
-	                                    <button class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-add"></i></button>
+	                                    
 	                                </div>
 	                                
-	                                <div class="card-body">
-	                                    <div class="listview">
-	                                        <a class="lv-item" href="">
+	                                <div class="card-body tl-body" style="">
+	                                	<div class="" id="add-tl-item" >
+		                                    <i class="add-new-item md md-add waves-effect waves-button waves-float" style="color:#FFC107"></i>
+		                                    
+		                                    <div class="add-tl-body">
+		                                        <textarea placeholder="What you want to do..." style="color: #FFC107"></textarea>
+		                                        
+		                                        <div class="add-tl-actions">
+		                                            <a href="" data-tl-action="dismiss"><i class="md md-close"></i></a>
+		                                            <a href="" data-tl-action="save"><i class="md md-check"></i></a>
+		                                        </div>
+		                                    </div>
+		                                </div>
+	                                    <div class="listview" style="margin-top: 6px;">
+	                                        <a class="lv-item" href="/P/partido/show/5">
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">David Belle</div>
@@ -377,10 +364,10 @@
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-item" href="">
+	                                        <a class="lv-item" href="/P/partido/show/5">
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">Jonathan Morris</div>
@@ -388,10 +375,10 @@
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-item" href="">
+	                                        <a class="lv-item" href="/P/partido/show/5">
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">Fredric Mitchell Jr.</div>
@@ -399,10 +386,10 @@
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-item" href="">
+	                                        <a class="lv-item" href="/P/partido/show/5">
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">Glenn Jecobs</div>
@@ -410,10 +397,10 @@
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-item" href="">
+	                                        <a class="lv-item" href="/P/partido/show/5">
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">Bill Phillips</div>
@@ -421,7 +408,7 @@
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-footer" href="">View All</a>
+	                                        <a class="lv-footer" href="">Ver Todos</a>
 	                                    </div>
 	                                </div>
 	                            </div><!-- Card -->

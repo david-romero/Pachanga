@@ -45,6 +45,16 @@ app.controller('InitController', [ '$scope', '$http',
 			$scope.partidos.push(data[3])
 			alert("Funciona!!");
 		}
+		
+		$scope.showPartido = function(partidoId){
+			alert(partidoId);
+			window.location.href = '/P/partido/show/' + partidoId
+		}
+		
+		$scope.showGrupo = function(grupoId){
+			alert(grupoId);
+			window.location.href = '/P/grupo/show/' + grupoId
+		}
 	} 
 ]);
 
@@ -240,6 +250,23 @@ app.controller('ProfileController',
 						cssClass = "active";
 					}
 					return cssClass;
+				}
+			}
+		]
+);
+app.controller('PartidoController', 
+		[ '$scope', '$http' ,
+		  	function($scope, $http) {
+				 $scope.activeTab = 1;
+				 $scope.getProfileTabCss = function(tab){
+					var cssClass = "";
+					if ( tab == $scope.activeTab ){
+						cssClass = "active";
+					}
+					return cssClass;
+				}
+				$scope.savePartido = function(){
+					alert("asdasd");
 				}
 			}
 		]

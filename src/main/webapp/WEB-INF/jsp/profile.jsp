@@ -70,57 +70,13 @@
                                 </ul>
                             </div>
                             
-                            <div class="pmo-block pmo-items hidden-xs">
-                                <h2>Connections</h2>
-                                
-                                <div class="pmob-body">
-                                    <div class="row">
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/1.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/2.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/3.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/4.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/5.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/6.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/7.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/8.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/1.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/2.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/3.jpg" alt="">
-                                        </a>
-                                        <a href="" class="col-xs-2">
-                                            <img class="img-circle" src="img/profile-pics/4.jpg" alt="">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                         
                         <div class="pm-body clearfix" ng-controller="ProfileController">
                             <ul tabindex="1" style="overflow: hidden;" class="tab-nav tn-justified">
-                                <li ng-click="activeTab = 1;" class="waves-effect" ng-class="getProfileTabCss(1)"><a href="#">About</a></li>
+                                <li ng-click="activeTab = 1;" class="waves-effect" ng-class="getProfileTabCss(1)"><a href="#">Perfil</a></li>
                                 <li ng-click="activeTab = 2;" class="waves-effect" ng-class="getProfileTabCss(2)"><a href="#">Timeline</a></li>
-                                <li ng-click="activeTab = 3;" class="waves-effect" ng-class="getProfileTabCss(3)"><a href="#">Connections</a></li>
                             </ul>
                             
                             <div ng-if="activeTab == 1">
