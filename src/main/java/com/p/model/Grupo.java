@@ -2,9 +2,15 @@ package com.p.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import com.google.common.collect.Sets;
 @Entity
@@ -12,6 +18,7 @@ public class Grupo extends BaseEntity<Long>{
 
 	public Grupo(){
 		usuarios = Sets.newHashSet();
+		comentarios = Sets.newHashSet();
 	}
 	
 	/**
@@ -29,6 +36,19 @@ public class Grupo extends BaseEntity<Long>{
 		this.usuarios = usuarios;
 	}
 	
+	
+	@NotNull
+	@OneToMany(mappedBy = "grupo", cascade = { CascadeType.REMOVE })
+	@Sort(type = SortType.NATURAL)
+	@Valid
+	protected Set<Comentario> comentarios;
+
+	public Set<Comentario> getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(Set<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
 	
 	
 }

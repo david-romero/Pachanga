@@ -388,14 +388,25 @@
     <script src="/P/resources/js/jquery.js"></script>
     <!-- jQuery -->
     <script src="/P/resources/js/jquery.nicescroll.min.js"></script>
+    
+     <!-- jQuery AutoSize -->
+    <script src="/P/resources/js/jquery.autosize.min.js"></script>
+    
+     <!-- Light Gallery -->
+    <script src="/P/resources/js/lightGallery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="/P/resources/js/bootstrap.min.js"></script>
     
-    <!-- Waves -->
-    <script src="/P/resources/js/waves.min.js"></script>
     <!-- Moment -->
     <script src="/P/resources/js/moment.min.js"></script>
+    
+    <!-- Bootstrap DateTimePicker -->
+    <script src="/P/resources/js/bootstrap-datetimepicker.min.js"></script>
+    
+    <!-- Waves -->
+    <script src="/P/resources/js/waves.min.js"></script>
+    
     <!-- Fullcalendar -->
     <script src="/P/resources/js/calendar.min.js"></script>
     <!-- Functions -->

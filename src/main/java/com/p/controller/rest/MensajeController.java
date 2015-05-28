@@ -90,4 +90,26 @@ public class MensajeController {
 		return mensaje;
 	}
 	
+	@RequestMapping(value = "/conversacion/{idUsuarioReceptor}", method = RequestMethod.POST)
+	public Mensaje addMensaje(Model model,
+			@PathVariable(value = "idUsuarioReceptor") Integer idUsuarioReceptor,
+			@RequestBody Mensaje mensaje) {
+		Assert.notNull(mensaje.getContenido());
+		Assert.isTrue(mensaje.getContenido().length() > 0);
+		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		User userConversation = new User();
+		userConversation.setId(new Long(idUsuarioReceptor));
+		
+		User userConversationSigned = new User();
+		userConversationSigned.setEmail(userSigned.getUsername());
+		
+		mensaje.setContenido(mensaje.getContenido());
+		Date fecha = new Date(System.currentTimeMillis());
+		mensaje.setFecha(fecha);
+		mensaje.setEmisor(userConversationSigned);
+		mensaje.setReceptor(userConversation);
+		return mensaje;
+	}
+	
 }

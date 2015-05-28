@@ -8,25 +8,12 @@ var app = angular.module('pachanga', [ "ngResource" ]);
 app.controller('InitController', [ '$scope', '$http',
 
 	function($scope, $http) {
-		$scope.partidos = [];
-		$scope.misPartidos = [];
 		$scope.inicio = function() {
-			
+			$scope.partidos = [];
 			$http.get('/P/rest/partido/inicio').success(function(data) {
+				console.log(data);
 				for (var i=0; i<data.length; i++){
 					$scope.partidos.push(data[i])
-				}
-			});
-			
-			$scope.obtenerMisPartidos();
-			
-		}
-		
-		$scope.obtenerMisPartidos = function(){
-			$scope.misPartidos = [];
-			$http.get('/P/rest/partido/jugados').success(function(data) {
-				for (var i=0; i<data.length; i++){
-					$scope.misPartidos.push(data[i])
 				}
 			});
 		}
@@ -60,37 +47,6 @@ app.controller('InitController', [ '$scope', '$http',
 		}
 	} 
 ]);
-
-app.controller('PartidoController', [ '$scope', '$http' ,
-                                  	function($scope, $http) {
-	$scope.createPartido = function () {
-        console.log('Attempting login with username ' + $scope.titulo + ' and password ' + $scope.precio);
-
-        if ($scope.form.$invalid) {
-            return;
-        }
-        
-        $http.post(
-				  '/P/rest/partido/save/', 
-				  {
-					  titulo:$scope.titulo,
-					  precio:$scope.precio,
-					  fecha:$scope.fecha,
-					  lugar: $scope.lugar
-				  }
-			    )
-	  .success(function(data) {
-		  alert("64445645asdasdasdasd");
-	   })
-	  .error(function(data, status, headers, config) {
-		    // called asynchronously if an error occurs
-		    // or server returns response with an error status.
-	   });
-
-        alert("asdasd");
-
-    };
-}]);
 
 app.controller('MensajeController', [ '$scope', '$http' ,
 	function($scope, $http) {
@@ -202,19 +158,36 @@ app.controller('MensajeController', [ '$scope', '$http' ,
 			  var mensajeContenido = $scope.contenido;
 			  var idDe = $scope.conversacion.emisor.id;
 			  var idPara = $scope.conversacion.receptor.id;
-			  $http.post(
-						  '/P/rest/mensaje/conversacion/'+idDe+"/"+idPara, 
+			  if ( idDe == undefined || idPAra == undefined  ){
+				  idPara = $scope.receptor;
+				  $http.post(
+						  '/P/rest/mensaje/conversacion/'+idPara, 
 						  {
 							  contenido:mensajeContenido
 						  }
 					    )
-			  .success(function(data) {
-				  $scope.conversacion.mensajes.push(data)
-			   })
-			  .error(function(data, status, headers, config) {
-				    // called asynchronously if an error occurs
-				    // or server returns response with an error status.
-			   });
+				  .success(function(data) {
+					  $scope.conversacion.mensajes.push(data)
+				   })
+				  .error(function(data, status, headers, config) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+				   });
+			  }else{
+				  $http.post(
+							  '/P/rest/mensaje/conversacion/'+idDe+"/"+idPara, 
+							  {
+								  contenido:mensajeContenido
+							  }
+						    )
+				  .success(function(data) {
+					  $scope.conversacion.mensajes.push(data)
+				   })
+				  .error(function(data, status, headers, config) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+				   });
+			  }
 		  }
 		}
 ]);
@@ -254,6 +227,20 @@ app.controller('NotificacionController',
 					return cssClass;
 				}
 			
+			}
+		]
+);
+app.controller('ProfileController', 
+		[ '$scope', '$http' ,
+		  	function($scope, $http) {
+				$scope.activeTab = 1;
+				$scope.getProfileTabCss = function(tab){
+					var cssClass = "";
+					if ( tab == $scope.activeTab ){
+						cssClass = "active";
+					}
+					return cssClass;
+				}
 			}
 		]
 );

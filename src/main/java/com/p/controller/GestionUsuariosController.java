@@ -164,7 +164,29 @@ public class GestionUsuariosController {
 	@RequestMapping(value = "/profile", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getProfile(Model model) {
 		String res = "";
+		org.springframework.security.core.userdetails.User principal =  (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User usr = new User();
+		usr.setEmail(principal.getUsername());
+		usr.setPassword(principal.getPassword());
+		model.addAttribute("userSigned", usr);
+		try {
+			//TODO - DRA - Profile
+			res = "profile";
+		} catch (Exception e) {
+			model.addAttribute("errorweb", e);
+			res = "errorweb";
+		}
 
+		return res;
+	}
+	
+	@RequestMapping(value = "/profile/{idUsuario}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public String getProfile(Model model, @PathVariable("idUsuario") Integer idUsuario) {
+		String res = "";
+		User usr = new User();
+		usr.setId(new Long(idUsuario));
+		usr.setEmail("aasdasdas@asdasd.com");
+		model.addAttribute("userSigned", usr);
 		try {
 			//TODO - DRA - Profile
 			res = "profile";
