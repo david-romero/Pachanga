@@ -7,21 +7,8 @@
 		<div class="container" id="content" ng-app="pachanga">
                     
                     <div class="block-header">
-                        <h2><c:out value="${partido.titulo}"></c:out></h2>
-                        <ul class="actions">
-                            <li class="dropdown">
-                                <a href="" data-toggle="dropdown">
-                                    <i class="md md-more-vert"></i>
-                                </a>
-                                
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <a data-pmb-action="edit" href="">Edit</a>
-                                    </li>
-                                </ul>
-                             
-                            </li>
-                        </ul>
+                        <h2 id="tituloValue"><c:out value="${partido.titulo}"></c:out></h2>
+                        
                     </div>
                     
                     <div class="card" id="profile-main" ng-controller="PartidoController">
@@ -39,7 +26,8 @@
                                     <sec:authorize access="isAuthenticated()" >
 	                				<sec:authentication var="user" property="principal" />
                                     <c:if test="${partido.propietario.email == user.username }">
-	                                    <a href="" class="pmop-edit">
+                                    	<input type="file" file-model="myFile" style="visibility:hidden"/>
+	                                    <a href="" class="pmop-edit" onclick="$(input)">
 	                                        <i class="md md-camera-alt"></i> <span class="hidden-xs">Actualizar Imagen</span>
 	                                    </a>
                                     </c:if>
@@ -76,7 +64,7 @@
                         <sec:authorize access="isAuthenticated()" >
                         	<c:if test="${partido.id == 0 }">
 	                        	<div class="pmb-block" id="messages-main" style="min-height: 0px;max-height: 0px;padding: 0px;margin: 0px;" >
-		                            	<a ng-click="savePartido()" class="btn btn-primary btn-float waves-effect waves-button waves-float" id="ms-compose">
+		                            	<a ng-click="savePartido(formCreatePartido)" class="btn btn-primary btn-float waves-effect waves-button waves-float" id="ms-compose">
 				                            <i class="md md-send"></i>
 				                        </a>
 				                </div>
@@ -85,16 +73,17 @@
                         
                         <div class="pm-body clearfix" ng-controller="ProfileController">
                             <ul tabindex="1" style="overflow: hidden;" class="tab-nav tn-justified">
-                                <li ng-click="activeTab = 1;" class="waves-effect" ng-class="getProfileTabCss(1)"><a href="#">Jugadores</a></li>
-                                <li ng-click="activeTab = 2;" class="waves-effect" ng-class="getProfileTabCss(2)"><a href="#">Datos</a></li>
+                            	<li ng-click="activeTab = 1;" class="waves-effect" ng-class="getProfileTabCss(1)"><a href="#">Datos</a></li>
+                                <li ng-click="activeTab = 2;" class="waves-effect" ng-class="getProfileTabCss(2)"><a href="#">Jugadores</a></li>
+                                
                             </ul>
                             
-                            <div ng-if="activeTab == 1">
+                            <div ng-if="activeTab == 2">
 	                            <div class="pmb-block" >
 	                                <div class="col-lg-12">
 			                            <div class="card">
 			                                <div class="card-header bgm-green">
-			                                    <h2>Usuarios Apuntados<small>You can type anything here...</small></h2>
+			                                    <h2>Usuarios Apuntados</h2>
 			
 			                                    <ul class="actions actions-alt">
 			                                        <li class="dropdown">
@@ -117,7 +106,7 @@
 			                                    </ul>
 			                                </div>
 			
-			                                <div class="card-body card-padding list-view" style="min-height: 200px;">
+			                                <div class="card-body card-padding list-view bgm-green" style="background-image:url('/P/resources/imgs/futbolsala.png');background-repeat: no-repeat;min-height: 415px;">
 			                                	<div class="col-lg-12">&nbsp;</div>
 			                                    <div class="col-lg-12 "><!-- Fila 1 -->
 			                                    	<div class="col-lg-1"><!-- Espacio -->
@@ -129,7 +118,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -140,7 +129,7 @@
 			                                    		
 			                                    	</div>
 			                                 		<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
@@ -154,30 +143,30 @@
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	
 			                                    </div>
@@ -192,7 +181,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -203,7 +192,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
@@ -234,150 +223,26 @@
 					                                    </tr>
 					                                </thead>
 					                                <tbody>
-					                                    <tr>
-					                                        <td>1</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Alexandra</td>
-					                                        <td>Christopher</td>
-					                                        <td>@makinton</td>
-					                                         <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>2</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Madeleine</td>
-					                                        <td>Hollaway</td>
-					                                        <td>@hollway</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>3</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Sebastian</td>
-					                                        <td>Johnston</td>
-					                                        <td>@sebastian</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>4</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Mitchell</td>
-					                                        <td>Christin</td>
-					                                        <td>@mitchell4u</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>5</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Elizabeth</td>
-					                                        <td>Belkitt</td>
-					                                        <td>@belkitt</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>6</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Benjamin</td>
-					                                        <td>Parnell</td>
-					                                        <td>@wayne234</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>7</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Katherine</td>
-					                                        <td>Buckland</td>
-					                                        <td>@anitabelle</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                         </c:if>
-					                                    </tr>
-					                                    <tr>
-					                                        <td>8</td>
-					                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt=""></td>
-					                                        <td>Nicholas</td>
-					                                        <td>Walmart</td>
-					                                        <td>@mwalmart</td>
-					                                        <c:if test="${partido.propietario.email == user.username }">
-					                                         	<td>
-					                                         		<ul class="actions">
-	            														<li>
-	                														<a href="#">
-	                    														<i class="md md-delete"></i>
-	                														</a>
-	            														</li>
-	        														</ul>
-	        													</td>
-					                                        </c:if>
-					                                    </tr>
+					                                	<c:forEach items="${partido.jugadores}" var="jugador">
+						                                    <tr>
+						                                        <td>1</td>
+						                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.email}" alt=""></td>
+						                                        <td><c:out value=" ${jugador.firstName}"></c:out></td>
+						                                        <td><c:out value=" ${jugador.lastName}"></c:out></td>
+						                                        <td><c:out value=" ${jugador.email}"></c:out></td>
+						                                         <c:if test="${partido.propietario.email == user.username }">
+						                                         	<td>
+						                                         		<ul class="actions">
+		            														<li>
+		                														<a href="#">
+		                    														<i class="md md-delete"></i>
+		                														</a>
+		            														</li>
+		        														</ul>
+		        													</td>
+						                                         </c:if>
+						                                    </tr>
+						                               </c:forEach>
 					                                </tbody>
 					                            </table>
 					                        </div>
@@ -385,11 +250,13 @@
 			                        </div>
 	                            </div>
                             </div><!-- TAB 1 -->
-                           <div ng-if="activeTab == 2">
+                           <div ng-if="activeTab == 1">
+                           		<form action="#" method="POST" name="formCreatePartido" ng-init="setFormScope(this)">
 	                            <div class="pmb-block" >
 	                                <div class="pmbb-header">
-	                                    <h2><i class="md fa fa-bookmark"></i> Biografía</h2>
+	                                    <h2><i class="md fa fa-bookmark"></i> Título</h2>
 	                                    <sec:authorize access="isAuthenticated()" >
+	                                    
                                     	<c:if test="${userSigned.email == user.username }">
 		                                    <ul class="actions">
 		                                        <li class="dropdown">
@@ -399,10 +266,9 @@
 		                                            
 		                                            <ul class="dropdown-menu dropdown-menu-right">
 		                                                <li>
-		                                                    <a data-pmb-action="edit" href="">Edit</a>
+		                                                    <a id="editarTitulo" data-pmb-action="edit" href="">Edit</a>
 		                                                </li>
 		                                            </ul>
-			                                        
 		                                        </li>
 		                                    </ul>
 	                                    </c:if>
@@ -410,17 +276,15 @@
 	                                </div>
 	                                <div class="pmbb-body p-l-30">
 	                                    <div class="pmbb-view">
-	                                        Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor. Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.
+	                                        ${partido.titulo}
 	                                    </div>
 	                                    
 	                                    <div class="pmbb-edit">
 	                                        <div class="fg-line">
-	                                            <textarea class="form-control" rows="5" placeholder="Summary...">Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor. Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.</textarea>
+	                                            <textarea ng-model="titulo"  name="titulo" class="form-control" rows="5" placeholder="Summary...">${partido.titulo}
+	                                            </textarea>
 	                                        </div>
-	                                        <div class="m-t-10">
-	                                            <button class="btn btn-primary btn-sm waves-effect waves-button waves-float">Save</button>
-	                                            <button data-pmb-action="reset" class="btn btn-link btn-sm waves-effect waves-button waves-float">Cancel</button>
-	                                        </div>
+
 	                                    </div>
 	                                </div>
 	                            </div>
@@ -439,7 +303,7 @@
 		                                            
 		                                            <ul class="dropdown-menu dropdown-menu-right">
 		                                                <li>
-		                                                    <a data-pmb-action="edit" href="">Edit</a>
+		                                                    <a id="editarBasica" data-pmb-action="edit" href="">Edit</a>
 		                                                </li>
 		                                            </ul>
 			                                        
@@ -455,12 +319,12 @@
 	                                            <dd>Mallinda Hollaway</dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
-	                                            <dt>Gender</dt>
-	                                            <dd>Female</dd>
+	                                            <dt>Precio</dt>
+	                                            <dd>${partido.precio}&nbsp;&euro;</dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
-	                                            <dt>Birthday</dt>
-	                                            <dd>June 23, 1990</dd>
+	                                            <dt>Fecha</dt>
+	                                            <dd>${partido.fechaRepresentacion}</dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
 	                                            <dt>Martial Status</dt>
@@ -470,51 +334,46 @@
 	                                    
 	                                    <div class="pmbb-edit">
 	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Full Name</dt>
+	                                            <dt class="p-t-10">Categor&iacute;a</dt>
 	                                            <dd>
 	                                                <div class="fg-line">
-	                                                    <input class="form-control" placeholder="eg. Mallinda Hollaway" type="text">
+	                                                    <select ng-model="categoria" class="form-control" name="categoría">
+	                                                        <option>F&uacute;tbol</option>
+	                                                        <option>F&uacute;tbol 7</option>
+	                                                        <option>F&uacute;tbol Sala</option>
+	                                                        <option>Paddel</option>
+	                                                        <option>Baloncesto</option>
+	                                                    </select>
 	                                                </div>
 	                                                
 	                                            </dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Gender</dt>
+	                                            <dt class="p-t-10">Precio</dt>
 	                                            <dd>
 	                                                <div class="fg-line">
-	                                                    <select class="form-control">
-	                                                        <option>Male</option>
-	                                                        <option>Female</option>
-	                                                        <option>Other</option>
-	                                                    </select>
+	                                                    <input type="number" ng-model="precio" name="precio" class="form-control" value="${partido.precio}" step="0.1" min="0" />
 	                                                </div>
 	                                            </dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Birthday</dt>
+	                                            <dt class="p-t-10">Fecha</dt>
 	                                            <dd>
 	                                                <div class="dtp-container dropdown fg-line">
-	                                                    <input class="form-control date-picker" data-toggle="dropdown" placeholder="Click here..." type="text">
+	                                                    <input ng-model="fecha" class="form-control date-time-picker" data-toggle="dropdown" placeholder="${partido.fechaRepresentacion}" type="text" value="">
 	                                                </div>
 	                                            </dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Martial Status</dt>
+	                                            <dt class="p-t-10">Plazas</dt>
 	                                            <dd>
 	                                                <div class="fg-line">
-	                                                    <select class="form-control">
-	                                                        <option>Single</option>
-	                                                        <option>Married</option>
-	                                                        <option>Other</option>
-	                                                    </select>
+	                                                    <input type="number" ng-model="plazas" name="plazas" class="form-control" value="${partido.plazas}"  min="0" />
 	                                                </div>
 	                                            </dd>
 	                                        </dl>
 	                                        
-	                                        <div class="m-t-30">
-	                                            <button class="btn btn-primary btn-sm waves-effect waves-button waves-float">Save</button>
-	                                            <button data-pmb-action="reset" class="btn btn-link btn-sm waves-effect waves-button waves-float">Cancel</button>
-	                                        </div>
+
 	                                    </div>
 	                                </div>
 	                            </div>
@@ -534,7 +393,7 @@
 		                                            
 		                                            <ul class="dropdown-menu dropdown-menu-right">
 		                                                <li>
-		                                                    <a data-pmb-action="edit" href="">Edit</a>
+		                                                    <a id="editar" data-pmb-action="edit" href="">Edit</a>
 		                                                </li>
 		                                            </ul>
 			                                        
@@ -597,14 +456,40 @@
 	                                            </dd>
 	                                        </dl>
 	                                        
-	                                        <div class="m-t-30">
-	                                            <button class="btn btn-primary btn-sm waves-effect waves-button waves-float">Save</button>
-	                                            <button data-pmb-action="reset" class="btn btn-link btn-sm waves-effect waves-button waves-float">Cancel</button>
-	                                        </div>
 	                                    </div>
 	                                </div>
 	                             </div>
+	                             </form>
                             </div><!-- TAB 2 -->
                         </div>
                     </div>
                 </div>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>              
+<script src="/P/resources/js/bootstrap-datetimepicker.min.js"></script>              
+<script type="text/javascript">
+$(document).ready(function () {
+	 $('#editarTitulo').click();
+	 $('#editarBasica').click();
+	 $('#editar').click();
+	 $('textarea[name=titulo]').keypress(function(e) {
+		 actualizarTitulo($(this),$('#tituloValue'));
+	    }).focus(function() {
+	    	actualizarTitulo($(this),$('#tituloValue'));
+	    }).keydown(function(e) {
+		 actualizarTitulo($(this),$('#tituloValue'));
+	    }).keyup(function(e) {
+		 actualizarTitulo($(this),$('#tituloValue'));
+	    });
+	//Date
+    if ($('.date-time-picker')[0]) {
+    	$('.date-time-picker').datetimepicker({
+    	    format: 'DD/MM/YYYY HH:mm',
+    	    locale: 'es',
+    	    minDate: new Date()
+    	});
+    }
+});
+	function actualizarTitulo(textarea,label){
+		label.html(textarea.val())
+	}
+</script>

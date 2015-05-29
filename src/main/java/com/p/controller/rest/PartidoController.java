@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,12 +22,16 @@ import com.google.common.collect.Lists;
 import com.p.model.Lugar;
 import com.p.model.Partido;
 import com.p.model.User;
+import com.p.service.PartidoService;
 
 @RestController
 @RequestMapping(value = "/rest/partido")
 public class PartidoController {
 
 	static int cursor = 1;
+	
+	@Autowired
+	protected PartidoService partidoService;
 
 	@RequestMapping(value = "/inicio", method = RequestMethod.GET)
 	public List<Partido> inicio() {
@@ -167,6 +174,14 @@ public class PartidoController {
 		
 		
 		
+	}
+	
+	@RequestMapping(value = "/save",method = RequestMethod.POST, headers = "Accept=application/json")
+	public Partido save(Model model) {
+		Random rd = new Random();
+		Partido p = partidoService.create();
+		p.setId(new Long(rd.nextInt(150)+1));
+		return p;
 	}
 
 }

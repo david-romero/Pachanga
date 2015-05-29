@@ -2,6 +2,7 @@ package com.p.controller;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,30 +15,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.google.common.collect.Lists;
 import com.p.model.Partido;
 import com.p.model.User;
+import com.p.service.PartidoService;
 
 @Controller
 @RequestMapping(value = "/partido")
 public class PachangaController {
 
+	@Autowired
+	protected PartidoService partidoService;
+	
 	@RequestMapping(value = "/create",method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getLogin(Model model) {
-		Partido p = new Partido();
-		p.setJugadores(Lists.newArrayList());
-		p.setFecha(new Date(System.currentTimeMillis()));
-		p.setTitulo("Partido nuevo");
+	public String create(Model model) {
+		Partido p = partidoService.create();
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
-		p.setId(0L);
+		
 		User usr = new User();
 		usr.setEmail(userSigned.getUsername());
-		p.setPropietario(usr);
+
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("partido", p);
 		return "partido";
 	}
 	
 	@RequestMapping(value = "/show/{partidoId}",method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getLogin(Model model,
+	public String show(Model model,
 			@PathVariable(value = "partidoId") Integer partidoId) {
 		Partido p = new Partido();
 		p.setJugadores(Lists.newArrayList());
@@ -60,5 +62,7 @@ public class PachangaController {
 		model.addAttribute("partido", p);
 		return "partido";
 	}
+	
+	
 	
 }

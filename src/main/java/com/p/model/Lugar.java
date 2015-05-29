@@ -1,6 +1,14 @@
 package com.p.model;
 
-public class Lugar {
+import javax.persistence.Entity;
+
+@Entity
+public class Lugar extends BaseEntity<Long>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2956838711366687295L;
 
 	protected double lat;
 	

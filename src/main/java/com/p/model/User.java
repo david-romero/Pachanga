@@ -1,23 +1,30 @@
 package com.p.model;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import com.p.service.SocialMediaService;
 
 @Entity
 @Table(name = "user_accounts")
-public class User extends BaseEntity<Long> implements PropietarioPartido{
+public class User extends PropietarioPartido {
  
     /**
 	 * 
@@ -73,6 +80,21 @@ public class User extends BaseEntity<Long> implements PropietarioPartido{
     
     @Transient
     private float karma;
+    
+    @NotNull
+	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
+	@Sort(type = SortType.NATURAL)
+	@Valid
+	protected Set<Partido> partidos;
+	
+	
+
+	public Set<Partido> getPartidos() {
+		return partidos;
+	}
+	public void setPartidos(Set<Partido> partidos) {
+		this.partidos = partidos;
+	}
     
  
     public Integer[] getKarmaPoints() {
@@ -173,6 +195,12 @@ public class User extends BaseEntity<Long> implements PropietarioPartido{
 	public float getKarma() {
 		
 		return karma;
+	}
+
+	@Override
+	public Collection<Partido> getPartidosCreados() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

@@ -17,7 +17,7 @@ public abstract class BaseEntity<T extends Serializable> implements Serializable
 	private static final long serialVersionUID = 8948822482158960890L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
     private T id;
     
     @Version

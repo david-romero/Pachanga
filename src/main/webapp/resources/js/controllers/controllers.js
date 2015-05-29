@@ -265,9 +265,77 @@ app.controller('PartidoController',
 					}
 					return cssClass;
 				}
-				$scope.savePartido = function(){
-					alert("asdasd");
+				 
+				 $scope.setFormScope= function(scope){
+					   this.formScope = scope;
+					} 
+				 
+				$scope.savePartido = function(form){
+					console.log(form);
+					var precio = $scope.precio
+					alert(precio);
+					var plazas = $scope.plazas
+					alert(plazas)
+					$http.post(
+							  '/P/rest/partido/save'
+						    )
+				  .success(function(data) {
+					  console.log(data)
+				   })
+				  .error(function(data, status, headers, config) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+					  console.log(data)
+				   });
 				}
+				
+				$scope.getPartidosComunidad = function(idComunidad){
+					$scope.partidos = [];
+					$http.get('/P/rest/comunidad/partidos/' + idComunidad).success(function(data) {
+						console.log(data);
+						for (var i=0; i<data.length; i++){
+							$scope.partidos.push(data[i])
+						}
+					});
+				}
+				
+				$scope.comprobarSiEstaApuntado = function(partido,emailUsuarioLogueado){
+					var inscrito = false;
+					for ( var i=0; i<partido.jugadores.length; i++ ){
+						if ( partido.jugadores[i].email == emailUsuarioLogueado ){
+							inscrito = true;
+						}
+					}
+					return inscrito;
+				}
+				
+				$scope.isInDate = function(partido){
+					console.log(partido.fecha);
+					console.log(new Date().getTime());
+					return partido.fecha >= new Date().getTime()
+				}
+				
+				$scope.isFull = function(partido){
+					console.log("jugadores " +partido.jugadores.length);
+					console.log("plazas " +partido.plazas);
+					return ( partido.jugadores.length == partido.plazas );
+				}
+				
+				$scope.uploadPhoto = function(){
+					var file = $scope.myFile;
+					var uploadUrl = 'http://www.example.com/images';
+					var fd = new FormData();
+			        fd.append('file', file);
+			        $http.post(uploadUrl, fd, {
+			            transformRequest: angular.identity,
+			            headers: {'Content-Type': undefined}
+			        })
+			        .success(function(){
+			        })
+			        .error(function(){
+			        });
+				}
+				
 			}
 		]
 );
@@ -303,3 +371,18 @@ app.directive('niceScroll', function() {
         }
     };
 });
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);

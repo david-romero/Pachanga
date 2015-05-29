@@ -1,46 +1,32 @@
 package com.p.service;
 
-import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
+import com.google.common.collect.Lists;
 import com.p.model.Partido;
-import com.p.model.repositories.PartidoRepository;
+import com.p.model.User;
 
 @Service
-@Transactional
 public class PartidoService {
 
-	@Autowired
-	public PartidoRepository repository; 
-	
-	public Collection<Partido> findAll(){
-		return repository.findAll();
-	}
-	
-	public Partido findOne(Integer id){
-		Assert.notNull(id);
-		Assert.isTrue(id > 0);
-		return repository.findOne(new Long(id));
-	}
-	
-	public Partido save(Partido partido){
-		Assert.notNull(partido);
-		if ( partido.getId() == 0L ){
-			Assert.isTrue(partido.getFecha().after(new Date(System.currentTimeMillis())));
-		}
-		return repository.save(partido);
-	}
-	
 	public Partido create(){
-		Partido partido = new Partido();
-		partido.setId(0L);
-		partido.setFecha(new Date(System.currentTimeMillis()) );
-		return partido;
+		Partido p = new Partido();
+		p.setJugadores(Lists.newArrayList());
+		p.setFecha(new Date(System.currentTimeMillis()));
+		p.setPrecio(0.0);
+		p.setPlazas(0);
+		p.setId(0L);
+		p.setTitulo("Partido nuevo");
+		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		
+		User usr = new User();
+		usr.setEmail(userSigned.getUsername());
+		p.setPropietario(usr);
+		return p;
 	}
 	
 }

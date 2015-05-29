@@ -15910,3 +15910,9 @@ a.thumbnail.active {
 .panel-group[data-collapse-color="green"] .panel-collapse .panel-heading.active .panel-title > a:after {
   background: #4caf50;
 }
+.profilePartido{
+	height: 30px;
+	border-radius: 50%;
+	cursor: pointer;
+	border: 1px solid #000;
+}

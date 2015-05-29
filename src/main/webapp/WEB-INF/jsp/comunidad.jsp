@@ -48,7 +48,7 @@
                                 
                                 
                                 <div class="pmo-stat">
-                                    <h2 class="m-0 c-white">15</h2>
+                                    <h2 class="m-0 c-white"><c:out value="${grupo.usuarios.size()}"></c:out> </h2>
                                     Usuarios
                                 </div>
                             </div>
@@ -102,254 +102,21 @@
 	                                </div>
 	                                
 	                                <div class="contacts clearfix row">
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Cathy Shelton</strong>
-	                                                <small>cathy.shelton31@example.com</small>
-	                                            </div>
-	                                            
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Stella Flores</strong>
-	                                                <small>stella@example.com</small>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Marilyn Thomas</strong>
-	                                                <small>marilyn@example.com</small>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Dwight Gilbert</strong>
-	                                                <small>dwight@example.com</small>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Cody Moreno</strong>
-	                                                <small>moreno@example.com</small>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Jamie Freeman</strong>
-	                                                <small>freeman@example.com</small>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Charles Spencer</strong>
-	                                                <small>charles@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Vickie Reed</strong>
-	                                                <small>reed@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Lauren Ruiz</strong>
-	                                                <small>ruiz@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Marlene Vasquez</strong>
-	                                                <small>vasquez@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Loretta Morrisonz</strong>
-	                                                <small>morrisonz@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Yvonne Wood</strong>
-	                                                <small>wood@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Denise Franklin</strong>
-	                                                <small>franklin@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Joseph Gonzalez</strong>
-	                                                <small>gonzalez@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Rick Graham</strong>
-	                                                <small>graham@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                    
-	                                    <div class="col-md-3 col-sm-6 col-xs-6">
-	                                        <div class="c-item">
-	                                            <a href="" class="ci-avatar">
-	                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                            </a>
-	                                            
-	                                            <div class="c-info">
-	                                                <strong>Alexander Bailey</strong>
-	                                                <small>bailey@example.com</small>
-	                                            </div>
-	                                            
-	                                            <div class="c-footer">
-	                                                <button class="waves-effect"><i class="md md-person-add"></i> Add</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
+	                                	<c:forEach items="${grupo.usuarios}" var="usuario">
+		                                    <div class="col-md-3 col-sm-6 col-xs-6">
+		                                        <div class="c-item">
+		                                            <a href="" class="ci-avatar">
+		                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${usuario.email}" alt="">
+		                                            </a>
+		                                            
+		                                            <div class="c-info">
+		                                                <strong><c:out value="${usuario.firstName}"></c:out>&nbsp;<c:out value="${usuario.lastName}"></c:out> </strong>
+		                                                <small><c:out value="${usuario.email}"></c:out></small>
+		                                            </div>
+		                                            
+		                                        </div>
+		                                    </div>
+	                                    </c:forEach>
 	                                </div>
 	                                
 	                            </div>
@@ -429,9 +196,62 @@
 			                        </div>
 	                            </div>    
                             </div><!-- TAB 2 -->
-                            <div ng-if="activeTab == 3">
-                            	Partidos como en index pero privados
-                            	<div class="pmb-block" id="messages-main" >
+                            <div ng-if="activeTab == 3" ng-controller="PartidoController" ng-init="getPartidosComunidad(${grupo.id})" class="col-md-12 col-sm-12" style="margin-top: 15px;">
+                            		 <div ng-repeat='partido in partidos' class="col-md-3 col-sm-6" >
+		                                <div  id="best-selling" class="dash-widget-item card">
+		                                    <div class="dash-widget-header card-header" style="padding: 0;" ng-click="showPartido(partido.id)">
+		                                        <div class="dash-widget-title">{{partido.titulo}}</div>
+		                                        <img src="{{partido.urlImagen}}" alt="">
+		                                        <div class="main-item">
+		                                            <small>{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}}</small>
+		                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i></small></h2>
+		                                        </div>
+		                                        <sec:authorize access="isAuthenticated()" >
+		                                        	<div ng-if="!comprobarSiEstaApuntado(partido,'${user.username}')">
+			                                        	<button ng-if="isFull(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Completo">
+			                                        		<i class="md md-dnd-on"></i>
+			                                        	</button>
+			                                        	<button ng-if="!isFull(partido) && !isInDate(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Fecha Pasada">
+			                                        		<i class="md md-timer-off"></i>
+			                                        	</button>
+			                                        	<button ng-if="isInDate(partido) && !isFull(partido)" ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float" title="Apuntate">
+			                                        		<i class="md md-person-add"></i>
+			                                        	</button>
+		                                        	</div>
+		                                        	<div ng-if="comprobarSiEstaApuntado(partido,'${user.username}')"> 
+			                                        	<button  class="btn bgm-green btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Ya Apuntado">
+			                                        		<i class="md md-check"></i>
+			                                        	</button>
+			                                        </div>
+		                                        </sec:authorize>
+		                                    </div>
+		                                
+		                                    <div class="listview p-t-5">
+		                                        <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
+		                                            <div class="media">
+		                                                <div class="pull-left">
+		                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.email}}" alt="">
+		                                                </div>
+		                                                <div class="media-body">
+		                                                    <div class="lv-title">{{jugador.email}}</div>
+		                                                    <small class="lv-small">
+		                                                    	<i class="md md-star"></i>
+		                                                    	<i class="md md-star"></i>
+		                                                    	<i class="md md-star"></i>
+		                                                    	<i class="md md-star-outline"></i>
+		                                                    	<i class="md md-star-outline"></i>
+		                                                    </small>
+		                                                </div>
+		                                            </div>
+		                                        </a>
+		                                        
+		                                        <a class="lv-footer" href="/P/partido/show/{{partido.id}}">
+		                                            Ver detalles
+		                                        </a>
+		                                    </div>
+		                                </div>
+                           			 </div>
+                            	<div class="pmb-block" id="messages-main" style="padding: 0px;min-height: 0px;max-height: 0px;margin: 0px;" >
 	                            	<a href="/P/partido/create" class="btn bgm-red btn-float waves-effect waves-button waves-float" id="ms-compose">
 			                            <i class="md md-add"></i>
 			                        </a>
