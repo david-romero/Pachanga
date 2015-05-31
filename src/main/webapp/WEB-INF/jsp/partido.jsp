@@ -26,8 +26,9 @@
                                     <sec:authorize access="isAuthenticated()" >
 	                				<sec:authentication var="user" property="principal" />
                                     <c:if test="${partido.propietario.email == user.username }">
-                                    	<input type="file" file-model="myFile" style="visibility:hidden"/>
-	                                    <a href="" class="pmop-edit" onclick="$(input)">
+                                    	<input type="file" ng-model-instant id="fileToUpload"  onchange="angular.element(this).scope().setFiles(this)" style="display:none;"/>
+                                    	
+	                                    <a href="" class="pmop-edit" onclick="uploadPhoto();">
 	                                        <i class="md md-camera-alt"></i> <span class="hidden-xs">Actualizar Imagen</span>
 	                                    </a>
                                     </c:if>
@@ -488,8 +489,12 @@ $(document).ready(function () {
     	    minDate: new Date()
     	});
     }
+	/*$('#fileToUpload').change( function(){ $('#uploadImg').click(); } );*/
 });
 	function actualizarTitulo(textarea,label){
 		label.html(textarea.val())
+	}
+	function uploadPhoto(){
+		$('input[type=file]').click();
 	}
 </script>

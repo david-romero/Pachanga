@@ -321,20 +321,61 @@ app.controller('PartidoController',
 					return ( partido.jugadores.length == partido.plazas );
 				}
 				
-				$scope.uploadPhoto = function(){
-					var file = $scope.myFile;
-					var uploadUrl = 'http://www.example.com/images';
-					var fd = new FormData();
-			        fd.append('file', file);
-			        $http.post(uploadUrl, fd, {
-			            transformRequest: angular.identity,
-			            headers: {'Content-Type': undefined}
-			        })
-			        .success(function(){
-			        })
-			        .error(function(){
-			        });
-				}
+				$scope.setFiles = function(element) {
+				    $scope.$apply(function(scope) {
+				      console.log('files:', element.files);
+				      // Turn the FileList object into an Array
+				      $scope.files = []
+				        for (var i = 0; i < element.files.length; i++) {
+				          scope.files.push(element.files[i])
+				        }
+				      $scope.progressVisible = false
+				      
+				      });
+				    $scope.uploadImagen()
+				 };
+				    
+				
+				 $scope.uploadImagen = function() {
+				        var fd = new FormData()
+				        for (var i in $scope.files) {
+				            fd.append("foto", $scope.files[i])
+				        }
+				        var xhr = new XMLHttpRequest()
+				        xhr.upload.addEventListener("progress", uploadProgress, false)
+				        xhr.addEventListener("load", uploadComplete, false)
+				        xhr.addEventListener("error", uploadFailed, false)
+				        xhr.addEventListener("abort", uploadCanceled, false)
+				        xhr.open("POST", "/P/rest/partido/editImage/5")
+				        $scope.progressVisible = true
+				        xhr.send(fd)
+				    }
+
+				    function uploadProgress(evt) {
+				    	$scope.$apply(function(){
+				            if (evt.lengthComputable) {
+				            	$scope.progress = Math.round(evt.loaded * 100 / evt.total)
+				            } else {
+				            	$scope.progress = 'unable to compute'
+				            }
+				        })
+				    }
+
+				    function uploadComplete(evt) {
+				        /* This event is raised when the server send back a response */
+				        alert(evt.target.responseText)
+				    }
+
+				    function uploadFailed(evt) {
+				        alert("There was an error attempting to upload the file.")
+				    }
+
+				    function uploadCanceled(evt) {
+				    	$scope.$apply(function(){
+				    		$scope.progressVisible = false
+				        })
+				        alert("The upload has been canceled by the user or the browser dropped the connection.")
+				    }
 				
 			}
 		]

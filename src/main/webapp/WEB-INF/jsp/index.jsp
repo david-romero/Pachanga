@@ -245,8 +245,8 @@
                                         <div class="dash-widget-title">{{partido.titulo}}</div>
                                         <img src="{{partido.urlImagen}}" alt="">
                                         <div class="main-item">
-                                            <small>{{partido.lugar.titulo}}</small>
-                                            <h2>{{partido.precio}}&euro;</h2>
+                                            <small>{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}}</small>
+                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i></small></h2>
                                         </div>
                                         <sec:authorize access="isAuthenticated()" >
                                         	<button ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-person-add"></i></button>

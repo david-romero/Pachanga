@@ -60,6 +60,7 @@
 			</bean>
 		</property>
 		<property name="categoria" ref="futbol" />
+		<property name="propietario" ref="user1"></property>
 		<property name="titulo" value="Pachanguita" />
 		<property name="precio" value="0.7"></property>
 		<property name="jugadores">
@@ -73,9 +74,10 @@
 	<bean id="partido2" class="com.p.model.Partido">
 		<property name="fecha">
 			<bean factory-bean="dateFormat" factory-method="parse">
-				<constructor-arg value="2015-05-29" />
+				<constructor-arg value="2015-05-30" />
 			</bean>
 		</property>
+		<property name="propietario" ref="user1"></property>
 		<property name="categoria" ref="futbol" />
 		<property name="titulo" value="Pachanguita" />
 		<property name="precio" value="0.7"></property>

@@ -3,18 +3,38 @@ package com.p.model;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.ocpsoft.prettytime.PrettyTime;
-
-public class Mensaje {
-
+import org.springframework.format.annotation.DateTimeFormat;
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Mensaje extends BaseEntity<Long>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6609980812110669425L;
+	@NotNull
+	@Valid
+	@ManyToOne()
 	private User emisor;
-	
+	@NotNull
+	@Valid
+	@ManyToOne()
 	private User receptor;
-	
+	@NotNull
 	private String contenido;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date fecha;
 	
 	private boolean leido;

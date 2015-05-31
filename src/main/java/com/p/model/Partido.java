@@ -30,7 +30,7 @@ public class Partido extends BaseEntity<Long> {
 	protected Collection<User> jugadores;
 
 	protected Date fecha;
-
+	@NotNull
 	protected String titulo;
 
 	protected Double precio;
@@ -51,6 +51,12 @@ public class Partido extends BaseEntity<Long> {
 	@Valid
 	@ManyToOne(optional=false,targetEntity=PropietarioPartido.class)
 	private PropietarioPartido propietario;
+	
+	@NotNull
+	@Valid
+	@ManyToOne(optional=false)
+	private Categoria categoria;
+	
 	@NotNull
 	private boolean publico;
 	
@@ -152,6 +158,14 @@ public class Partido extends BaseEntity<Long> {
 
 	public void setPlazas(Integer plazas) {
 		this.plazas = plazas;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 	
 	

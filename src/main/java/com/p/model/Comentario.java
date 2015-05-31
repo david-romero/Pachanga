@@ -34,7 +34,7 @@ public class Comentario extends BaseEntity<Long>{
 	private String contenido;
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date fecha;
 	@NotNull
 	private boolean leido;

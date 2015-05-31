@@ -4,10 +4,13 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.p.model.BaseEntity</class>
 		<class>com.p.model.Categoria</class>
+		<class>com.p.model.Comentario</class>
 		<class>com.p.model.Grupo</class>
 		<class>com.p.model.Lugar</class>
 		<class>com.p.model.Mensaje</class>
+		<class>com.p.model.Notificacion</class>
 		<class>com.p.model.Partido</class>
+		<class>com.p.model.PropietarioPartido</class>
 		<class>com.p.model.User</class>
 		
 		
