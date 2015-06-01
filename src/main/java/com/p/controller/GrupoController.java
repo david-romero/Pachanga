@@ -112,7 +112,7 @@ public class GrupoController {
 			objetos.add(p);
 		}
 
-		grupo.setPartidos(Sets.newHashSet(objetos));
+		grupo.setPartidosCreados(Sets.newHashSet(objetos));
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("grupo", grupo);
 		return "comunidad";

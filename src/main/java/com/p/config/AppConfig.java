@@ -65,7 +65,7 @@ public class AppConfig extends org.springframework.web.servlet.config.annotation
 		Properties prop = new Properties();
 		prop.put("hibernate.format_sql", "true");
 		prop.put("hibernate.show_sql", "true");
-		prop.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+		prop.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return prop;
 	}
 
@@ -73,10 +73,10 @@ public class AppConfig extends org.springframework.web.servlet.config.annotation
 	public BasicDataSource dataSource() {
 
 		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("org.h2.Driver");
-		ds.setUrl("jdbc:h2:target/db/p");
-		ds.setUsername("sa");
-		ds.setPassword("");
+		ds.setDriverClassName("com.mysql.jdbc.Driver");
+		ds.setUrl("jdbc:mysql://localhost:3306/pachanga");
+		ds.setUsername("rootApp");
+		ds.setPassword("root123");
 		return ds;
 	}
 
@@ -104,9 +104,9 @@ public class AppConfig extends org.springframework.web.servlet.config.annotation
         		);
  
         Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         jpaProperties.put("hibernate.format_sql", "true");
-        jpaProperties.put("hibernate.hbm2ddl.auto", "create");
+        jpaProperties.put("hibernate.hbm2ddl.auto", "verify");
         //jpaProperties.put("hibernate.ejb.naming_strategy", env.getRequiredProperty("hibernate.ejb.naming_strategy"));
         jpaProperties.put("hibernate.show_sql", "false");
  

@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -26,7 +27,7 @@ public class Partido extends BaseEntity<Long> {
 	private static final long serialVersionUID = -181161949409988033L;
 	@NotNull
 	@Valid
-	@OneToMany()
+	@ManyToMany()
 	protected Collection<User> jugadores;
 
 	protected Date fecha;

@@ -1,6 +1,5 @@
 package com.p.model;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -29,7 +28,6 @@ public class Grupo extends PropietarioPartido{
 	public Grupo(){
 		usuarios = Sets.newHashSet();
 		comentarios = Sets.newHashSet();
-		partidos = Sets.newHashSet();
 	}
 	
 	/**
@@ -68,18 +66,7 @@ public class Grupo extends PropietarioPartido{
 	@Valid
 	protected Set<Comentario> comentarios;
 	
-	@NotNull
-	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
-	@Sort(type = SortType.NATURAL)
-	@Valid
-	protected Set<Partido> partidos;
-	
-	public Set<Partido> getPartidos() {
-		return partidos;
-	}
-	public void setPartidos(Set<Partido> partidos) {
-		this.partidos = partidos;
-	}
+
 	public Set<Comentario> getComentarios() {
 		return comentarios;
 	}
@@ -118,15 +105,8 @@ public class Grupo extends PropietarioPartido{
 		fechaRepresentacion = p.format(fechaCreacion);
 		return fechaRepresentacion;
 	}
-	@Override
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Collection<Partido> getPartidosCreados() {
-		return getPartidos();
-	}
+
+
 	
 	
 }

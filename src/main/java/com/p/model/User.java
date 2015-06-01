@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
+import com.google.common.collect.Sets;
 import com.p.service.SocialMediaService;
 
 @Entity
@@ -30,9 +31,6 @@ public class User extends PropietarioPartido {
 	 * 
 	 */
 	private static final long serialVersionUID = -4183055938551792532L;
- 
-    @Column(name = "email", length = 100, nullable = false, unique = true)
-    private String email;
  
     @Column(name = "first_name", length = 100,nullable = false)
     private String firstName;
@@ -65,9 +63,22 @@ public class User extends PropietarioPartido {
 	@Valid
 	protected Set<Grupo> grupos;
     
+    @NotNull
+	@Valid
+	@ManyToMany()
+	protected Collection<Partido> partidosJugados;
     
     
-    public Set<Grupo> getGrupos() {
+    
+    public Collection<Partido> getPartidosJugados() {
+		return partidosJugados;
+	}
+
+	public void setPartidosJugados(Collection<Partido> partidosJugados) {
+		this.partidosJugados = partidosJugados;
+	}
+
+	public Set<Grupo> getGrupos() {
 		return grupos;
 	}
 
@@ -81,21 +92,6 @@ public class User extends PropietarioPartido {
     @Transient
     private float karma;
     
-    @NotNull
-	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
-	@Sort(type = SortType.NATURAL)
-	@Valid
-	protected Set<Partido> partidos;
-	
-	
-
-	public Set<Partido> getPartidos() {
-		return partidos;
-	}
-	public void setPartidos(Set<Partido> partidos) {
-		this.partidos = partidos;
-	}
-    
  
     public Integer[] getKarmaPoints() {
 		return karmaPoints;
@@ -106,16 +102,10 @@ public class User extends PropietarioPartido {
 	}
 
 	public User() {
- 
+		partidosJugados = Sets.newHashSet();
+		grupos = Sets.newHashSet();
     }
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -197,11 +187,6 @@ public class User extends PropietarioPartido {
 		return karma;
 	}
 
-	@Override
-	public Collection<Partido> getPartidosCreados() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	
     

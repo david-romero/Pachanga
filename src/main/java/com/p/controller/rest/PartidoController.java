@@ -7,7 +7,9 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,7 @@ import com.p.service.PartidoService;
 
 @RestController
 @RequestMapping(value = "/rest/partido")
+@Transactional
 public class PartidoController {
 
 	static int cursor = 1;
@@ -32,124 +35,20 @@ public class PartidoController {
 
 	@RequestMapping(value = "/inicio", method = RequestMethod.GET)
 	public List<Partido> inicio() {
-		List<Partido> objetos = Lists.newArrayList();
+		List<Partido> partidos = Lists.newArrayList();
 
-		for (int i = 0; i < 4; i++) {
-			Partido p = new Partido();
-			p.setId(new Long(i));
-			p.setPrecio(0.7);
-			Lugar lg = new Lugar();
-			lg.setTitulo("Hytasa");
-			p.setLugar(lg);
-			p.setFecha(new Date(System.currentTimeMillis()));
-			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
-			User user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(1L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(2L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(3L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
-			objetos.add(p);
-		}
+		partidos.addAll(partidoService.findAll(1).getContent());
 
-		return objetos;
+		return partidos;
 	}
 
-	@RequestMapping(value = "/loadMorePartidos", method = RequestMethod.GET)
-	public List<Partido> getMorePartidos() {
-		List<Partido> objetos = Lists.newArrayList();
+	@RequestMapping(value = "/loadMorePartidos/{pagina}", method = RequestMethod.GET)
+	public List<Partido> getMorePartidos(@PathVariable(value = "pagina") Integer pagina) {
+		List<Partido> partidos = Lists.newArrayList();
+		Assert.isTrue(pagina > 1);
+		partidos.addAll(partidoService.findAll(pagina).getContent());
 
-		for (int i = 0; i < 4; i++) {
-			Partido p = new Partido();
-			p.setId(new Long(i));
-			p.setPrecio(0.7);
-			Lugar lg = new Lugar();
-			lg.setTitulo("Hytasa");
-			p.setLugar(lg);
-			p.setFecha(new Date(System.currentTimeMillis()));
-			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
-			User user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(1L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(2L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(3L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
-			objetos.add(p);
-		}
-
-		return objetos;
+		return partidos;
 	}
 	
 	@RequestMapping(value = "/apuntarse/{idPartido}", method = RequestMethod.POST)
