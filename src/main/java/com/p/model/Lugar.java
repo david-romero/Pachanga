@@ -3,7 +3,7 @@ package com.p.model;
 import javax.persistence.Entity;
 
 @Entity
-public class Lugar extends BaseEntity<Long>{
+public class Lugar extends BaseEntity{
 
 	/**
 	 * 

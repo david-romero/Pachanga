@@ -10,10 +10,17 @@ app.controller('InitController', [ '$scope', '$http',
 	function($scope, $http) {
 		$scope.inicio = function() {
 			$scope.partidos = [];
+			$scope.partidosJugados = [];
 			$http.get('/P/rest/partido/inicio').success(function(data) {
 				console.log(data);
 				for (var i=0; i<data.length; i++){
 					$scope.partidos.push(data[i])
+				}
+			});
+			$http.get('/P/rest/partido/jugados').success(function(data) {
+				console.log(data);
+				for (var i=0; i<data.length; i++){
+					$scope.partidosJugados.push(data[i])
 				}
 			});
 		}
@@ -251,7 +258,125 @@ app.controller('ProfileController',
 					}
 					return cssClass;
 				}
-			}
+			
+		
+				$scope.setFiles = function(element) {
+				    $scope.$apply(function(scope) {
+				      console.log('files:', element.files);
+				      // Turn the FileList object into an Array
+				      $scope.files = []
+				        for (var i = 0; i < element.files.length; i++) {
+				          scope.files.push(element.files[i])
+				        }
+				      $scope.progressVisible = false
+				      
+				      });
+				    $scope.uploadImagen()
+				 };
+			    
+			
+				 $scope.uploadImagen = function() {
+				        var fd = new FormData()
+				        for (var i in $scope.files) {
+				            fd.append("foto", $scope.files[i])
+				        }
+				        $scope.progressVisible = true
+				        $http({
+					        method: 'POST',
+					        url: "/P/rest/usuarios/editImage",
+					        headers: {'Content-Type': undefined},
+					        data: fd,
+					        transformRequest: function(data, headersGetterFunction) {
+					                        return data;
+					         }
+					     })
+					    .success(function(data, status) {   
+					                    alert("success");
+					     })
+					    .error(function(data, status) {   
+					                    alert("error");
+					     });
+				    }
+		
+				    function uploadProgress(evt) {
+				    	$scope.$apply(function(){
+				            if (evt.lengthComputable) {
+				            	$scope.progress = Math.round(evt.loaded * 100 / evt.total)
+				            } else {
+				            	$scope.progress = 'unable to compute'
+				            }
+				        })
+				    }
+		
+				    function uploadComplete(evt) {
+				        /* This event is raised when the server send back a response */
+				        alert(evt.target.responseText)
+				    }
+		
+				    function uploadFailed(evt) {
+				        alert("There was an error attempting to upload the file.")
+				    }
+		
+				    function uploadCanceled(evt) {
+				    	$scope.$apply(function(){
+				    		$scope.progressVisible = false
+				        })
+				        alert("The upload has been canceled by the user or the browser dropped the connection.")
+				    }
+		}
+		]
+);
+app.controller('GrupoController', 
+		[ '$scope', '$http' ,
+		  	function($scope, $http) {
+			
+			$scope.idComunidad = 0;
+			
+			$scope.setFiles = function(element) {
+			    $scope.$apply(function(scope) {
+			      console.log('files:', element.files);
+			      // Turn the FileList object into an Array
+			      $scope.files = []
+			        for (var i = 0; i < element.files.length; i++) {
+			          scope.files.push(element.files[i])
+			        }
+			      $scope.progressVisible = false
+			      
+			      });
+			    $scope.uploadImagen()
+			 };
+		    
+			 
+		
+			 $scope.uploadImagen = function() {
+			        var fd = new FormData()
+			        for (var i in $scope.files) {
+			            fd.append("foto", $scope.files[i])
+			        }
+			        alert($scope.idComunidad);
+			        $http({
+				        method: 'POST',
+				        url: "/P/rest/comunidad/editImage/" +  $scope.idComunidad,
+				        headers: {'Content-Type': undefined},
+				        data: fd,
+				        transformRequest: function(data, headersGetterFunction) {
+				            return data;
+				        }
+				     })
+				    .success(function(data, status) {   				                    
+				    	$scope.urlComunidad='/P/rest/comunidad/getImage/' + data.id + "?" + new Date().getTime()
+				     })
+				    .error(function(data, status) {   
+				                    alert("error");
+				     });
+			    }
+			 
+			 
+			 $scope.showUser = function(userId){
+					alert(userId);
+					window.location.href = '/P/usuarios/profile/' + userId
+				}
+		}
 		]
 );
 app.controller('PartidoController', 

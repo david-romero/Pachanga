@@ -1,4 +1,4 @@
-package com.p.controller;
+package com.p.controller.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,12 +26,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
+import com.p.controller.AbstractController;
 import com.p.model.User;
 import com.p.service.UsersService;
 
 @Controller
 @RequestMapping(value = "/usuarios")
-public class GestionUsuariosController {
+public class GestionUsuariosController extends AbstractController{
 
 	RestTemplate restTemplate = new RestTemplate();
 	// Definimos el controlador de logger.
@@ -143,19 +144,19 @@ public class GestionUsuariosController {
 		return res;
 	}
 
-	@RequestMapping(value = "/getUserImage/{username}")
+	@RequestMapping(value = "/getUserImage/{id}")
 	public void getUserImage(HttpServletResponse response,
-			@PathVariable("username") String username) throws IOException {
+			@PathVariable("id") Integer id) throws IOException {
 
 		response.setContentType("image/jpeg");
 		byte[] buffer = null;
-		User user = usersService.getByEmail(username);
-		if (user == null || user.getImagen() == null) {
+		User user = usersService.findOne(id);
+		if (user == null || user.getImagen() == null || user.getImagen().length == 0) {
 			InputStream in = this.getClass().getResourceAsStream("/profile-pic-300px.jpg");
 
 			buffer = IOUtils.toByteArray(in);
 		} else {
-			buffer = usersService.getByEmail(username).getImagen();
+			buffer = user.getImagen();
 		}
 		InputStream in1 = new ByteArrayInputStream(buffer);
 		IOUtils.copy(in1, response.getOutputStream());
@@ -165,36 +166,36 @@ public class GestionUsuariosController {
 	public String getProfile(Model model) {
 		String res = "";
 		org.springframework.security.core.userdetails.User principal =  (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usr = new User();
-		usr.setEmail(principal.getUsername());
-		usr.setPassword(principal.getPassword());
-		model.addAttribute("userSigned", usr);
+		User usr = null;
 		try {
-			//TODO - DRA - Profile
+			beginTransaction(true);
+			usr = usersService.getByEmail(principal.getUsername());
+			commitTransaction();
 			res = "profile";
 		} catch (Exception e) {
+			rollbackTransaction();
 			model.addAttribute("errorweb", e);
 			res = "errorweb";
 		}
-
+		model.addAttribute("userSigned", usr);
 		return res;
 	}
 	
 	@RequestMapping(value = "/profile/{idUsuario}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getProfile(Model model, @PathVariable("idUsuario") Integer idUsuario) {
 		String res = "";
-		User usr = new User();
-		usr.setId(new Long(idUsuario));
-		usr.setEmail("aasdasdas@asdasd.com");
-		model.addAttribute("userSigned", usr);
+		User usr = null;
 		try {
-			//TODO - DRA - Profile
+			beginTransaction(true);
+			usr = usersService.findOne(idUsuario);
+			commitTransaction();
 			res = "profile";
 		} catch (Exception e) {
+			rollbackTransaction();
 			model.addAttribute("errorweb", e);
 			res = "errorweb";
 		}
-
+		model.addAttribute("userSigned", usr);
 		return res;
 	}
 	

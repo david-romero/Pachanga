@@ -20,15 +20,10 @@ import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.google.common.collect.Sets;
 @Entity
 public class Grupo extends PropietarioPartido{
 
-	public Grupo(){
-		usuarios = Sets.newHashSet();
-		comentarios = Sets.newHashSet();
-	}
+
 	
 	/**
 	 * 
@@ -65,6 +60,9 @@ public class Grupo extends PropietarioPartido{
 	@Sort(type = SortType.NATURAL)
 	@Valid
 	protected Set<Comentario> comentarios;
+	
+	@Transient
+	protected Integer size;
 	
 
 	public Set<Comentario> getComentarios() {
@@ -105,8 +103,9 @@ public class Grupo extends PropietarioPartido{
 		fechaRepresentacion = p.format(fechaCreacion);
 		return fechaRepresentacion;
 	}
-
-
 	
-	
+	public Integer getSize() {
+		return usuarios.size();
+	}
+
 }

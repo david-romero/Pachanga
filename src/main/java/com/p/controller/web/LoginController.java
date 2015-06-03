@@ -1,4 +1,4 @@
-package com.p.controller;
+package com.p.controller.web;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -68,18 +69,7 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping(value = "/map", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody String getMap(@RequestParam(value="consultaCT", required = false, defaultValue="false") boolean consultaCT) {
-		String res = "";
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String name = auth.getName();
-		
-		
-		final ExecutorService service = Executors.newFixedThreadPool(50);
-				
-		service.shutdown();
-		return res;
-	}
+
 	
 	
 	
@@ -147,8 +137,8 @@ public class LoginController {
 			Authentication auth = SecurityContextHolder.getContext()
 					.getAuthentication();
 			String name = auth.getName();
-			User user = usersService.getByLogin(name);
-			Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+			User user = usersService.getByEmail(name);
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 			if (cambiarPass.getPassNuevo().length() < 8) {
 				model.addAttribute("errorWeb",
 						"La contraseña debe tener una longitud mínima de 8 caracteres.");
@@ -156,14 +146,14 @@ public class LoginController {
 					cambiarPass.getPassValidar())) {
 				model.addAttribute("errorWeb",
 						"Las contraseñas indicadas no coinciden.");
-			} else if (!user.getPassword().equals( encoder.encodePassword(cambiarPass.getPassActual(),null) )) {
+			} else if (!user.getPassword().equals( encoder.encode(cambiarPass.getPassActual()) )) {
 				model.addAttribute("errorWeb",
 						"La contraseña actual no corresponte con la indicada.");
 			} else {
 				
-				String hashedPass = encoder.encodePassword(cambiarPass.getPassNuevo(), null);
+				String hashedPass = encoder.encode(cambiarPass.getPassNuevo());
 				user.setPassword(hashedPass);
-				usersService.update(user);
+				usersService.save(user);
 				model.addAttribute("ok",
 						"Se ha actualizado la contraseña correctamente.");
 			}

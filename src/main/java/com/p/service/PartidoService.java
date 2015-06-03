@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class PartidoService {
 
 	@Autowired
 	protected PartidoRepository repository;
+	
+	@Autowired
+	protected UsersService userService;
 
 	private static final int PAGE_SIZE = 4;
 
@@ -32,7 +36,7 @@ public class PartidoService {
 		p.setFecha(new Date(System.currentTimeMillis()));
 		p.setPrecio(0.0);
 		p.setPlazas(0);
-		p.setId(0L);
+		p.setId(0);
 		p.setTitulo("Partido nuevo");
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -42,16 +46,18 @@ public class PartidoService {
 		p.setPropietario(usr);
 		return p;
 	}
-
-	public Partido findOne(Long id) {
+	@Transactional
+	public Partido findOne(Integer id) {
 		Assert.notNull(id);
 		Assert.isTrue(id > 0);
 		return repository.findOne(id);
 	}
-
+	
+	@Transactional
 	public Collection<? extends Partido> findAll() {
 		return repository.findAll();
 	}
+	
 	@Transactional
 	public Page<Partido> findAll(Integer page) {
 		PageRequest request = new PageRequest(page - 1, PAGE_SIZE,
@@ -64,6 +70,28 @@ public class PartidoService {
 			return true;
 		});
 		return pagina;
+	}
+	
+	@Transactional
+	public Page<Partido> findAllPosiblesPublicos(Integer page) {
+		PageRequest request = new PageRequest(page - 1, PAGE_SIZE,
+				Sort.Direction.DESC, "fecha");
+		Page<Partido> pagina = repository.getAllFuturosPublicosNoLlenos(request);
+		return pagina;
+	}
+	
+	@Transactional
+	public Collection<Partido> findAllJugados(String email) {
+		User usr = userService.getByEmail(email);
+		Assert.notNull(usr);
+		Assert.isTrue(usr.getId()>0);
+		Collection<Partido> pagina = repository.getAllJugados(usr);
+		return Lists.newArrayList(pagina).subList(0, pagina.size() >= 4 ? 4 : pagina.size());
+	}
+	
+	@Transactional
+	public Partido save(Partido p) {
+		return repository.save(p);
 	}
 
 }

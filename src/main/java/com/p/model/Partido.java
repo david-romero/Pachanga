@@ -7,10 +7,10 @@ import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import org.ocpsoft.prettytime.PrettyTime;
 @Entity
-public class Partido extends BaseEntity<Long> {
+public class Partido extends BaseEntity{
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class Partido extends BaseEntity<Long> {
 	private static final long serialVersionUID = -181161949409988033L;
 	@NotNull
 	@Valid
-	@ManyToMany()
+	@ManyToMany(fetch=FetchType.EAGER)
 	protected Collection<User> jugadores;
 
 	protected Date fecha;
@@ -65,6 +65,11 @@ public class Partido extends BaseEntity<Long> {
 	@Min(value=0)
 	@Max(value=30)
 	private Integer plazas;
+	
+	@NotNull
+	@Min(value=0)
+	@Max(value=30)
+	private Integer plazasOcupadas;
 	
 	@Transient
 	private String fechaRepresentacion;
@@ -136,7 +141,7 @@ public class Partido extends BaseEntity<Long> {
 			Random rd = new Random();
 			urlImagen = "/P/resources/imgs/partidos/futbol/" + (rd.nextInt(4)+1)+".jpg";
 		}else{
-			urlImagen = "/P/usuarios/getUserImage/bent@test.com";
+			urlImagen = "/P/usuarios/getUserImage/" + getId();
 		}
 		return urlImagen;
 	}
@@ -168,6 +173,15 @@ public class Partido extends BaseEntity<Long> {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+
+	public Integer getPlazasOcupadas() {
+		return plazasOcupadas;
+	}
+
+	public void setPlazasOcupadas(Integer plazasOcupadas) {
+		this.plazasOcupadas = plazasOcupadas;
+	}
+	
 	
 	
 

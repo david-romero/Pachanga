@@ -30,11 +30,11 @@ public class MensajeController {
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		User userConversation = new User();
-		userConversation.setId(new Long(idUsuario));
+		userConversation.setId((idUsuario));
 		
 		User userConversationSigned = new User();
 		userConversationSigned.setEmail(userSigned.getUsername());
-		userConversationSigned.setId(999L);
+		userConversationSigned.setId(999);
 		
 		
 		Random rd = new Random();
@@ -76,10 +76,10 @@ public class MensajeController {
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		User userConversation = new User();
-		userConversation.setId(new Long(idUsuarioReceptor));
+		userConversation.setId(idUsuarioReceptor);
 		
 		User userConversationSigned = new User();
-		userConversationSigned.setId(new Long(idUsuarioEmisor));
+		userConversationSigned.setId(idUsuarioEmisor);
 		userConversationSigned.setEmail(userSigned.getUsername());
 		
 		mensaje.setContenido(mensaje.getContenido());
@@ -99,7 +99,7 @@ public class MensajeController {
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		User userConversation = new User();
-		userConversation.setId(new Long(idUsuarioReceptor));
+		userConversation.setId(idUsuarioReceptor);
 		
 		User userConversationSigned = new User();
 		userConversationSigned.setEmail(userSigned.getUsername());

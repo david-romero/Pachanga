@@ -1,90 +1,103 @@
 package com.p.controller.rest;
 
-import java.util.Date;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.collect.Lists;
-import com.p.model.Lugar;
+import com.p.controller.AbstractController;
+import com.p.model.Grupo;
 import com.p.model.Partido;
-import com.p.model.User;
+import com.p.service.GrupoService;
+import com.p.service.UsersService;
 
 @RestController
 @RequestMapping(value = "/rest/comunidad")
-public class ComunidadController {
+public class ComunidadController extends AbstractController{
+	
+	@Autowired
+	protected GrupoService service;
+	
+	@Autowired
+	protected UsersService userService;
 
 	@RequestMapping(value = "/partidos/{idComunidad}", method = RequestMethod.GET)
-	public List<Partido> inicio(@PathVariable(value = "idComunidad") Integer idComunidad) {
-		List<Partido> objetos = Lists.newArrayList();
-
-		for (int i = 0; i < 8; i++) {
-			Partido p = new Partido();
-			p.setId(new Long(i));
-			p.setPrecio(0.7);
-			Lugar lg = new Lugar();
-			lg.setTitulo("Hytasa");
-			p.setLugar(lg);
-			p.setPlazas(5);
-			p.setFecha(new Date(System.currentTimeMillis()));
-			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
-			User user = new User();
-			if ( i > 5){
-				user.setEmail("bent@test.com");
-				user.setId(1L);
-				user.setTieneAvatar(false);
-				usuarios.add(user);
-			}
-			if ( i == 1 ){
-				p.setFecha(new Date(System.currentTimeMillis()+1534465));
-			}
-			if ( i == 2 || i == 4 ){
-				p.setPlazas(3);
-			}
-			user = new User();
-			user.setEmail("bent1@test.com");
-			user.setId(2L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent2@test.com");
-			user.setId(3L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7L);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8L);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
-			objetos.add(p);
+	public Collection<Partido> inicio(@PathVariable(value = "idComunidad") Integer idComunidad) {
+		Grupo grp = null;
+		try{
+			beginTransaction();
+			grp = service.findOne(idComunidad);
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
 		}
+		Assert.notNull(grp);
+		return grp.getPartidosCreados();
+	}
+	
+	@RequestMapping(value = "/editImage/{idComunidad}",method = RequestMethod.POST)
+	public Grupo save(Model model,@RequestParam("foto") MultipartFile file,
+			@PathVariable(value = "idComunidad") Integer idComunidad) {
+		Grupo grp = null;
+		try{
+			beginTransaction();
+			grp = service.findOne(idComunidad);
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+		Assert.notNull(grp);
+		try{
+			beginTransaction();
+			grp.setImagen(file.getBytes());
+			grp = service.save(grp);
+			txStatus.flush();
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+		return grp;
+	}
+	
+	@RequestMapping(value = "/getImage/{id}")
+	public void getGrupoImage(HttpServletResponse response,
+			@PathVariable("id") Integer id) throws IOException {
 
-		return objetos;
+		response.setContentType("image/jpeg");
+		byte[] buffer = null;
+		Grupo grp = null;
+		try{
+			beginTransaction();
+			grp = service.findOne(id);
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+		if ( grp.getImagen() == null || grp.getImagen().length == 0) {
+			InputStream in = this.getClass().getResourceAsStream("/profile-pic-300px.jpg");
+			buffer = IOUtils.toByteArray(in);
+		} else {
+			buffer = grp.getImagen();
+		}
+		InputStream in1 = new ByteArrayInputStream(buffer);
+		IOUtils.copy(in1, response.getOutputStream());
 	}
 	
 }

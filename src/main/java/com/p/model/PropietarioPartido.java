@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
@@ -25,7 +26,7 @@ import com.google.common.collect.Sets;
  * @author David
  *
  */
-public class PropietarioPartido extends BaseEntity<Long> {
+public class PropietarioPartido extends BaseEntity {
 
 	public PropietarioPartido(){
 		partidosCreados = Sets.newHashSet();
@@ -38,7 +39,7 @@ public class PropietarioPartido extends BaseEntity<Long> {
 	@NotNull
 	protected String email;
 	@NotNull
-	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
+	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE }, fetch= FetchType.EAGER)
 	@Sort(type = SortType.NATURAL)
 	@Valid
 	protected  Collection<Partido> partidosCreados;

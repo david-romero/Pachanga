@@ -1,4 +1,4 @@
-package com.p.controller;
+package com.p.controller.web;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +42,11 @@ public class AdminUsuariosController {
 
 	@RequestMapping(value = "/remove/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public String postRemove(Model model,
-			@PathVariable(value = "id") String idUsuario) {
+			@PathVariable(value = "id") Integer idUsuario) {
 
 		String res;
 		try {
-			Long id = Long.valueOf(idUsuario);
-			usersService.delete(id);
+			usersService.delete(idUsuario);
 
 			model.addAttribute("error", "Usuario eliminado correctamente.");
 			

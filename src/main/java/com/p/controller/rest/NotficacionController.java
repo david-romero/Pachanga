@@ -29,11 +29,11 @@ public class NotficacionController {
 				.getContext().getAuthentication().getPrincipal();
 
 		User userConversation = new User();
-		userConversation.setId(new Long(1L));
+		userConversation.setId(1);
 
 		User userConversationSigned = new User();
 		userConversationSigned.setEmail(userSigned.getUsername());
-		userConversationSigned.setId(999L);
+		userConversationSigned.setId(999);
 
 		Random rd = new Random();
 		Integer numeroMensajes = rd.nextInt(10);

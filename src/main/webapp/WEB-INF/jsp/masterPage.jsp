@@ -253,8 +253,7 @@
 	                <sec:authentication var="user" property="principal" />
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle profile-pic" data-toggle="dropdown" title="<c:out value="${user.username}" />">
-		                        <img class="profile-nav" src="${pageContext.request.contextPath}/usuarios/getUserImage/${user.username}" alt="profile">
-		                        <!--<c:out value="${user.username}" /> <i class="fa fa-angle-down"></i>-->
+		                        <img class="profile-nav" src="${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.id}" alt="profile">
 		                    </a>
 		                    <ul class="dropdown-menu dm-icon pull-right">
 		                        <li><a href="/P/app">Inicio</a></li>
@@ -293,7 +292,7 @@
                         <div class="profile-menu">
                             <a href="">
                                 <div class="profile-pic">
-                                    <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${user.username}" alt="<c:out value="${user.username}" />">
+                                    <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.id}" alt="<c:out value="${user.username}" />">
                                 </div>
                 
                                 <div class="profile-info">

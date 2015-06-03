@@ -84,53 +84,21 @@
         <sec:authorize access="isAuthenticated()" >
 	        <div class="mini-charts">
 	             <div class="row">
-	                 <div class="col-sm-6 col-md-3">
-	                     <div class="mini-charts-item bgm-cyan" ng-click="showGrupo(0)">
+	                 <c:forEach items="${gruposUsrSigned}" var="grupo">
+	                 <div class="col-sm-6 col-md-3" >
+	                     <div class="mini-charts-item bgm-cyan" ng-click="showGrupo(<c:out value="${grupo.id}"></c:out>)">
 	                         <div class="clearfix">
-	                             <div class="chart stats-bar"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
+	                             <div class="chart stats-bar">
+	                             	<img src="${pageContext.request.contextPath}/rest/comunidad/getImage/<c:out value="${grupo.id}"></c:out>" />
+	                             </div>
 	                             <div class="count">
-	                                 <small>Steaua del Grifo</small>
-	                                 <h2>12</h2>
+	                                 <small><c:out value="${grupo.titulo}"></c:out> </small>
+	                                 <h2><c:out value="${tamGruposUsrSigned[grupo.id]}"></c:out></h2>
 	                             </div>
 	                         </div>
 	                     </div>
 	                 </div>
-	                 
-	                 <div class="col-sm-6 col-md-3">
-	                     <div class="mini-charts-item bgm-lightgreen">
-	                         <div class="clearfix">
-	                             <div class="chart stats-bar-2"><canvas height="45" width="83" style="display: inline-block; width: 83px; height: 45px; vertical-align: top;"></canvas></div>
-	                             <div class="count">
-	                                 <small>Joga Bonito</small>
-	                                 <h2>35</h2>
-	                             </div>
-	                         </div>
-	                     </div>
-	                 </div>
-	                 
-	                 <div class="col-sm-6 col-md-3">
-	                     <div class="mini-charts-item bgm-orange">
-	                         <div class="clearfix">
-	                             <div class="chart stats-line"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
-	                             <div class="count">
-	                                 <small>Arcilasis</small>
-	                                 <h2>8</h2>
-	                             </div>
-	                         </div>
-	                     </div>
-	                 </div>
-	                 
-	                 <div class="col-sm-6 col-md-3">
-	                     <div class="mini-charts-item bgm-bluegray">
-	                         <div class="clearfix">
-	                             <div class="chart stats-line-2"><canvas height="45" width="85" style="display: inline-block; width: 85px; height: 45px; vertical-align: top;"></canvas></div>
-	                             <div class="count">
-	                                 <small>Vengadores</small>
-	                                 <h2>23</h2>
-	                             </div>
-	                         </div>
-	                     </div>
-	                 </div>
+	                 </c:forEach>
 	             </div>
 	         </div>
          </sec:authorize>
@@ -260,7 +228,7 @@
                                         <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
                                             <div class="media">
                                                 <div class="pull-left">
-                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.email}}" alt="">
+                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.id}}" alt="">
                                                 </div>
                                                 <div class="media-body">
                                                     <div class="lv-title">{{jugador.email}}</div>
@@ -275,7 +243,7 @@
                                             </div>
                                         </a>
                                         
-                                        <a class="lv-footer" href="">
+                                        <a class="lv-footer" href="/P/partido/show/{{jugador.id}}">
                                             Ver detalles
                                         </a>
                                     </div>
@@ -353,58 +321,14 @@
 		                                    </div>
 		                                </div>
 	                                    <div class="listview" style="margin-top: 6px;">
-	                                        <a class="lv-item" href="/P/partido/show/5">
+	                                        <a class="lv-item" href="/P/partido/show/{{partido.id}}" ng-repeat='partido in partidosJugados'>
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{partido.propietario.id}}" alt="">
 	                                                </div>
 	                                                <div class="media-body">
-	                                                    <div class="lv-title">David Belle</div>
+	                                                    <div class="lv-title">{{partido.propietario.firstName}}&nbsp;{{partido.propietario.lastName}} </div>
 	                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
-	                                                </div>
-	                                            </div>
-	                                        </a>
-	                                        <a class="lv-item" href="/P/partido/show/5">
-	                                            <div class="media">
-	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                                </div>
-	                                                <div class="media-body">
-	                                                    <div class="lv-title">Jonathan Morris</div>
-	                                                    <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
-	                                                </div>
-	                                            </div>
-	                                        </a>
-	                                        <a class="lv-item" href="/P/partido/show/5">
-	                                            <div class="media">
-	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                                </div>
-	                                                <div class="media-body">
-	                                                    <div class="lv-title">Fredric Mitchell Jr.</div>
-	                                                    <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
-	                                                </div>
-	                                            </div>
-	                                        </a>
-	                                        <a class="lv-item" href="/P/partido/show/5">
-	                                            <div class="media">
-	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                                </div>
-	                                                <div class="media-body">
-	                                                    <div class="lv-title">Glenn Jecobs</div>
-	                                                    <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
-	                                                </div>
-	                                            </div>
-	                                        </a>
-	                                        <a class="lv-item" href="/P/partido/show/5">
-	                                            <div class="media">
-	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
-	                                                </div>
-	                                                <div class="media-body">
-	                                                    <div class="lv-title">Bill Phillips</div>
-	                                                    <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
 	                                                </div>
 	                                            </div>
 	                                        </a>
@@ -415,6 +339,11 @@
 	                        </div><!-- Col Recent Post -->
 					</div>
 				</div>
+				<div class="pmb-block" id="messages-main" style="padding: 0px;min-height: 0px;max-height: 0px;margin: 0px;" >
+                     	<a href="/P/partido/create" class="btn bgm-red btn-float waves-effect waves-button waves-float" id="ms-compose">
+                       <i class="md md-add"></i>
+                   </a>
+               </div>
 				</sec:authorize>
         </div><!-- ROW -->
 

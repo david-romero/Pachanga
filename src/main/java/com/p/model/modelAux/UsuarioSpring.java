@@ -21,7 +21,7 @@ public class UsuarioSpring extends User implements Serializable, SocialUserDetai
 	public UsuarioSpring(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired,
 			boolean accountNonLocked,
-			Collection<? extends GrantedAuthority> authorities, Long id) {
+			Collection<? extends GrantedAuthority> authorities, Integer id) {
 		super(username, password, enabled, accountNonExpired,
 				credentialsNonExpired, accountNonLocked, authorities);
 		this.id = id;
@@ -32,15 +32,15 @@ public class UsuarioSpring extends User implements Serializable, SocialUserDetai
 	 */
 	private static final long serialVersionUID = -7958347624993602864L;
 
-	private Long id;
+	private Integer id;
 
 	
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

@@ -1,4 +1,4 @@
-package com.p.controller;
+package com.p.controller.web;
 
 import javax.annotation.Resource;
 
@@ -18,7 +18,7 @@ public class RegistroController {
 
 	// Definimos el controlador de logger.
 	protected static Logger logger = Logger
-			.getLogger(DashboardController.class);
+			.getLogger(RegistroController.class);
 
 	@Resource(name = "usersService")
 	private UsersService usersService;

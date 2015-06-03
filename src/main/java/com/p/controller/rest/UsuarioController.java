@@ -1,66 +1,66 @@
 package com.p.controller.rest;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
+import com.p.controller.AbstractController;
+import com.p.model.Partido;
 import com.p.model.User;
+import com.p.service.UsersService;
 
 @RestController
 @RequestMapping(value = "/rest/usuarios")
-public class UsuarioController {
-
-	static List<User> usuarios = Lists.newArrayList();
+@Transactional
+public class UsuarioController extends AbstractController{
 	
-	static{
-		User user = new User();
-		user.setEmail("test@test.com");
-		user.setId(1L);
-		user.setTieneAvatar(false);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test1@test.com");
-		user.setId(2L);
-		user.setTieneAvatar(true);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test2@test.com");
-		user.setId(3L);
-		user.setTieneAvatar(false);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test3@test.com");
-		user.setId(4L);
-		user.setTieneAvatar(true);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test4@test.com");
-		user.setId(5L);
-		user.setTieneAvatar(false);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test5@test.com");
-		user.setId(6L);
-		user.setTieneAvatar(true);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test6@test.com");
-		user.setId(7L);
-		user.setTieneAvatar(false);
-		usuarios.add(user);
-		user = new User();
-		user.setEmail("test7@test.com");
-		user.setId(8L);
-		user.setTieneAvatar(true);
-		usuarios.add(user);
-	}
+	@Autowired
+	protected UsersService userService;
+	
+	
 	
 	@RequestMapping(value = "/inicio",method = RequestMethod.GET)
     public List<User> inicio() {		
-        return usuarios;
+        return Lists.newArrayList(userService.findAll());
     }
+	
+	@RequestMapping(value = "/editImage",method = RequestMethod.POST)
+	public User save(Model model,@RequestParam("foto") MultipartFile file) {
+		User usr = null;
+		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		try{
+			beginTransaction();
+			usr = userService.getByEmail(userSigned.getUsername());
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+		try{
+			beginTransaction();
+			usr.setImagen(file.getBytes());
+			usr.setTieneAvatar(true);
+			usr = userService.save(usr);
+			txStatus.flush();
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+		return usr;
+	}
 	
 }

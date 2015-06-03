@@ -16,7 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-public class Comentario extends BaseEntity<Long>{
+public class Comentario extends BaseEntity{
 
 	/**
 	 * 

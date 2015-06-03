@@ -2,16 +2,16 @@ package com.p.model;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
-
 @Entity
-public class Categoria extends BaseEntity<Long>{
+public class Categoria extends BaseEntity {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3472798802254577100L;
+	private static final long serialVersionUID = -7724003014847557531L;
+	
+	protected String titulo;
 	@NotNull
-	private String titulo;
-
 	public String getTitulo() {
 		return titulo;
 	}
@@ -20,4 +20,6 @@ public class Categoria extends BaseEntity<Long>{
 		this.titulo = titulo;
 	}
 	
+	
+
 }

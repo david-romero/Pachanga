@@ -17,7 +17,7 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Mensaje extends BaseEntity<Long>{
+public class Mensaje extends BaseEntity{
 	/**
 	 * 
 	 */

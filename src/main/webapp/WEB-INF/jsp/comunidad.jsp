@@ -25,22 +25,24 @@
                         </ul>
                     </div>
                     
-                    <div class="card" id="profile-main" ng-controller="PartidoController">
+                    <div class="card" id="profile-main" ng-controller="GrupoController">
                         
-                        <div tabindex="4" style="overflow: hidden;" class="pm-overview c-overflow">
+                        <div tabindex="4" style="overflow: hidden;" class="pm-overview c-overflow" ng-init="urlComunidad='${pageContext.request.contextPath}/rest/comunidad/getImage/${grupo.id}'">
                             <div class="pmo-pic">
                                 <div class="p-relative">
                                     <a href="">
                                     	<c:if test="${grupo.id != 0 }">
-                                        	<img class="img-responsive" src="${partido.urlImagen}" alt="">
+                                        	<img id="imagenGrupo" class="img-responsive" ng-src="{{urlComunidad}}" alt="">
                                         </c:if> 
                                         <c:if test="${grupo.id == 0 }">
-                                        	<img class="img-responsive" src="${pageContext.request.contextPath}/usuarios/getUserImage/bent@test.com" alt="">
+                                        	<img class="img-responsive" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
                                         </c:if>
                                     </a>
                                     <sec:authorize access="isAuthenticated()" >
 	                				<sec:authentication var="user" property="principal" />
-	                                    <a href="" class="pmop-edit">
+	                                    <input type="file" ng-model-instant id="fileToUpload"  onchange="angular.element(this).scope().idComunidad=${grupo.id};angular.element(this).scope().setFiles(this)" style="display:none;"/>
+                                    	
+	                                    <a href="" class="pmop-edit" onclick="uploadPhoto();">
 	                                        <i class="md md-camera-alt"></i> <span class="hidden-xs">Actualizar Imagen</span>
 	                                    </a>
                                     </sec:authorize>
@@ -103,17 +105,16 @@
 	                                
 	                                <div class="contacts clearfix row">
 	                                	<c:forEach items="${grupo.usuarios}" var="usuario">
-		                                    <div class="col-md-3 col-sm-6 col-xs-6">
+		                                    <div class="col-md-3 col-sm-6 col-xs-6" ng-click="showUser(${usuario.id})">
 		                                        <div class="c-item">
 		                                            <a href="" class="ci-avatar">
-		                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${usuario.email}" alt="">
+		                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${usuario.id}" alt="">
 		                                            </a>
 		                                            
 		                                            <div class="c-info">
 		                                                <strong><c:out value="${usuario.firstName}"></c:out>&nbsp;<c:out value="${usuario.lastName}"></c:out> </strong>
 		                                                <small><c:out value="${usuario.email}"></c:out></small>
 		                                            </div>
-		                                            
 		                                        </div>
 		                                    </div>
 	                                    </c:forEach>
@@ -260,4 +261,9 @@
                         </div>
                     </div>
                 </div>
+                <script type="text/javascript">
+                function uploadPhoto(){
+            		$('input[type=file]').click();
+            	}
+                </script>
 </sec:authorize>

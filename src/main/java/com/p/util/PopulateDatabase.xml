@@ -31,6 +31,11 @@
 		<property name="firstName" value="David" />
 		<property name="lastName" value="David" />
 		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
+		<property name="grupos">
+			<set>
+				<ref bean="grupo"></ref>
+			</set>
+		</property>
 	</bean>
 	
 	<bean id="user2" class="com.p.model.User">
@@ -47,6 +52,11 @@
 		<property name="firstName" value="David" />
 		<property name="lastName" value="David" />
 		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
+		<property name="grupos">
+			<set>
+				<ref bean="grupo"></ref>
+			</set>
+		</property>
 	</bean>
 
 	<bean id="futbol" class="com.p.model.Categoria">
@@ -62,6 +72,8 @@
 		<property name="categoria" ref="futbol" />
 		<property name="propietario" ref="user1"></property>
 		<property name="titulo" value="Pachanguita" />
+		<property name="plazas" value="10" />
+		<property name="plazasOcupadas" value="2" />
 		<property name="precio" value="0.7"></property>
 		<property name="jugadores">
 			<list>
@@ -79,6 +91,8 @@
 		</property>
 		<property name="propietario" ref="user1"></property>
 		<property name="categoria" ref="futbol" />
+		<property name="plazas" value="10" />
+		<property name="plazasOcupadas" value="2" />
 		<property name="titulo" value="Pachanguita" />
 		<property name="precio" value="0.7"></property>
 		<property name="jugadores">
@@ -89,7 +103,20 @@
 		</property>
 	</bean>
 
-	
+	<bean id="grupo" class="com.p.model.Grupo">
+		<property name="titulo" value="Futbol Grupo" />
+		<property name="fechaCreacion">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2015-06-03" />
+			</bean>
+		</property>
+		<property name="usuarios">
+			<list>
+				<ref bean="user1"></ref>
+				<ref bean="user3"></ref>
+			</list>
+		</property>
+	</bean>
 	
 </beans>
 

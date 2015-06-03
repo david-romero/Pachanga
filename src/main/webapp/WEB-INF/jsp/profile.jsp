@@ -5,19 +5,19 @@
 
 	 <jsp:include page="masterPage.jsp"></jsp:include>
 	
-	<div class="container" id="content" ng-app="pachanga">
+	<div class="container" id="content" ng-app="pachanga" ng-controller="ProfileController">
                     
                     <div class="block-header">
                         <h2><c:out value="${userSigned.email}"></c:out> <small>Web/UI Developer, Dubai, United Arab Emirates</small></h2>
                         
                     </div>
                     
-                    <div class="card" id="profile-main" ng-controller="MensajeController">
+                    <div class="card" id="profile-main" >
                         <div tabindex="4" style="overflow: hidden;" class="pm-overview c-overflow">
                             <div class="pmo-pic">
                                 <div class="p-relative">
                                     <a href="">
-                                        <img class="img-responsive" src="${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.email}" alt=""> 
+                                        <img class="img-responsive" src="${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.id}" alt=""> 
                                     </a>
                                     <sec:authorize access="isAuthenticated()" >
 	                				<sec:authentication var="user" property="principal" />
@@ -27,7 +27,7 @@
 	                                            <i class="md md-message"></i>
 	                                        </a>
 	                                        
-	                                        <div class="dropdown-menu">
+	                                        <div class="dropdown-menu" ng-controller="MensajeController">
 	                                        	<form ng-submit="sendMensaje();contenido= '';">
 		                                            <textarea ng-model="contenido" placeholder="Write something..."></textarea>
 		                                            <input type="hidden" ng-model="receptor" name="receptor"  ng-init="receptor='${userSigned.id}'" ng-value="${userSigned.id}" value="${userSigned.id}" />
@@ -37,8 +37,10 @@
 	                                    </div>
                                     </c:if>
                                     <c:if test="${userSigned.email == user.username }">
-	                                    <a href="" class="pmop-edit">
-	                                        <i class="md fa fa-camera-retro"></i> <span class="hidden-xs">Update Profile Picture</span>
+	                                    <input type="file" ng-model-instant id="fileToUpload"  onchange="angular.element(this).scope().setFiles(this)" style="display:none;"/>
+                                    	
+	                                    <a href="" class="pmop-edit" onclick="uploadPhoto();">
+	                                        <i class="md md-camera-alt"></i> <span class="hidden-xs">Actualizar Imagen</span>
 	                                    </a>
                                     </c:if>
                                     </sec:authorize>
@@ -73,7 +75,7 @@
                             
                         </div>
                         
-                        <div class="pm-body clearfix" ng-controller="ProfileController">
+                        <div class="pm-body clearfix" >
                             <ul tabindex="1" style="overflow: hidden;" class="tab-nav tn-justified">
                                 <li ng-click="activeTab = 1;" class="waves-effect" ng-class="getProfileTabCss(1)"><a href="#">Perfil</a></li>
                                 <li ng-click="activeTab = 2;" class="waves-effect" ng-class="getProfileTabCss(2)"><a href="#">Timeline</a></li>
@@ -683,3 +685,8 @@
                         </div>
                     </div>
                 </div>
+<script type="text/javascript">
+function uploadPhoto(){
+	$('input[type=file]').click();
+}
+</script>
