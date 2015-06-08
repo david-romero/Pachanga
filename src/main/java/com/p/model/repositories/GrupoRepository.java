@@ -7,4 +7,6 @@ import com.p.model.Grupo;
 @Repository
 public interface GrupoRepository extends CrudRepository<Grupo, Integer>{
 
+	
+	
 }

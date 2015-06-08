@@ -39,7 +39,7 @@ public class PropietarioPartido extends BaseEntity {
 	@NotNull
 	protected String email;
 	@NotNull
-	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE }, fetch= FetchType.EAGER)
+	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
 	@Sort(type = SortType.NATURAL)
 	@Valid
 	protected  Collection<Partido> partidosCreados;

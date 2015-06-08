@@ -1,11 +1,5 @@
-/**
- * 
- */
-var app = angular.module('pachanga', [ "ngResource" ]);
 
-
-
-app.controller('InitController', [ '$scope', '$http',
+angular.module('pachanga').controller('InitController', [ '$scope', '$http',
 
 	function($scope, $http) {
 		$scope.inicio = function() {
@@ -59,13 +53,12 @@ app.controller('InitController', [ '$scope', '$http',
 		}
 		
 		$scope.showGrupo = function(grupoId){
-			alert(grupoId);
 			window.location.href = '/P/grupo/show/' + grupoId
 		}
 	} 
 ]);
 
-app.controller('MensajeController', [ '$scope', '$http' ,
+angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 	function($scope, $http) {
 		$scope.conversacion = new Object();
 		$scope.conversacion.receptor = "";
@@ -122,7 +115,6 @@ app.controller('MensajeController', [ '$scope', '$http' ,
 					for (var i=0; i<data.length; i++){
 						$scope.conversacion.mensajes.push(data[i])
 					}
-					console.log(data);
 				});
 		  }
 		  
@@ -209,7 +201,7 @@ app.controller('MensajeController', [ '$scope', '$http' ,
 		}
 ]);
 
-app.controller('NotificacionController', 
+angular.module('pachanga').controller('NotificacionController', 
 		[ '$scope', '$http' ,
 		  function($scope, $http) {
 				$scope.notificaciones = [];
@@ -226,8 +218,6 @@ app.controller('NotificacionController',
 						console.log(data);
 					});
 					$http.get('/P/rest/notificacion/obtenerNumeroPaginas').success(function(data) {
-						console.log(data);
-						console.log(parseInt(data));
 						$scope.numeroPaginas = parseInt(data);
 						for (var i=0; i<$scope.numeroPaginas; i++){
 							$scope.paginas.push(i);
@@ -247,7 +237,7 @@ app.controller('NotificacionController',
 			}
 		]
 );
-app.controller('ProfileController', 
+angular.module('pachanga').controller('ProfileController', 
 		[ '$scope', '$http' ,
 		  	function($scope, $http) {
 				$scope.activeTab = 1;
@@ -326,7 +316,7 @@ app.controller('ProfileController',
 		}
 		]
 );
-app.controller('GrupoController', 
+angular.module('pachanga').controller('GrupoController', 
 		[ '$scope', '$http' ,
 		  	function($scope, $http) {
 			
@@ -373,139 +363,96 @@ app.controller('GrupoController',
 			 
 			 
 			 $scope.showUser = function(userId){
-					alert(userId);
 					window.location.href = '/P/usuarios/profile/' + userId
-				}
+			 };
+			 
+			 
+			  $scope.conversacion = new Object();
+			  $scope.conversacion.receptor = "";
+			  $scope.conversacion.emisor = "";
+			  $scope.conversacion.mensajes = [];
+			  
+			  $scope.loadMensajes = function() {
+				  $scope.usuarios = [];
+				  $scope.conversacion.mensajes = [];
+						$http.get('/P/rest/comunidad/mensajes/4').success(function(data) {
+							for (var i=0; i<data.length; i++){
+								$scope.conversacion.mensajes.push(data[i])
+								var cssClass = avatarCss[Math.floor(Math.random() * 21) + 1];
+								data[i].emisor.avatarCssClass = cssClass;
+							}
+					});
+				};
+				
+				var avatarCss = {
+				        1: "bgm-red",
+				        2: "bgm-white",
+				        3: "bgm-black",
+				        4: "bgm-brown",
+				        5: "bgm-pink",
+				        6: "bgm-blue",
+				        7: "bgm-purple",
+				        8: "bgm-deeppurple",
+				        9: "bgm-lightblue",
+				        10: "bgm-cyan",
+				        11: "bgm-teal",
+				        12: "bgm-green",
+				        13: "bgm-lightgreen",
+				        14: "bgm-lime",
+				        15: "bgm-yellow",
+				        16: "bgm-amber",
+				        17: "bgm-orange",
+				        18: "bgm-deeporange",
+				        19: "bgm-gray",
+				        20: "bgm-bluegray",
+				        21: "bgm-indigo"
+				      };
+			  
+			  $scope.getAvatarCssClass = function(usuario){
+				  return usuario.avatarCssClass;
+			  }	
+			  
+			  $scope.getMensajeCssClass = function(mensaje){
+				  var cssClass= ""
+				  if ( mensaje.emisor.id == $scope.conversacion.emisor.id ){
+					  cssClass = "right";
+				  }
+				  return cssClass;
+			  }
+			  
+			  $scope.getMensajeAvatarCssClass = function(mensaje){
+				  var cssClass= "pull-left"
+				  if ( mensaje.emisor.id == $scope.conversacion.emisor.id ){
+					  //En este caso el que ha mandado el mensaje es el usuario que esta logueado
+					  cssClass = "pull-right";
+				  }
+				  return cssClass;
+			  }
+			  
+			  $scope.sendMensaje = function(){
+				  var mensajeContenido = $scope.contenido;
+				  alert(mensajeContenido);
+					  $http.post(
+							  '/P/rest/comunidad/mensaje/4', 
+							  {
+								  contenido:mensajeContenido
+							  }
+						    )
+					  .success(function(data) {
+						  console.log(data);
+						  console.log($scope.conversacion.mensajes);
+						  $scope.conversacion.mensajes.push(data)
+					   })
+					  .error(function(data, status, headers, config) {
+						    // called asynchronously if an error occurs
+						    // or server returns response with an error status.
+					   });
+			  }
 		}
 		]
 );
-app.controller('PartidoController', 
-		[ '$scope', '$http' ,
-		  	function($scope, $http) {
-				 $scope.activeTab = 1;
-				 $scope.getProfileTabCss = function(tab){
-					var cssClass = "";
-					if ( tab == $scope.activeTab ){
-						cssClass = "active";
-					}
-					return cssClass;
-				}
-				 
-				 $scope.setFormScope= function(scope){
-					   this.formScope = scope;
-					} 
-				 
-				$scope.savePartido = function(form){
-					console.log(form);
-					var precio = $scope.precio
-					alert(precio);
-					var plazas = $scope.plazas
-					alert(plazas)
-					$http.post(
-							  '/P/rest/partido/save'
-						    )
-				  .success(function(data) {
-					  console.log(data)
-				   })
-				  .error(function(data, status, headers, config) {
-					    // called asynchronously if an error occurs
-					    // or server returns response with an error status.
-					  console.log(data)
-				   });
-				}
-				
-				$scope.getPartidosComunidad = function(idComunidad){
-					$scope.partidos = [];
-					$http.get('/P/rest/comunidad/partidos/' + idComunidad).success(function(data) {
-						console.log(data);
-						for (var i=0; i<data.length; i++){
-							$scope.partidos.push(data[i])
-						}
-					});
-				}
-				
-				$scope.comprobarSiEstaApuntado = function(partido,emailUsuarioLogueado){
-					var inscrito = false;
-					for ( var i=0; i<partido.jugadores.length; i++ ){
-						if ( partido.jugadores[i].email == emailUsuarioLogueado ){
-							inscrito = true;
-						}
-					}
-					return inscrito;
-				}
-				
-				$scope.isInDate = function(partido){
-					console.log(partido.fecha);
-					console.log(new Date().getTime());
-					return partido.fecha >= new Date().getTime()
-				}
-				
-				$scope.isFull = function(partido){
-					console.log("jugadores " +partido.jugadores.length);
-					console.log("plazas " +partido.plazas);
-					return ( partido.jugadores.length == partido.plazas );
-				}
-				
-				$scope.setFiles = function(element) {
-				    $scope.$apply(function(scope) {
-				      console.log('files:', element.files);
-				      // Turn the FileList object into an Array
-				      $scope.files = []
-				        for (var i = 0; i < element.files.length; i++) {
-				          scope.files.push(element.files[i])
-				        }
-				      $scope.progressVisible = false
-				      
-				      });
-				    $scope.uploadImagen()
-				 };
-				    
-				
-				 $scope.uploadImagen = function() {
-				        var fd = new FormData()
-				        for (var i in $scope.files) {
-				            fd.append("foto", $scope.files[i])
-				        }
-				        var xhr = new XMLHttpRequest()
-				        xhr.upload.addEventListener("progress", uploadProgress, false)
-				        xhr.addEventListener("load", uploadComplete, false)
-				        xhr.addEventListener("error", uploadFailed, false)
-				        xhr.addEventListener("abort", uploadCanceled, false)
-				        xhr.open("POST", "/P/rest/partido/editImage/5")
-				        $scope.progressVisible = true
-				        xhr.send(fd)
-				    }
 
-				    function uploadProgress(evt) {
-				    	$scope.$apply(function(){
-				            if (evt.lengthComputable) {
-				            	$scope.progress = Math.round(evt.loaded * 100 / evt.total)
-				            } else {
-				            	$scope.progress = 'unable to compute'
-				            }
-				        })
-				    }
-
-				    function uploadComplete(evt) {
-				        /* This event is raised when the server send back a response */
-				        alert(evt.target.responseText)
-				    }
-
-				    function uploadFailed(evt) {
-				        alert("There was an error attempting to upload the file.")
-				    }
-
-				    function uploadCanceled(evt) {
-				    	$scope.$apply(function(){
-				    		$scope.progressVisible = false
-				        })
-				        alert("The upload has been canceled by the user or the browser dropped the connection.")
-				    }
-				
-			}
-		]
-);
-app.directive('scroll', function($timeout) {
+angular.module('pachanga').directive('scroll', function($timeout) {
 	  return {
 	    restrict: 'A',
 	    link: function(scope, element, attr) {
@@ -518,7 +465,7 @@ app.directive('scroll', function($timeout) {
 	    }
 	  }
 	});
-app.directive('niceScroll', function() {
+angular.module('pachanga').directive('niceScroll', function() {
     return{
         restrict: 'A',
         link: function(scope, element, attribute) {
@@ -537,7 +484,7 @@ app.directive('niceScroll', function() {
         }
     };
 });
-app.directive('fileModel', ['$parse', function ($parse) {
+angular.module('pachanga').directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {

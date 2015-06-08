@@ -12,9 +12,12 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
 
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Mensaje extends BaseEntity{
@@ -36,6 +39,10 @@ public class Mensaje extends BaseEntity{
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date fecha;
+	
+	@Valid
+	@ManyToOne(optional=true)
+	private Grupo propietario;
 	
 	private boolean leido;
 	
@@ -81,11 +88,20 @@ public class Mensaje extends BaseEntity{
 	public void setLeido(boolean leido) {
 		this.leido = leido;
 	}
-
+	
+	@JsonProperty
 	public String getFechaRepresentacion() {
 		PrettyTime p = new PrettyTime(new Locale("ES","es"));
 		fechaRepresentacion = p.format(fecha);
 		return fechaRepresentacion;
+	}
+
+	public Grupo getPropietario() {
+		return propietario;
+	}
+
+	public void setPropietario(Grupo propietario) {
+		this.propietario = propietario;
 	}
 
 	

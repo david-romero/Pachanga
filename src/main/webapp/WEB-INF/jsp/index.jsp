@@ -1,7 +1,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en" ng-app="pachanga">
+<html lang="en" >
 
 <head>
 
@@ -65,12 +65,12 @@
 
 </head>
 
-<body ng-app="pachanga-app" ng-controller="InitController" ng-init="inicio()">
+<body ng-app="pachanga">
 
      <jsp:include page="masterPage.jsp"></jsp:include>
 
     <!-- Page Content -->
-    <div class="container" id="content">
+    <div class="container" id="content" ng-controller="InitController" ng-init="inicio()">
 
         <div class="block-header">
 	        <ul class="actions">
@@ -86,10 +86,10 @@
 	             <div class="row">
 	                 <c:forEach items="${gruposUsrSigned}" var="grupo">
 	                 <div class="col-sm-6 col-md-3" >
-	                     <div class="mini-charts-item bgm-cyan" ng-click="showGrupo(<c:out value="${grupo.id}"></c:out>)">
+	                     <div class="mini-charts-item bgm-cyan" style="cursor: pointer;" ng-click="showGrupo(<c:out value="${grupo.id}"></c:out>)">
 	                         <div class="clearfix">
 	                             <div class="chart stats-bar">
-	                             	<img src="${pageContext.request.contextPath}/rest/comunidad/getImage/<c:out value="${grupo.id}"></c:out>" />
+	                             	<img style="height: 42px;" src="${pageContext.request.contextPath}/rest/comunidad/getImage/<c:out value="${grupo.id}"></c:out>" />
 	                             </div>
 	                             <div class="count">
 	                                 <small><c:out value="${grupo.titulo}"></c:out> </small>
@@ -211,7 +211,7 @@
                                 <div  id="best-selling" class="dash-widget-item card">
                                     <div class="dash-widget-header card-header" style="padding: 0;" ng-click="showPartido(partido.id)">
                                         <div class="dash-widget-title">{{partido.titulo}}</div>
-                                        <img src="{{partido.urlImagen}}" alt="">
+                                        <img ng-src="{{partido.urlImagen}}" alt="">
                                         <div class="main-item">
                                             <small>{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}}</small>
                                             <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i></small></h2>
@@ -228,7 +228,7 @@
                                         <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
                                             <div class="media">
                                                 <div class="pull-left">
-                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.id}}" alt="">
+                                                    <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.id}}" alt="">
                                                 </div>
                                                 <div class="media-body">
                                                     <div class="lv-title">{{jugador.email}}</div>
@@ -324,7 +324,7 @@
 	                                        <a class="lv-item" href="/P/partido/show/{{partido.id}}" ng-repeat='partido in partidosJugados'>
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/{{partido.propietario.id}}" alt="">
+	                                                    <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{partido.propietario.id}}" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">{{partido.propietario.firstName}}&nbsp;{{partido.propietario.lastName}} </div>

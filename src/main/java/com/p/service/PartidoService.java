@@ -38,12 +38,6 @@ public class PartidoService {
 		p.setPlazas(0);
 		p.setId(0);
 		p.setTitulo("Partido nuevo");
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal();
-
-		User usr = new User();
-		usr.setEmail(userSigned.getUsername());
-		p.setPropietario(usr);
 		return p;
 	}
 	@Transactional
@@ -81,8 +75,7 @@ public class PartidoService {
 	}
 	
 	@Transactional
-	public Collection<Partido> findAllJugados(String email) {
-		User usr = userService.getByEmail(email);
+	public Collection<Partido> findAllJugados(User usr) {
 		Assert.notNull(usr);
 		Assert.isTrue(usr.getId()>0);
 		Collection<Partido> pagina = repository.getAllJugados(usr);

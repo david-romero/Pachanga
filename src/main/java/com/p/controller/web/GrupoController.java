@@ -3,6 +3,7 @@ package com.p.controller.web;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,6 +22,7 @@ import com.p.model.Grupo;
 import com.p.model.Lugar;
 import com.p.model.Partido;
 import com.p.model.User;
+import com.p.service.GrupoService;
 import com.p.service.UsersService;
 
 @Controller
@@ -29,6 +31,11 @@ public class GrupoController extends AbstractController{
 
 	@Autowired
 	protected UsersService userService;
+	
+	@Autowired
+	protected GrupoService service;
+	
+	protected static final Logger log = Logger.getLogger(GrupoController.class);
 	
 	@RequestMapping(value = "/create",method = RequestMethod.GET, headers = "Accept=application/json")
 	public String create(Model model) {
@@ -48,76 +55,21 @@ public class GrupoController extends AbstractController{
 	@RequestMapping(value = "/show/{grupoId}",method = RequestMethod.GET, headers = "Accept=application/json")
 	public String show(Model model,
 			@PathVariable(value = "grupoId") Integer grupoId) {
-		Grupo grupo = new Grupo();
+		Grupo grupo = null;
 		
-		grupo.setTitulo("Grupo nuevo");
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User usr = new User();
-		if ((auth instanceof AnonymousAuthenticationToken)) {
-			usr.setEmail("anonymous@anonymous.com");   
-		}else{
-			usr = findUser();
-		}
-		grupo.setId(grupoId);
 		
-		grupo.setUsuarios(Sets.newHashSet(usr));
-		List<Partido> objetos = Lists.newArrayList();
-
-		for (int i = 0; i < 4; i++) {
-			Partido p = new Partido();
-			p.setId(i);
-			p.setPrecio(0.7);
-			Lugar lg = new Lugar();
-			lg.setTitulo("Hytasa");
-			p.setLugar(lg);
-			p.setFecha(new Date(System.currentTimeMillis()));
-			p.setTitulo("Partido semanal");
-			List<User> usuarios = Lists.newArrayList();
-			User user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(1);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(2);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("bent@test.com");
-			user.setId(3);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test3@test.com");
-			user.setId(4);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test4@test.com");
-			user.setId(5);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test5@test.com");
-			user.setId(6);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test6@test.com");
-			user.setId(7);
-			user.setTieneAvatar(false);
-			usuarios.add(user);
-			user = new User();
-			user.setEmail("test7@test.com");
-			user.setId(8);
-			user.setTieneAvatar(true);
-			usuarios.add(user);
-			p.setJugadores(usuarios.subList(0, 3));
-			objetos.add(p);
+		User usr = findUser();
+		
+		try{
+			beginTransaction(true);
+			grupo = service.findOne(grupoId);
+			Hibernate.initialize(grupo.getUsuarios());
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
 		}
-
-		grupo.setPartidosCreados(Sets.newHashSet(objetos));
+		
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("grupo", grupo);
 		return "comunidad";

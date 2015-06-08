@@ -20,6 +20,8 @@ import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Grupo extends PropietarioPartido{
 
@@ -85,6 +87,7 @@ public class Grupo extends PropietarioPartido{
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
+	@JsonIgnore
 	public byte[] getImagen() {
 		return imagen;
 	}
@@ -92,7 +95,11 @@ public class Grupo extends PropietarioPartido{
 		this.imagen = imagen;
 	}
 	public Date getFechaCreacion() {
-		return fechaCreacion;
+		if (fechaCreacion != null){
+			return fechaCreacion;
+		}else{
+			return new Date(System.currentTimeMillis());
+		}
 	}
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
@@ -100,7 +107,7 @@ public class Grupo extends PropietarioPartido{
 	
 	public String getFechaRepresentacion() {
 		PrettyTime p = new PrettyTime(new Locale("ES","es"));
-		fechaRepresentacion = p.format(fechaCreacion);
+		fechaRepresentacion = p.format(getFechaCreacion());
 		return fechaRepresentacion;
 	}
 	

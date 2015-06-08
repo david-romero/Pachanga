@@ -118,5 +118,39 @@
 		</property>
 	</bean>
 	
+	<bean id="mensaje1" class="com.p.model.Mensaje">
+		<property name="contenido" value="TEst test test test asdas asdasd" />
+		<property name="fecha">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2015-06-05" />
+			</bean>
+		</property>
+		<property name="emisor" ref="user1" />
+		<property name="receptor" ref="user3" />
+	</bean>
+	
+	<bean id="mensaje2" class="com.p.model.Mensaje">
+		<property name="contenido" value="345 345 345 345 345 345345" />
+		<property name="fecha">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2015-06-05" />
+			</bean>
+		</property>
+		<property name="emisor" ref="user3" />
+		<property name="receptor" ref="user1" />
+	</bean>
+	
+	<bean id="mensaje3" class="com.p.model.Mensaje">
+		<property name="contenido" value="345 345 345 345 345 345345" />
+		<property name="fecha">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2015-06-05" />
+			</bean>
+		</property>
+		<property name="emisor" ref="user3" />
+		<property name="receptor" ref="user1" />
+		<property name="propietario" ref="grupo"></property>
+	</bean>
+	
 </beans>
 

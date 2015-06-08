@@ -416,11 +416,17 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-resource.js"></script>
     
     
-    <!-- Angular JS Services -->
-    <script src="/P/resources/js/services.js"></script>
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/pachanga.js"></script>
     
     <!-- Angular JS Controllers -->
     <script src="/P/resources/js/controllers/controllers.js"></script>
+    
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/partidoController.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services.js"></script>
 
 </body>
 </html>

@@ -18,6 +18,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.ocpsoft.prettytime.PrettyTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Partido extends BaseEntity{
 
@@ -127,7 +129,7 @@ public class Partido extends BaseEntity{
 	public void setLugar(Lugar lugar) {
 		this.lugar = lugar;
 	}
-
+	@JsonIgnore
 	public byte[] getImagen() {
 		return imagen;
 	}
