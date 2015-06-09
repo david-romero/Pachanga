@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -30,6 +31,10 @@ public class PropietarioPartido extends BaseEntity {
 
 	public PropietarioPartido(){
 		partidosCreados = Sets.newHashSet();
+	}
+	
+	public PropietarioPartido(Integer id){
+		setId(id);
 	}
 	
 	/**
@@ -48,7 +53,7 @@ public class PropietarioPartido extends BaseEntity {
 		return email;
 	}
 	
-	
+	@JsonIgnore
 	public Collection<Partido> getPartidosCreados(){
 		return partidosCreados;
 	}

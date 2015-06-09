@@ -15,9 +15,9 @@
                     <div class="card" id="profile-main" >
                         <div tabindex="4" style="overflow: hidden;" class="pm-overview c-overflow">
                             <div class="pmo-pic">
-                                <div class="p-relative">
+                                <div class="p-relative" ng-init="urlProfile='${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.id}'">
                                     <a href="">
-                                        <img class="img-responsive" src="${pageContext.request.contextPath}/usuarios/getUserImage/${userSigned.id}" alt=""> 
+                                        <img class="img-responsive" src="{{urlProfile}}" alt=""> 
                                     </a>
                                     <sec:authorize access="isAuthenticated()" >
 	                				<sec:authentication var="user" property="principal" />

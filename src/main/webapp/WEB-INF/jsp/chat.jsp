@@ -21,7 +21,7 @@
                         <div class="ms-menu">
                             <div class="ms-block">
                                 <div class="ms-user">
-                                    <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${user.username}" alt="">
+                                    <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${user.id}" alt="">
                                     <div>Logueado como <br> ${user.username}</div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                                 <div class="lv-item media " ng-repeat="usuario in usuarios" ng-class="{'active': getCssClass(usuario)}" ng-click="loadConversacion(usuario)">
                                 	<div ng-if="usuario.tieneAvatar == false" ng-class="getAvatarCssClass(usuario)"  class="lv-avatar  pull-left">{{usuario.email.substring( 0, 1 )}}</div>
                                     <div ng-if="usuario.tieneAvatar == true" class="lv-avatar pull-left">
-                                        <img src="${pageContext.request.contextPath}/usuarios/getUserImage/{{usuario.id}}" alt="">
+                                        <img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{usuario.id}}" alt="">
                                     </div>
                                     <div class="media-body">
                                         <div  class="lv-title">{{usuario.email}}</div>
@@ -68,7 +68,7 @@
                                     <div class="lvh-label hidden-xs">
                                         <div ng-if="conversacion.receptor.tieneAvatar == false" ng-class="getAvatarCssClass(conversacion.receptor)"  class="lv-avatar  pull-left">{{conversacion.receptor.email.substring( 0, 1 )}}</div>
 	                                    <div ng-if="conversacion.receptor.tieneAvatar == true" class="lv-avatar pull-left">
-	                                        <img src="${pageContext.request.contextPath}/usuarios/getUserImage/{{conversacion.receptor.id}}" alt="">
+	                                        <img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{conversacion.receptor.id}}" alt="">
 	                                    </div>
                                         <span class="c-black">{{conversacion.receptor.email}}</span>
                                     </div>
@@ -124,7 +124,7 @@
                                                                     
                                     <div class="lv-item media" ng-repeat="mensaje in conversacion.mensajes" ng-class="getMensajeCssClass(mensaje)" ><!-- Mensaje -->
                                         <div ng-if="mensaje.emisor.id == conversacion.emisor.id" class="lv-avatar" ng-class="getMensajeAvatarCssClass(mensaje)">
-	                                        <img src="${pageContext.request.contextPath}/usuarios/getUserImage/{{mensaje.emisor.id}}" alt="">
+	                                        <img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{mensaje.emisor.id}}" alt="">
 	                                    </div>
                                         <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && mensaje.emisor.id == conversacion.receptor.id"  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar {{conversacion.receptor.avatarCssClass}} ">
                                         	{{conversacion.receptor.email.substring( 0, 1 )}}

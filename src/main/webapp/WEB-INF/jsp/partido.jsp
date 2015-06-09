@@ -119,7 +119,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -130,7 +130,7 @@
 			                                    		
 			                                    	</div>
 			                                 		<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
@@ -144,30 +144,30 @@
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
 			                                    	</div>
 			                                    	
 			                                    </div>
@@ -182,7 +182,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -193,7 +193,7 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
@@ -206,7 +206,7 @@
 			                            </div><!-- Card -->
 			                            <div class="card">
 					                        <div class="card-header">
-					                            <h2>Lista <small>Jugadores apuntados al partido</small></h2>
+					                            <h2>Convocatoria <small>Jugadores apuntados al partido</small></h2>
 					                        </div>
 					                        
 					                        <div tabindex="1" style="overflow: hidden;" class="table-responsive">
@@ -227,7 +227,7 @@
 					                                	<c:forEach items="${partido.jugadores}" var="jugador">
 						                                    <tr>
 						                                        <td>1</td>
-						                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.id}" alt=""></td>
+						                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.id}" alt=""></td>
 						                                        <td><c:out value=" ${jugador.firstName}"></c:out></td>
 						                                        <td><c:out value=" ${jugador.lastName}"></c:out></td>
 						                                        <td><c:out value=" ${jugador.email}"></c:out></td>
@@ -235,7 +235,7 @@
 						                                         	<td>
 						                                         		<ul class="actions">
 		            														<li>
-		                														<a ng-click="eliminarJugador(${partido.id},${jugador.id})">
+		                														<a ng-click="eliminarJugador(${partido.id},${jugador.id})" style="cursor: pointer;">
 		                    														<i class="md md-delete"></i>
 		                														</a>
 		            														</li>
@@ -253,6 +253,7 @@
                             </div><!-- TAB 1 -->
                            <div ng-if="activeTab == 1">
                            		<form action="#" method="POST" name="formCreatePartido" ng-init="setFormScope(this)">
+                           		<input type="hidden" name="propietario" ng-model="propietario" ng-init="propietario = ${partido.propietario.id}" ng-value="${partido.propietario.id}">
 	                            <div class="pmb-block" >
 	                                <div class="pmbb-header">
 	                                    <h2><i class="md fa fa-bookmark"></i> Título</h2>
@@ -361,7 +362,7 @@
 	                                            <dt class="p-t-10">Fecha</dt>
 	                                            <dd>
 	                                                <div class="dtp-container dropdown fg-line">
-	                                                    <input ng-model="fecha" class="form-control date-time-picker" data-toggle="dropdown" placeholder="${partido.fechaRepresentacion}" type="text" value="">
+	                                                    <input ng-model="fecha" name="fecha" class="form-control date-time-picker" data-toggle="dropdown" placeholder="${partido.fechaRepresentacion}" type="text" >
 	                                                </div>
 	                                            </dd>
 	                                        </dl>
@@ -489,7 +490,7 @@ $(document).ready(function () {
     	    minDate: new Date()
     	});
     }
-	/*$('#fileToUpload').change( function(){ $('#uploadImg').click(); } );*/
+
 });
 	function actualizarTitulo(textarea,label){
 		label.html(textarea.val())

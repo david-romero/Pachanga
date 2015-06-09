@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.p.controller.converters.PropietarioPartidoConverter;
 
 @Configuration
 @EnableWebMvc
@@ -44,12 +45,28 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		return messageConverter;
 
 	}
+	
+	/*
+	 * Here we register the Hibernate4Module into an ObjectMapper, then set this
+	 * custom-configured ObjectMapper to the MessageConverter and return it to
+	 * be added to the HttpMessageConverters of our application
+	 */
+	public MappingJackson2HttpMessageConverter jacksonMessageConverter2() {
+		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
+
+		PropietarioPartidoConverter converter = new PropietarioPartidoConverter();
+
+		messageConverter.setObjectMapper(converter);
+		return messageConverter;
+
+	}
 
 	@Override
 	public void configureMessageConverters(
 			List<HttpMessageConverter<?>> converters) {
 		// Here we add our custom-configured HttpMessageConverter
 		converters.add(jacksonMessageConverter());
+		converters.add(jacksonMessageConverter2());
 		super.configureMessageConverters(converters);
 	}
 }

@@ -10,6 +10,9 @@ public class Categoria extends BaseEntity {
 	 */
 	private static final long serialVersionUID = -7724003014847557531L;
 	
+
+	
+	
 	protected String titulo;
 	@NotNull
 	public String getTitulo() {
@@ -19,7 +22,5 @@ public class Categoria extends BaseEntity {
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	
-	
 
 }

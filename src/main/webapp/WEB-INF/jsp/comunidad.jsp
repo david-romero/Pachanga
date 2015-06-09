@@ -28,7 +28,7 @@
                     
                     <div class="card" id="profile-main" >
                         
-                        <div tabindex="4" style="overflow: hidden;" class="pm-overview c-overflow" ng-init="urlComunidad='${pageContext.request.contextPath}/rest/comunidad/getImage/${grupo.id}'">
+                        <div tabindex="4" ng-controller="GrupoController" style="overflow: hidden;" class="pm-overview c-overflow" ng-init="urlComunidad='${pageContext.request.contextPath}/rest/comunidad/getImage/${grupo.id}';idComunidad=${grupo.id}">
                             <div class="pmo-pic">
                                 <div class="p-relative">
                                     <a href="">
@@ -192,7 +192,7 @@
 		                                        <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
 		                                            <div class="media">
 		                                                <div class="pull-left">
-		                                                    <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/[[jugador.id]]" alt="">
+		                                                    <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.id}}" alt="">
 		                                                </div>
 		                                                <div class="media-body">
 		                                                    <div class="lv-title">{{jugador.email}}</div>

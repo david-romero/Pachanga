@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages="com.p.model.repositories") 
+@EnableJpaRepositories(basePackages={"com.p.model.repositories","com.p.model"}) 
 public class DbConfig{
  
    @Bean

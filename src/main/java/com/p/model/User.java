@@ -65,7 +65,7 @@ public class User extends PropietarioPartido {
 	protected Collection<Partido> partidosJugados;
     
     
-    
+    @JsonIgnore
     public Collection<Partido> getPartidosJugados() {
 		return partidosJugados;
 	}

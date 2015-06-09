@@ -61,6 +61,9 @@
 			  margin: -12px 30px 0 0 !important;
 			}
 		}
+		.form-control {
+		    padding: 0px 25px !important;
+		}
     </style>
 
 </head>
@@ -280,7 +283,7 @@
 	                                    <h2>&Uacute;ltimos Partidos <small>Partidos creados o a los que te has apuntado</small></h2>
 	                                    <ul class="actions">
 	                                        <li>
-	                                            <a href="">
+	                                            <a href="" ng-click="refreshPartidosJugados()">
 	                                                <i class="md md-cached"></i>
 	                                            </a>
 	                                        </li>
@@ -312,11 +315,18 @@
 		                                    <i class="add-new-item md md-add waves-effect waves-button waves-float" style="color:#FFC107"></i>
 		                                    
 		                                    <div class="add-tl-body">
-		                                        <textarea placeholder="What you want to do..." style="color: #FFC107"></textarea>
-		                                        
+		                                    	<form action="#" method="POST" name="formCreatePartido" ng-init="setFormScope(this)">
+	                           							<input type="hidden" name="propietario" ng-model="propietario" ng-init="propietario = ${userSigned.id}" ng-value="${userSigned.id}">
+				                                        <textarea ng-model="titulo" name="plazas" placeholder="Titulo..." style="color: #FFC107;height: 45%;padding-bottom: 0;margin-top: -120px;"></textarea>
+				                                        <input style="margin-top: 120px;" ng-model="fecha" name="plazas" autocomplete="off" placeholder="Fecha" maxlength="19" class="form-control input-mask" data-mask="00/00/0000 00:00:00" placeholder="ej: 00/00/0000 00:00:00" type="text">
+				                                        
+				                                        <input type="number" placeholder="Plazas" ng-model="plazas" name="plazas" class="form-control" value="0"  min="0" />
+				                                        
+				                                        <input type="number" placeholder="Precio" ng-model="precio" name="precio" class="form-control" value="0.0" step="0.1" min="0" />
+			                                        </form>
 		                                        <div class="add-tl-actions">
 		                                            <a href="" data-tl-action="dismiss"><i class="md md-close"></i></a>
-		                                            <a href="" data-tl-action="save"><i class="md md-check"></i></a>
+		                                            <a href="" ng-click="savePartido()" data-tl-action="save"><i class="md md-check"></i></a>
 		                                        </div>
 		                                    </div>
 		                                </div>
@@ -324,11 +334,11 @@
 	                                        <a class="lv-item" href="/P/partido/show/{{partido.id}}" ng-repeat='partido in partidosJugados'>
 	                                            <div class="media">
 	                                                <div class="pull-left">
-	                                                    <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{partido.propietario.id}}" alt="">
+	                                                    <img class="lv-img-sm" ng-src="{{partido.urlImagen}}" alt="">
 	                                                </div>
 	                                                <div class="media-body">
 	                                                    <div class="lv-title">{{partido.propietario.firstName}}&nbsp;{{partido.propietario.lastName}} </div>
-	                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
+	                                                    <small class="lv-small">{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}} - {{partido.precio}}&euro;</small>
 	                                                </div>
 	                                            </div>
 	                                        </a>
@@ -366,7 +376,45 @@
     </div>
     <!-- /.container -->
 
-    
+<sec:authorize access="isAuthenticated()" >
+	<script type="text/javascript">
+	$(document).ready(function(){
+	    
+		//Welcome Message (not for login page)
+	    function notify(message, type){
+	    	$.growl({
+	            message: message
+	        },{
+	            type: type,
+	            allow_dismiss: false,
+	            label: 'Cancel',
+	            className: 'btn-xs btn-inverse',
+	            placement: {
+	                from: 'top',
+	                align: 'right'
+	            },
+	            delay: 2500,
+	            animate: {
+	                    enter: 'animated bounceIn',
+	                    exit: 'animated bounceOut'
+	            },
+	            offset: {
+	                x: 20,
+	                y: 85
+	            }
+	        });
+	    };
+	    
+	    if (!$('.login-content')[0]) {
+	    	var loginName = '<c:out value="${userSigned.email}" />'
+	        notify('Bienvenido ' + loginName, 'inverse');
+	    } 
+	    
+	    
+	});
+	</script>
+</sec:authorize>    
+
 
 </body>
 

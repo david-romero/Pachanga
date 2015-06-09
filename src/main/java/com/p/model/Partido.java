@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -18,8 +20,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.p.infrastructure.CustomJsonDateDeserializer;
 @Entity
 public class Partido extends BaseEntity{
 
@@ -31,7 +37,10 @@ public class Partido extends BaseEntity{
 	@Valid
 	@ManyToMany(fetch=FetchType.EAGER)
 	protected Collection<User> jugadores;
-
+	@Temporal(TemporalType.TIMESTAMP)
+	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	protected Date fecha;
 	@NotNull
 	protected String titulo;
@@ -76,9 +85,13 @@ public class Partido extends BaseEntity{
 	@Transient
 	private String fechaRepresentacion;
 	
+	@Transient
+	@JsonProperty(value="categoriaTitulo")
+	private String categoriaTitulo;
+	
 	public String getFechaRepresentacion() {
 		PrettyTime p = new PrettyTime(new Locale("ES","es"));
-		fechaRepresentacion = p.format(fecha);
+		fechaRepresentacion = p.format(getFecha());
 		return fechaRepresentacion;
 	}
 
@@ -99,7 +112,11 @@ public class Partido extends BaseEntity{
 	}
 
 	public Date getFecha() {
-		return fecha;
+		if (fecha != null){
+			return fecha;
+		}else{
+			return new Date(System.currentTimeMillis());
+		}
 	}
 
 	public void setFecha(Date fecha) {
@@ -177,11 +194,19 @@ public class Partido extends BaseEntity{
 	}
 
 	public Integer getPlazasOcupadas() {
-		return plazasOcupadas;
+		return plazasOcupadas != null ? plazasOcupadas : 0;
 	}
 
 	public void setPlazasOcupadas(Integer plazasOcupadas) {
 		this.plazasOcupadas = plazasOcupadas;
+	}
+
+	public String getCategoriaTitulo() {
+		return categoriaTitulo;
+	}
+
+	public void setCategoriaTitulo(String categoriaTitulo) {
+		this.categoriaTitulo = categoriaTitulo;
 	}
 	
 	

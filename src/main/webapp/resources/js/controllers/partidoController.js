@@ -1,6 +1,6 @@
 angular.module('pachanga').controller('PartidoController', 
-		[ '$scope', '$http' ,
-		  	function($scope, $http) {
+		[ '$scope', '$http' , "partidoService" ,
+		  	function($scope, $http, partidoService) {
 				 $scope.activeTab = 1;
 				 $scope.getProfileTabCss = function(tab){
 					var cssClass = "";
@@ -11,36 +11,45 @@ angular.module('pachanga').controller('PartidoController',
 				}
 				 
 				 $scope.setFormScope= function(scope){
-					   this.formScope = scope;
+					   $scope.formScope = scope;
 					} 
 				 
 				$scope.savePartido = function(form){
-					console.log(form);
-					var precio = $scope.precio
-					alert(precio);
-					var plazas = $scope.plazas
-					alert(plazas)
-					$http.post(
-							  '/P/rest/partido/save'
-						    )
-				  .success(function(data) {
-					  console.log(data)
-				   })
-				  .error(function(data, status, headers, config) {
-					    // called asynchronously if an error occurs
-					    // or server returns response with an error status.
-					  console.log(data)
-				   });
+					console.log($scope.formScope);
+					var precio = $scope.formScope.precio
+					var titulo = $scope.formScope.titulo;
+					var categoria = $scope.formScope.categoria;
+					var plazas = $scope.formScope.plazas
+					var fecha = $scope.formScope.fecha;
+					var propietario = $scope.formScope.propietario;
+					var partido = new Object()
+					partido.categoria = categoria;
+					partido.titulo = titulo;
+					partido.plazas = plazas;
+					partido.precio = precio;
+					partido.fecha = fecha;
+					partido.propietario = propietario;
+					partidoService.save(partido)
+					    .then(function(data) {
+					      $scope.partidos.push(data)
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	alert("Error");
+					    });
 				}
 				
 				$scope.getPartidosComunidad = function(idComunidad){
 					$scope.partidos = [];
-					$http.get('/P/rest/comunidad/partidos/' + idComunidad).success(function(data) {
-						console.log(data);
+					partidoService.getPartidosComunidad(idComunidad).then(function(data) {
 						for (var i=0; i<data.length; i++){
 							$scope.partidos.push(data[i])
 						}
-					});
+				    })
+				    .catch(function(error) {
+				    	console.log(error);
+				    	notify('Se ha producido un error obteniendo los partidos de la comunidad', 'inverse');
+				    });
 				}
 				
 				$scope.comprobarSiEstaApuntado = function(partido,emailUsuarioLogueado){
@@ -54,14 +63,10 @@ angular.module('pachanga').controller('PartidoController',
 				}
 				
 				$scope.isInDate = function(partido){
-					console.log(partido.fecha);
-					console.log(new Date().getTime());
 					return partido.fecha >= new Date().getTime()
 				}
 				
 				$scope.isFull = function(partido){
-					console.log("jugadores " +partido.jugadores.length);
-					console.log("plazas " +partido.plazas);
 					return ( partido.jugadores.length == partido.plazas );
 				}
 				
@@ -79,60 +84,81 @@ angular.module('pachanga').controller('PartidoController',
 				    $scope.uploadImagen()
 				 };
 				 
-				 $scope.eliminarJugador = function(idPartido,idJugador){
-					 $http.post('/P/rest/partido/eliminarJugador/'+idPartido+"/"+idJugador)
-					     .success(function(data) {
-							console.log(data);
+				 $scope.eliminarJugador = function(idPartido,idJugador){					 
+					 partidoService.eliminarJugador(idPartido,idJugador)
+				        .then(function(data) {
+				        	console.log(data);
+				        	console.log($scope);
 							//TODO - DRA Iterar sobre los jugadores del partido y eliminar para refrescar UI
-						}).error(function(data) {
-							console.log(data);
-						});
+				        	for ( var indice = 0; indice < $scope.partidos; indice++ ){
+						    	  var partido = $scope.partidos[indice]
+						    	  console.log(partido);
+						      }
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error eliminando al jugador', 'inverse');
+					    });
 				 }
-				 
-				 
-				    
+				  
 				
 				 $scope.uploadImagen = function() {
-				        var fd = new FormData()
+					 var fd = new FormData()
 				        for (var i in $scope.files) {
 				            fd.append("foto", $scope.files[i])
 				        }
-				        var xhr = new XMLHttpRequest()
-				        xhr.upload.addEventListener("progress", uploadProgress, false)
-				        xhr.addEventListener("load", uploadComplete, false)
-				        xhr.addEventListener("error", uploadFailed, false)
-				        xhr.addEventListener("abort", uploadCanceled, false)
-				        xhr.open("POST", "/P/rest/partido/editImage/5")
-				        $scope.progressVisible = true
-				        xhr.send(fd)
-				    }
+				        
+					 partidoService.uploadImage(fd)
+				        .then(function(data) {
+				        	$scope.urlProfile='/P/usuarios/getUserImage/' + data.id + "?" + new Date().getTime()
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error subiendo la imagen', 'inverse');
+					    });
+				}
+				 
+				 $scope.apuntarseAPartido = function(partidoId){
+					 partidoService.apuntarse(partidoId)
+					    .then(function(data) {
+					    	console.log($scope);
+					      for ( var indice = 0; indice < $scope.partidos; indice++ ){
+					    	  var partido = $scope.partidos[indice]
+					    	  console.log(partido);
+					      }
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error al apuntarse al partido', 'inverse');
+					    });
+				}
 
-				    function uploadProgress(evt) {
-				    	$scope.$apply(function(){
-				            if (evt.lengthComputable) {
-				            	$scope.progress = Math.round(evt.loaded * 100 / evt.total)
-				            } else {
-				            	$scope.progress = 'unable to compute'
-				            }
-				        })
-				    }
-
-				    function uploadComplete(evt) {
-				        /* This event is raised when the server send back a response */
-				        alert(evt.target.responseText)
-				    }
-
-				    function uploadFailed(evt) {
-				        alert("There was an error attempting to upload the file.")
-				    }
-
-				    function uploadCanceled(evt) {
-				    	$scope.$apply(function(){
-				    		$scope.progressVisible = false
-				        })
-				        alert("The upload has been canceled by the user or the browser dropped the connection.")
-				    }
+				    
 				
 			}
 		]
 );
+//Bootstrap Growl 
+function notify(message, type){
+	jQuery.growl({
+        message: message
+    },{
+        type: type,
+        allow_dismiss: false,
+        label: 'Cancel',
+        className: 'btn-xs btn-inverse',
+        placement: {
+            from: 'top',
+            align: 'right'
+        },
+        delay: 2500,
+        animate: {
+                enter: 'animated bounceIn',
+                exit: 'animated bounceOut'
+        },
+        offset: {
+            x: 20,
+            y: 85
+        }
+    });
+};

@@ -35,7 +35,8 @@ public class PartidoService {
 		p.setJugadores(Lists.newArrayList());
 		p.setFecha(new Date(System.currentTimeMillis()));
 		p.setPrecio(0.0);
-		p.setPlazas(0);
+		p.setPlazas(10);
+		p.setPlazasOcupadas(0);
 		p.setId(0);
 		p.setTitulo("Partido nuevo");
 		return p;
@@ -62,6 +63,7 @@ public class PartidoService {
 				Assert.notNull(usr);
 			}
 			return true;
+			//HIBERNATE Prevent LazyInitiliatiationException
 		});
 		return pagina;
 	}
@@ -85,6 +87,19 @@ public class PartidoService {
 	@Transactional
 	public Partido save(Partido p) {
 		return repository.save(p);
+	}
+	@Transactional
+	public Partido apuntarse(Partido partido, User user) {
+		Assert.isTrue(!partido.getJugadores().contains(user));
+		partido.getJugadores().add(user);
+		
+		user.getPartidosJugados().add(partido);
+		
+		userService.save(user);
+		partido.setPlazasOcupadas(partido.getPlazasOcupadas() + 1);
+		partido = save(partido);
+		
+		return partido;
 	}
 
 }

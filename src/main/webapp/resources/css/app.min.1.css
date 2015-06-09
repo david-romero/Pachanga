@@ -3329,6 +3329,8 @@ output {
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+
+
 .form-control:focus {
   border-color: #b4b4b4;
   outline: 0;
@@ -14959,6 +14961,10 @@ html:not(.ie9) .select.fg-line:before {
 
 .form-group {
   margin-bottom: 30px;
+}
+
+.form-control {
+    padding: 0px 25p !important; 
 }
 
 /*

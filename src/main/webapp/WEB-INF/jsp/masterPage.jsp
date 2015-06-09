@@ -403,6 +403,9 @@
     <!-- Bootstrap DateTimePicker -->
     <script src="/P/resources/js/bootstrap-datetimepicker.min.js"></script>
     
+    <!-- Bootstrap Growl -->
+    <script src="/P/resources/js/bootstrap-growl.min.js"></script>
+    
     <!-- Waves -->
     <script src="/P/resources/js/waves.min.js"></script>
     
@@ -425,8 +428,37 @@
     <!-- Angular JS Controllers -->
     <script src="/P/resources/js/controllers/partidoController.js"></script>
     
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/mensajeController.js"></script>
+    
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/notificacionController.js"></script>
+    
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/profileController.js"></script>
+    
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/grupoController.js"></script>
+    
     <!-- Angular JS Services -->
     <script src="/P/resources/js/services.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/partidoService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/profileService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/grupoService.js"></script>
+    
+     <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/mensajeService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/controllers/directives.js"></script>
+	
 
+	
 </body>
 </html>
