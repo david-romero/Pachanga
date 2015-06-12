@@ -64,6 +64,13 @@
 		.form-control {
 		    padding: 0px 25px !important;
 		}
+		.radio {
+		    padding-left: 20px !important;
+		}
+		.no-active {
+	       pointer-events: none;
+	       cursor: default;
+	    } 
     </style>
 
 </head>
@@ -73,7 +80,7 @@
      <jsp:include page="masterPage.jsp"></jsp:include>
 
     <!-- Page Content -->
-    <div class="container" id="content" ng-controller="InitController" ng-init="inicio()">
+    <div class="container" id="content" ng-controller="InitController" ng-init="inicio();userSigned.id = ${userSigned.id}">
 
         <div class="block-header">
 	        <ul class="actions">
@@ -91,10 +98,10 @@
 	                 <div class="col-sm-6 col-md-3" >
 	                     <div class="mini-charts-item bgm-cyan" style="cursor: pointer;" ng-click="showGrupo(<c:out value="${grupo.id}"></c:out>)">
 	                         <div class="clearfix">
-	                             <div class="chart stats-bar">
-	                             	<img style="height: 42px;" src="${pageContext.request.contextPath}/rest/comunidad/getImage/<c:out value="${grupo.id}"></c:out>" />
+	                             <div class="chart stats-bar" style="padding: 0px;">
+	                             	<img style="height: 72px;" src="${pageContext.request.contextPath}/rest/comunidad/getImage/<c:out value="${grupo.id}"></c:out>" />
 	                             </div>
-	                             <div class="count">
+	                             <div class="count" style="padding-left: 22px;">
 	                                 <small><c:out value="${grupo.titulo}"></c:out> </small>
 	                                 <h2><c:out value="${tamGruposUsrSigned[grupo.id]}"></c:out></h2>
 	                             </div>
@@ -212,18 +219,36 @@
             	<div class="col-lg-12" ><!-- Items -->
                     <div ng-repeat='partido in partidos' class="col-md-3 col-sm-6" >
                                 <div  id="best-selling" class="dash-widget-item card">
-                                    <div class="dash-widget-header card-header" style="padding: 0;" ng-click="showPartido(partido.id)">
+                                    <div class="dash-widget-header card-header" style="padding: 0;" >
                                         <div class="dash-widget-title">{{partido.titulo}}</div>
                                         <img ng-src="{{partido.urlImagen}}" alt="">
-                                        <div class="main-item">
-                                            <small>{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}}</small>
-                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i></small></h2>
+                                        <div class="main-item" ng-click="showPartido(partido.id)" style="cursor: pointer;">
+                                            <small>{{partido.lugar.titulo}} <div ng-if="partido.lugar != undefined">-</div> {{partido.fechaRepresentacion}}</small>
+                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i>&nbsp;{{partido.fecha}}</small></h2>
                                         </div>
                                         <sec:authorize access="isAuthenticated()" >
-                                        	<button ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-person-add"></i></button>
+	                                        <div ng-if="!comprobarSiEstaApuntado(partido,'${userSigned.id}')">
+	                                        	<button ng-if="isPropio(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Partido creado por ti">
+	                                        		<i class="md md-favorite"></i>
+	                                        	</button>
+	                                        	<button ng-if="!isPropio(partido) && isFull(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Completo">
+	                                        		<i class="md md-dnd-on"></i>
+	                                        	</button>
+	                                        	<button ng-if="!isPropio(partido) && !isFull(partido) && !isInDate(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Fecha Pasada">
+	                                        		<i class="md md-timer-off"></i>
+	                                        	</button>
+	                                        	<button ng-if="isInDate(partido) && !isFull(partido) && !isPropio(partido)" ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float" title="Apuntate">
+	                                        		<i class="md md-person-add"></i>
+	                                        	</button>
+	                                       	</div>
+	                                       	<div ng-if="comprobarSiEstaApuntado(partido,'${userSigned.id}')"> 
+	                                        	<button  class="btn bgm-green btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Ya Apuntado">
+	                                        		<i class="md md-check"></i>
+	                                        	</button>
+	                                        </div>
                                         </sec:authorize>
                                         <sec:authorize access="isAnonymous()" >
-                                        	<button onclick=" window.location.href='/P/secure'"  class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-person-add"></i></button>
+                                        	<button onclick="window.location.href='/P/secure'"  class="btn bgm-cyan btn-float waves-effect waves-button waves-float"><i class="md md-person-add"></i></button>
                                         </sec:authorize>
                                     </div>
                                 
@@ -246,7 +271,7 @@
                                             </div>
                                         </a>
                                         
-                                        <a class="lv-footer" href="/P/partido/show/{{jugador.id}}">
+                                        <a class="lv-footer" href="/P/partido/show/{{partido.id}}">
                                             Ver detalles
                                         </a>
                                     </div>
@@ -256,7 +281,7 @@
                       </div>
                       <div class="col-lg-12">
                       	  <div class="clearfix"></div>
-	                      <div class="load-more">
+	                      <div class="load-more" ng-class="getCssLoadMoreButton()">
 	                          <a  ng-click="loadMorePartidos()" href=""><i class="md md-refresh"></i> Mostrar M&aacute;s...</a>
 	                      </div>
 	                      <div class="clearfix"></div>
@@ -316,10 +341,39 @@
 		                                    
 		                                    <div class="add-tl-body">
 		                                    	<form action="#" method="POST" name="formCreatePartido" ng-init="setFormScope(this)">
+		                                    			<input type="hidden" name="publico" ng-model="publico" ng-init="publico = true" ng-value="true">
 	                           							<input type="hidden" name="propietario" ng-model="propietario" ng-init="propietario = ${userSigned.id}" ng-value="${userSigned.id}">
-				                                        <textarea ng-model="titulo" name="plazas" placeholder="Titulo..." style="color: #FFC107;height: 45%;padding-bottom: 0;margin-top: -120px;"></textarea>
-				                                        <input style="margin-top: 120px;" ng-model="fecha" name="plazas" autocomplete="off" placeholder="Fecha" maxlength="19" class="form-control input-mask" data-mask="00/00/0000 00:00:00" placeholder="ej: 00/00/0000 00:00:00" type="text">
+				                                        <textarea nice-scroll ng-model="titulo" name="plazas" placeholder="Titulo..." style="color: #FFC107;height: 30%;padding-bottom: 0;margin-top: -102px;"></textarea>
+	                                                    
 				                                        
+				                                        <div style="color: rgb(85, 85, 85);margin-top: 102px;margin-left: 22px;">
+					                                        <label class="radio radio-inline m-r-20">
+								                                <input name="inlineRadioOptions" value="Futbol" ng-model="categoriaTitulo" type="radio">
+								                                <i class="input-helper"></i>  
+								                                F&uacute;tbol
+								                            </label>
+								                            <label class="radio radio-inline m-r-15">
+								                                <input name="inlineRadioOptions" value="FutbolSala" ng-model="categoriaTitulo" type="radio">
+								                                <i class="input-helper"></i>  
+								                                F&uacute;tbol Sala
+								                            </label>
+								                            <label class="radio radio-inline m-r-15">
+								                                <input name="inlineRadioOptions" value="Futbol7" ng-model="categoriaTitulo" type="radio">
+								                                <i class="input-helper"></i>  
+								                                F&uacute;tbol 7
+								                            </label>
+								                            <label class="radio radio-inline m-r-15">
+								                                <input name="inlineRadioOptions" value="Baloncesto" ng-model="categoriaTitulo" type="radio">
+								                                <i class="input-helper"></i>  
+								                                Baloncesto
+								                            </label>
+								                            <label class="radio radio-inline m-r-15">
+								                                <input name="inlineRadioOptions" value="Paddel" ng-model="categoriaTitulo" type="radio">
+								                                <i class="input-helper"></i>  
+								                                Paddel
+								                            </label>
+							                            </div>
+							                            <input   ng-model="fecha" name="plazas" autocomplete="off" placeholder="Fecha" maxlength="19" class="form-control input-mask" data-mask="00/00/0000 00:00:00" placeholder="ej: 00/00/0000 00:00:00" type="date">
 				                                        <input type="number" placeholder="Plazas" ng-model="plazas" name="plazas" class="form-control" value="0"  min="0" />
 				                                        
 				                                        <input type="number" placeholder="Precio" ng-model="precio" name="precio" class="form-control" value="0.0" step="0.1" min="0" />
@@ -379,6 +433,7 @@
 <sec:authorize access="isAuthenticated()" >
 	<script type="text/javascript">
 	$(document).ready(function(){
+		
 	    
 		//Welcome Message (not for login page)
 	    function notify(message, type){

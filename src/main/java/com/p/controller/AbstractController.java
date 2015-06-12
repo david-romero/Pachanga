@@ -3,10 +3,13 @@ package com.p.controller;
 /**
  * imports
  */
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -14,6 +17,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.p.model.User;
+import com.p.service.UsersService;
 
 
 @Controller
@@ -29,6 +35,9 @@ public abstract class AbstractController {
 	 */
 	private static final Logger LOGGER = Logger
 			.getLogger(AbstractController.class);
+	
+	@Autowired
+	protected UsersService userService;
 
 	// Panic handler ----------------------------------------------------------
 
@@ -82,14 +91,18 @@ public abstract class AbstractController {
 	 */
 	protected void beginTransaction(boolean readOnly) {
 		assert txStatus == null;
+		
+		if ( txStatus != null ){
+			commitTransaction();
+		}
 
 		DefaultTransactionDefinition definition;
 
 		definition = new DefaultTransactionDefinition();
 		definition
-				.setIsolationLevel(DefaultTransactionDefinition.ISOLATION_DEFAULT);
+				.setIsolationLevel(DefaultTransactionDefinition.ISOLATION_READ_UNCOMMITTED);
 		definition
-				.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRES_NEW);
+				.setPropagationBehavior(DefaultTransactionDefinition.ISOLATION_READ_UNCOMMITTED);
 		definition.setReadOnly(readOnly);
 		txStatus = transactionManager.getTransaction(definition);
 	}
@@ -102,12 +115,13 @@ public abstract class AbstractController {
 	 */
 	protected void commitTransaction() throws TransactionException {
 		assert txStatus != null;
-
-		try {
-			transactionManager.commit(txStatus);
-			txStatus = null;
-		} catch (TransactionException oops) {
-			throw oops;
+		if (txStatus!=null){
+			try {
+				transactionManager.commit(txStatus);
+				txStatus = null;
+			} catch (TransactionException oops) {
+				throw oops;
+			}
 		}
 	}
 
@@ -127,6 +141,34 @@ public abstract class AbstractController {
 		} catch (TransactionException oops) {
 			throw oops;
 		}
+	}
+	
+	@ExceptionHandler(NullPointerException.class)
+    public ModelAndView handleNullPointerException(HttpServletRequest request, Exception ex){
+		LOGGER.error("Requested URL="+request.getRequestURL());
+		LOGGER.error("Exception Raised="+ex);
+         
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("exception", ex);
+        modelAndView.addObject("url", request.getRequestURL());
+         
+        modelAndView.setViewName("error");
+        return modelAndView;
+    } 
+	
+	protected User findUserSigned() {
+		User usr = null;
+		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		try {
+			beginTransaction(true);
+			usr = userService.getByEmail(userSigned.getUsername());
+			commitTransaction();
+		} catch (Exception e) {
+			LOGGER.error(e);
+			rollbackTransaction();
+		}
+		return usr;
 	}
 
 }

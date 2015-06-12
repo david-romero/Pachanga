@@ -1,72 +1,117 @@
 package com.p.controller.rest;
 
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
-import com.p.model.Mensaje;
+import com.p.controller.AbstractController;
 import com.p.model.Notificacion;
 import com.p.model.User;
+import com.p.service.NotificacionService;
 
 @RestController
+@Transactional()
 @RequestMapping(value = "/rest/notificacion")
-public class NotficacionController {
+public class NotficacionController extends AbstractController {
 
-	@RequestMapping(value = "/obtenerTodas/{pagina}", method = RequestMethod.GET)
-	public List<Notificacion> getConversacion(Model model,
-			@PathVariable(value = "pagina") Integer pagina) {
-		List<Notificacion> list = Lists.newArrayList();
+	@Autowired
+	protected NotificacionService notificacionService;
 
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal();
+	protected static final Logger log = Logger
+			.getLogger(NotficacionController.class);
 
-		User userConversation = new User();
-		userConversation.setId(1);
-
-		User userConversationSigned = new User();
-		userConversationSigned.setEmail(userSigned.getUsername());
-		userConversationSigned.setId(999);
-
-		Random rd = new Random();
-		Integer numeroMensajes = rd.nextInt(10);
-		for (int i = 0; i < numeroMensajes; i++) {
-
-			Notificacion msj = new Notificacion();
-			msj.setContenido("Nuevo mensaje  de " + 1L + " para  "
-					+ userSigned.getUsername());
-			msj.setTitulo("Titulo de la notificacion 1");
-			Date fecha = new Date(System.currentTimeMillis());
-			msj.setFecha(fecha);
-			msj.setEmisor(userConversation);
-			msj.setReceptor(userConversationSigned);
-			list.add(msj);
-
-			msj = new Notificacion();
-			msj.setContenido("Nuevo mensaje  de " + userSigned.getUsername()
-					+ " para  " + 1L);
-			msj.setTitulo("Titulo de la notificacion 2");
-			fecha = new Date(System.currentTimeMillis());
-			msj.setFecha(fecha);
-			msj.setEmisor(userConversationSigned);
-			msj.setReceptor(userConversation);
-			list.add(msj);
-
+	@RequestMapping(value = "/obtenerNoLeidas", method = RequestMethod.GET)
+	public Collection<? extends Notificacion> getNotificacionesNoLeidas(Model model) {
+		Collection<? extends Notificacion> notificaciones = null;
+		User usrSigned = findUserSigned();
+		
+		try {
+			beginTransaction(true);
+			Optional<Integer> optional = Optional.empty();
+			notificaciones = notificacionService.findUltimasNoLeidas(usrSigned,optional);
+			commitTransaction();
+		} catch (Exception e) {
+			log.error(e);
+			rollbackTransaction();
 		}
 
-		return list;
-	}
-	
-	@RequestMapping(value = "/obtenerNumeroPaginas", method = RequestMethod.GET)
-	public Integer getConversacion(Model model) {
-		return 5;
+		return notificaciones;
 	}
 
+	@RequestMapping(value = "/eliminar", method = RequestMethod.POST)
+	public void eliminar(Model model, @RequestBody Map<String,List<Notificacion>> notificaciones) {
+		for ( Notificacion notificacion : notificaciones.get("notificaciones") ){
+			try{
+				beginTransaction(false);
+				notificacionService.remove(notificacion);
+				commitTransaction();
+			}catch(Exception e){
+				log.error(e);
+				rollbackTransaction();
+			}
+		}
+	}
+	
+	@RequestMapping(value = "/marcarLeidas", method = RequestMethod.POST)
+	public void marcarLeidas(Model model, @RequestBody Map<String,List<Notificacion>> notificaciones) {
+		for ( Notificacion notificacion : notificaciones.get("notificaciones") ){
+			try{
+				beginTransaction(false);
+				notificacion.setLeido(true);
+				notificacionService.save(notificacion);
+				commitTransaction();
+			}catch(Exception e){
+				log.error(e);
+				rollbackTransaction();
+			}
+		}
+	}
+
+	@RequestMapping(value = "/obtenerUltimas/", method = RequestMethod.GET)
+	public List<Notificacion> getUltimasNtoficaciones() {
+		List<Notificacion> list = Lists.newArrayList();
+		User usrSigned = findUserSigned();
+		try {
+			beginTransaction(true);
+			Optional<Integer> optional = Optional.of(5);
+			list.addAll(notificacionService.findUltimasNoLeidas(usrSigned,optional));
+			commitTransaction();
+		} catch (Exception e) {
+			log.error(e);
+			rollbackTransaction();
+		}
+		if ( list.size() > 5 ){
+			list = list.subList(0, 4);
+		}
+		return list;
+	}
+
+	@RequestMapping(value = "/leerTodasNoLeidas", method = RequestMethod.GET)
+	public void leerTodasNoLeidas() {
+		List<Notificacion> list = getUltimasNtoficaciones();
+		try {
+			beginTransaction();
+			for (Notificacion noti : list) {
+				noti.setLeido(true);
+				notificacionService.save(noti);
+			}
+			commitTransaction();
+		} catch (Exception e) {
+			log.error(e);
+			rollbackTransaction();
+		}
+	}
+
+	
 }

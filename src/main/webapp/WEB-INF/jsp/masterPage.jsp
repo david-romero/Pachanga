@@ -2,56 +2,7 @@
     pageEncoding="ISO-8859-1"%>
     <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>P</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="/P/resources/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="/P/resources/css/shop-homepage.css" rel="stylesheet">
-    
-    <!-- APP -->
-    <link href="/P/resources/css/app.css" rel="stylesheet">
-	
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	
-	 <!-- Vendor CSS -->
-     <link href="/P/resources/css/fullcalendar.css" rel="stylesheet">
-     <link href="/P/resources/css/animate.min.css" rel="stylesheet">
-     <link href="/P/resources/css/sweet-alert.min.css" rel="stylesheet">
-     <link href="/P/resources/css/material-design-iconic-font.min.css" rel="stylesheet">
-     <link href="/P/resources/css/socicon.min.css" rel="stylesheet">
-         
-     <!-- CSS -->
-     <link href="/P/resources/css/app.min.1.css" rel="stylesheet">
-     <link href="/P/resources/css/app.min.2.css" rel="stylesheet">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-    <style type="text/css">
-    	@media (min-width: 1200px){
-			.top-menu #toggle-width .toggle-switch {
-			  margin: -22px 30px 0 0;
-			}
-		}
-    </style>
-    
-</head>
-<body>
 
 	<!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
@@ -85,66 +36,25 @@
                         <a class="tm-search" href=""></a>
                     </li>
                     <sec:authorize access="isAuthenticated()" >
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="tm-message" href=""><i class="tmn-counts">6</i></a>
+                    <li class="dropdown" ng-controller="MensajeController" ng-init="loadMensajesSinLeer();iniciarEventos();">
+                        <a data-toggle="dropdown" class="tm-message" href=""><i class="tmn-counts" ng-if="numeroMensajesPorLeer > 0">{{numeroMensajesPorLeer}}</i></a>
                         <div class="dropdown-menu dropdown-menu-lg pull-right">
                             <div class="listview">
                                 <div class="lv-header">
                                     Mensajes
                                 </div>
-                                <div tabindex="1" style="overflow: hidden;" class="lv-body c-overflow">
-                                    <a class="lv-item" href="">
+                                <div tabindex="1" style="overflow: hidden;" class="lv-body c-overflow" >
+                                    <a class="lv-item" href="" ng-repeat="mensaje in mensajesPorLeer" ng-click="verConversacion(mensaje.emisor)">
                                         <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+                                            <div class="pull-left" ng-if="mensaje.emisor.tieneAvatar == true">
+                                                <img class="lv-img-sm"  ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{mensaje.emisor.id}}" alt="">
+                                            </div>
+                                            <div ng-if="mensaje.emisor.tieneAvatar == false" ng-class="mensaje.emisor.avatar"  class="lv-avatar  pull-left">
+                                            	{{mensaje.emisor.email.substring( 0, 1 )}}
                                             </div>
                                             <div class="media-body">
-                                                <div class="lv-title">David Belle</div>
-                                                <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Jonathan Morris</div>
-                                                <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Fredric Mitchell Jr.</div>
-                                                <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Glenn Jecobs</div>
-                                                <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Bill Phillips</div>
-                                                <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
+                                                <div class="lv-title">{{mensaje.emisor.firstName}}&nbsp;{{mensaje.emisor.lastName}}</div>
+                                                <small class="lv-small">{{mensaje.contenido}}</small>
                                             </div>
                                         </div>
                                     </a>
@@ -153,80 +63,36 @@
                             </div>
                         <div style="width: 0px; z-index: 9; cursor: default; position: absolute; top: 0px; left: 298px; height: 275px; display: block; opacity: 0;" class="nicescroll-rails nicescroll-rails-vr" id="ascrail2002"><div class="nicescroll-cursors" style="position: relative; top: 0px; float: right; width: 0px; height: 271px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div><div style="height: 0px; z-index: 9; top: 275px; left: 0px; position: absolute; cursor: default; display: none; width: 298px; opacity: 0;" class="nicescroll-rails nicescroll-rails-hr" id="ascrail2002-hr"><div class="nicescroll-cursors" style="position: absolute; top: 0px; height: 0px; width: 298px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div></div>
                     </li>
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="tm-notification" href=""><i class="tmn-counts">9</i></a>
+                    <li class="dropdown" ng-controller="NotificacionController" ng-init="loadNotificacionesInicio()">
+                        <a  data-toggle="dropdown" class="tm-notification" href=""><i ng-show="existenNotificaciones()" class="tmn-counts">{{numeroNotificaciones}}</i></a>
                         <div class="dropdown-menu dropdown-menu-lg pull-right">
-                            <div class="listview" id="notifications">
+                            <div class="listview" id="notifications" ng-class="getCssListViewNotificaciones()">
                                 <div class="lv-header">
                                     Notificaci&oacute;n
                     
-                                    <ul class="actions">
+                                    <ul class="actions" ng-show="existenNotificaciones()">
                                         <li class="dropdown">
-                                            <a href="" data-clear="notification">
+                                            <a href="" data-clear="notification" ng-click="leerTodasNoLeidas()">
                                                 <i class="md md-done-all"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div tabindex="2" style="overflow: hidden;" class="lv-body c-overflow">
-                                    <a class="lv-item" href="">
+                                    <a class="lv-item" href="" ng-repeat="notificacion in notificacionesALeer">
                                         <div class="media">
                                             <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+                                                <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{notificacion.emisor.id}}" alt="">
                                             </div>
                                             <div class="media-body">
-                                                <div class="lv-title">David Belle</div>
-                                                <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Jonathan Morris</div>
-                                                <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Fredric Mitchell Jr.</div>
-                                                <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Glenn Jecobs</div>
-                                                <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a class="lv-item" href="">
-                                        <div class="media">
-                                            <div class="pull-left">
-                                                <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="lv-title">Bill Phillips</div>
-                                                <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
+                                                <div class="lv-title">{{notificacion.emisor.firstName}}&nbsp;{{notificacion.emisor.lastName}}</div>
+                                                <small class="lv-small">{{notificacion.titulo}}</small>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
                     
-                                <a href="/P/usuarios/notificaciones" class="lv-footer" href="">Ver todas</a>
+                                <a href="/P/notificaciones" class="lv-footer" href="">Ver todas</a>
                             </div>
                     
                         <div style="width: 0px; z-index: 9; cursor: default; position: absolute; top: 0px; left: 298px; height: 275px; display: block; opacity: 0;" class="nicescroll-rails nicescroll-rails-vr" id="ascrail2003"><div class="nicescroll-cursors" style="position: relative; top: 0px; float: right; width: 0px; height: 271px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div><div style="height: 0px; z-index: 9; top: 275px; left: 0px; position: absolute; cursor: default; display: none; width: 298px; opacity: 0;" class="nicescroll-rails nicescroll-rails-hr" id="ascrail2003-hr"><div class="nicescroll-cursors" style="position: absolute; top: 0px; height: 0px; width: 298px; background-color: rgba(0, 0, 0, 0.5); border: 0px none; background-clip: padding-box; border-radius: 0px;"></div></div></div>
@@ -317,7 +183,7 @@
                 
                         <ul class="main-menu">
                             <li><a href="/P/app"><i class="md md-home"></i> Home</a></li>
-                            <li><a href="typography.html"><i class="md md-format-underline"></i> Typography</a></li>
+                            <li><a href="/P/notificaciones/leidas"><i class="md md-format-underline"></i> Notificaciones Le&iacute;das</a></li>
                             <li class="sub-menu">
                                 <a href=""><i class="md md-now-widgets"></i> Widgets</a>
 
@@ -403,6 +269,9 @@
     <!-- Bootstrap DateTimePicker -->
     <script src="/P/resources/js/bootstrap-datetimepicker.min.js"></script>
     
+    <!-- Bootstrap Select -->
+    <script src="/P/resources/js/bootstrap-select.min.js"></script>
+    
     <!-- Bootstrap Growl -->
     <script src="/P/resources/js/bootstrap-growl.min.js"></script>
     
@@ -454,6 +323,12 @@
     
      <!-- Angular JS Services -->
     <script src="/P/resources/js/services/mensajeService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/notificacionService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/usuarioService.js"></script>
     
     <!-- Angular JS Services -->
     <script src="/P/resources/js/controllers/directives.js"></script>

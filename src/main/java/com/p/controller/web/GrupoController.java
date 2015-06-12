@@ -1,32 +1,28 @@
 package com.p.controller.web;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.p.controller.AbstractController;
 import com.p.model.Grupo;
-import com.p.model.Lugar;
-import com.p.model.Partido;
 import com.p.model.User;
 import com.p.service.GrupoService;
 import com.p.service.UsersService;
 
 @Controller
 @RequestMapping(value = "/grupo")
+@Transactional
 public class GrupoController extends AbstractController{
 
 	@Autowired
@@ -58,35 +54,29 @@ public class GrupoController extends AbstractController{
 		Grupo grupo = null;
 		
 		
-		User usr = findUser();
-		
+		User usr = findUserSigned();
+		Integer size = 0;
+		Set<User> usuariosGrupo = Sets.newHashSet();
 		try{
 			beginTransaction(true);
 			grupo = service.findOne(grupoId);
 			Hibernate.initialize(grupo.getUsuarios());
+			usuariosGrupo.addAll(grupo.getUsuarios());
+			size = usuariosGrupo.size();
 			commitTransaction();
 		}catch(Exception e){
 			log.error(e);
+			e.printStackTrace();
 			rollbackTransaction();
 		}
 		
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("grupo", grupo);
+		model.addAttribute("grupoSize", size);
+		model.addAttribute("usuariosGrupo", usuariosGrupo);
 		return "comunidad";
 	}
 
-	private User findUser() {
-		User usr = null;
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal();
-		try {
-			beginTransaction(true);
-			usr = userService.getByEmail(userSigned.getUsername());
-			commitTransaction();
-		} catch (Exception e) {
-			rollbackTransaction();
-		}
-		return usr;
-	}
+
 	
 }

@@ -1,21 +1,23 @@
 package com.p.service;
 
 import java.util.Collection;
+import java.util.Random;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.p.model.User;
 import com.p.model.repositories.UserRepository;
 
 @Service("usersService")
-@Transactional
+@Transactional(isolation=Isolation.READ_UNCOMMITTED)
 public class UsersService {
 
 	protected static Logger logger = Logger.getLogger("service");
@@ -46,6 +48,10 @@ public class UsersService {
 	 */
 	@Transactional()
 	public User save(User us) {
+		if ( us.getAvatar() == null ){
+			Random rd = new Random();
+			us.setAvatar(User.avatarCss[rd.nextInt(User.avatarCss.length)]);
+		}
 		User usr = repository.save(us);
 		return usr;
 	}
@@ -60,13 +66,19 @@ public class UsersService {
 	@Transactional
 	public User findOne(Integer id) {
 		Assert.notNull(id);
-		Assert.isTrue(id > 0L);
+		Assert.isTrue(id > -1);
 		return repository.findOne(id);
 	}
 
 	@Transactional
 	public Collection<User> findAll() {
 		return repository.findAll();
+	}
+
+	@Transactional
+	public Collection<User> findAllDifferent(String email) {
+		
+		return repository.findAllDifferent(email);
 	}
 
 }

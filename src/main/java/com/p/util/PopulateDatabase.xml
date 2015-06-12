@@ -31,6 +31,7 @@
 		<property name="firstName" value="David" />
 		<property name="lastName" value="David" />
 		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
+		<property name="avatar" value="bgm-orange"></property>
 		<property name="grupos">
 			<set>
 				<ref bean="grupo"></ref>
@@ -43,6 +44,7 @@
 		<property name="role" value="ROLE_USER"></property>
 		<property name="firstName" value="David" />
 		<property name="lastName" value="David" />
+		<property name="avatar" value="bgm-red"></property>
 		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
 	</bean>
 	
@@ -52,6 +54,7 @@
 		<property name="firstName" value="David" />
 		<property name="lastName" value="David" />
 		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
+		<property name="avatar" value="bgm-blue"></property>
 		<property name="grupos">
 			<set>
 				<ref bean="grupo"></ref>

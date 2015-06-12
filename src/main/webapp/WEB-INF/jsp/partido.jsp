@@ -2,9 +2,59 @@
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-		<jsp:include page="masterPage.jsp"></jsp:include>
+<jsp:useBean id = "prettyTime" class = "org.ocpsoft.prettytime.PrettyTime" />
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Index</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/P/resources/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/P/resources/css/shop-homepage.css" rel="stylesheet">
+    
+    <!-- APP -->
+    <link href="/P/resources/css/app.css" rel="stylesheet">
+	
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	
+	 <!-- Vendor CSS -->
+     <link href="/P/resources/css/fullcalendar.css" rel="stylesheet">
+     <link href="/P/resources/css/animate.min.css" rel="stylesheet">
+     <link href="/P/resources/css/sweet-alert.min.css" rel="stylesheet">
+     <link href="/P/resources/css/material-design-iconic-font.min.css" rel="stylesheet">
+     <link href="/P/resources/css/socicon.min.css" rel="stylesheet">
+         
+     <!-- CSS -->
+     <link href="/P/resources/css/app.min.1.css" rel="stylesheet">
+     <link href="/P/resources/css/app.min.2.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+
+
+</head>
+
+<body ng-app="pachanga">
 		
-		<div class="container" id="content" ng-app="pachanga">
+		
+		<div class="container" id="content" >
+		
+			<jsp:include page="masterPage.jsp"></jsp:include>
                     
                     <div class="block-header">
                         <h2 id="tituloValue"><c:out value="${partido.titulo}"></c:out></h2>
@@ -339,7 +389,7 @@
 	                                            <dt class="p-t-10">Categor&iacute;a</dt>
 	                                            <dd>
 	                                                <div class="fg-line">
-	                                                    <select ng-model="categoria" class="form-control" name="categoría">
+	                                                    <select ng-model="categoria" class="form-control selectpicker" name="categoría">
 	                                                        <option>F&uacute;tbol</option>
 	                                                        <option>F&uacute;tbol 7</option>
 	                                                        <option>F&uacute;tbol Sala</option>
@@ -381,86 +431,6 @@
 	                            </div>
 	                       
 	                        
-	                            <div class="pmb-block">
-	                                <div class="pmbb-header">
-	                                    <h2><i class="md fa fa-phone"></i> Información de contacto</h2>
-	                                    
-	                                    <sec:authorize access="isAuthenticated()" >
-                                    	<c:if test="${userSigned.email == user.username }">
-		                                    <ul class="actions">
-		                                        <li class="dropdown">
-		                                            <a href="" data-toggle="dropdown">
-		                                                <i class="md md-more-vert"></i>
-		                                            </a>
-		                                            
-		                                            <ul class="dropdown-menu dropdown-menu-right">
-		                                                <li>
-		                                                    <a id="editar" data-pmb-action="edit" href="">Edit</a>
-		                                                </li>
-		                                            </ul>
-			                                        
-		                                        </li>
-		                                    </ul>
-	                                    </c:if>
-		                                </sec:authorize>
-	                                </div>
-	                                <div class="pmbb-body p-l-30">
-	                                    <div class="pmbb-view">
-	                                        <dl class="dl-horizontal">
-	                                            <dt>Mobile Phone</dt>
-	                                            <dd>00971 12345678 9</dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt>Email Address</dt>
-	                                            <dd>malinda.h@gmail.com</dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt>Twitter</dt>
-	                                            <dd>@malinda</dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt>Skype</dt>
-	                                            <dd>malinda.hollaway</dd>
-	                                        </dl>
-	                                    </div>
-	                                    
-	                                    <div class="pmbb-edit">
-	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Mobile Phone</dt>
-	                                            <dd>
-	                                                <div class="fg-line">
-	                                                    <input class="form-control" placeholder="eg. 00971 12345678 9" type="text">
-	                                                </div>
-	                                            </dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Email Address</dt>
-	                                            <dd>
-	                                                <div class="fg-line">
-	                                                    <input class="form-control" placeholder="eg. malinda.h@gmail.com" type="email">
-	                                                </div>
-	                                            </dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Twitter</dt>
-	                                            <dd>
-	                                                <div class="fg-line">
-	                                                    <input class="form-control" placeholder="eg. @malinda" type="text">
-	                                                </div>
-	                                            </dd>
-	                                        </dl>
-	                                        <dl class="dl-horizontal">
-	                                            <dt class="p-t-10">Skype</dt>
-	                                            <dd>
-	                                                <div class="fg-line">
-	                                                    <input class="form-control" placeholder="eg. malinda.hollaway" type="text">
-	                                                </div>
-	                                            </dd>
-	                                        </dl>
-	                                        
-	                                    </div>
-	                                </div>
-	                             </div>
 	                             </form>
                             </div><!-- TAB 2 -->
                         </div>
@@ -499,3 +469,5 @@ $(document).ready(function () {
 		$('input[type=file]').click();
 	}
 </script>
+</body>
+</html>

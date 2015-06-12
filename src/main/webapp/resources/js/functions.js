@@ -135,7 +135,7 @@ $(document).ready(function(){
      */
     $('body').on('click', '[data-clear="notification"]', function(e){
       e.preventDefault();
-    
+
       var x = $(this).closest('.listview');
       var y = x.find('.lv-item');
       var z = y.size();
@@ -149,6 +149,7 @@ $(document).ready(function(){
       var w = 0;
       y.each(function(){
           var z = $(this);
+          console.log(z);
           setTimeout(function(){
           z.addClass('animated fadeOutRightBig').delay(1000).queue(function(){
               z.remove();
@@ -159,6 +160,45 @@ $(document).ready(function(){
 	//Popup empty message
 	setTimeout(function(){
 	    $('#notifications').addClass('empty');
+	}, (z*150)+200);
+    });
+    
+    /*
+     * Clear Notification
+     */
+    $('body').on('click', '[data-clear="seleccionados"]', function(e){
+      e.preventDefault();
+
+      var x = $(this).closest('.listview');
+      var y = x.find('.lv-item');
+      var z = y.size();
+      
+      //$(this).parent().fadeOut();
+      
+      x.find('.list-group').prepend('<i class="grid-loading hide-it"></i>');
+      x.find('.grid-loading').fadeIn(1500);
+      
+      var existenEliminados = false;    
+      var w = 0;
+      y.each(function(){
+          var z = $(this);
+          var checkbox = z.find('input[type=checkbox]')
+          var checkboxChecked = z.find('input[type=checkbox]:checked')
+          if ( checkboxChecked.length == 1 ){
+        	  existenEliminados = true;
+	          setTimeout(function(){
+	          z.addClass('animated fadeOutRightBig').delay(1000).queue(function(){
+	              z.remove();
+	          });
+	          }, w+=150);
+          }
+      })
+	
+	//Popup empty message
+	setTimeout(function(){
+		if (existenEliminados){
+			$('#notifications').addClass('empty');
+		}
 	}, (z*150)+200);
     });
     
@@ -556,7 +596,12 @@ $(document).ready(function(){
     
     //Date Time Picker
     if ($('.date-time-picker')[0]) {
-	   $('.date-time-picker').datetimepicker();
+	   $('.date-time-picker').datetimepicker({
+		   keepOpen: true,
+		   widgetPositioning : {
+			   vertical:  'top'
+		   }
+	   });
     }
     
     //Time

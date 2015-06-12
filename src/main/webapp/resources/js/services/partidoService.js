@@ -20,13 +20,11 @@ angular.module('pachanga').factory('partidoService' ,
 							  propietario:partido.propietario
 						  })
 			  .success(function(data) {
-				  alert("entra en success");
 				  deferred.resolve(data);
 			   })
 			  .error(function(err) {
 				    // called asynchronously if an error occurs
 				    // or server returns response with an error status.
-				  alert("entra en error");
 				  console.log(err);
 				  deferred.reject(err);
 			   });
@@ -95,12 +93,37 @@ angular.module('pachanga').factory('partidoService' ,
 			return promise;
 		}
 		
+		var loadMorePartidos = function(pagina){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.get('/P/rest/partido/loadMorePartidos/' + pagina)
+			.success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err) {
+				deferred.reject(err);
+			});
+			return promise;
+		}
+		
+		var refreshPartidosJugados = function(){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.get('/P/rest/partido/jugados').success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err) {
+				deferred.reject(err);
+			});
+			return promise;
+		}
+		
 		return {
 			save : save ,
 			apuntarse : apuntarse ,
 			uploadImage : uploadImage ,
 			getPartidosComunidad : getPartidosComunidad ,
-			eliminarJugador : eliminarJugador
+			eliminarJugador : eliminarJugador ,
+			loadMorePartidos : loadMorePartidos ,
+			refreshPartidosJugados : refreshPartidosJugados
 		}
 	}
 ]);

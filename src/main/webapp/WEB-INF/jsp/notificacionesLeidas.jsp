@@ -47,12 +47,12 @@
 </head>
 
 <body ng-app="pachanga">
-<sec:authorize access="isAuthenticated()">
-	
-	<sec:authentication var="user" property="principal" />
-	<div class="container" id="content" >
-	<jsp:include page="masterPage.jsp"></jsp:include>
-	    <div ng-controller="NotificacionController" ng-init="loadNotificaciones(1)">
+
+	<sec:authorize access="isAuthenticated()">
+		
+		<sec:authentication var="user" property="principal" />
+		<div class="container" id="content" >
+			<div>
                     <div class="block-header">
                         <h2>Notificaciones</h2>
                     </div>
@@ -121,48 +121,53 @@
                             </div>
                             
                             <div class="lv-body">
-                                <div class="lv-item media" ng-repeat="notificacion in notificaciones"><!-- Bloque Notificacion -->
-                                    <div class="checkbox pull-left">
-                                        <label>
-                                            <input ng-click="addToSelected(notificacion)" type="checkbox" value="{{notificacion.id}}" ng-value="{{notificacion.id}}">
-                                            <i class="input-helper"></i>
-                                        </label>
-                                    </div>
-                                    <div class="pull-left">
-                                        <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{notificacion.emisor.id}}" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="lv-title">{{notificacion.titulo}}</div>
-                                        <small class="lv-small">{{notificacion.contenido}}</small>
-                                        <ul class="lv-attrs">
-                                            <li>{{notificacion.fechaRepresentacion}}</li>
-                                            <li ng-if="notificacion.propietario != null">Usuarios: 78954</li>
-     
-                                        </ul>
-                                        
-                                        <div class="lv-actions actions dropdown">
-                                            <a href="" data-toggle="dropdown" aria-expanded="true">
-                                                <i class="md md-more-vert"></i>
-                                            </a>
-                                
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li ng-show="!notificacion.leido">
-                                                    <a href="">Marcar como leida</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">Eliminar</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            	<c:forEach items="notificaciones"  var="notificacion">
+	                                <div class="lv-item media"><!-- Bloque Notificacion -->
+	                                    <div class="checkbox pull-left">
+	                                        <label>
+	                                            <input  type="checkbox" value="${notificacion.id}" >
+	                                            <i class="input-helper"></i>
+	                                        </label>
+	                                    </div>
+	                                    <div class="pull-left">
+	                                        <img class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${notificacion.emisor.id}" alt="">
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div class="lv-title">${notificacion.titulo}</div>
+	                                        <small class="lv-small">${notificacion.contenido}</small>
+	                                        <ul class="lv-attrs">
+	                                            <li>${notificacion.fechaRepresentacion}</li>
+	                                            <li>Usuarios: 78954</li>
+	     
+	                                        </ul>
+	                                        
+	                                        <div class="lv-actions actions dropdown">
+	                                            <a href="" data-toggle="dropdown" aria-expanded="true">
+	                                                <i class="md md-more-vert"></i>
+	                                            </a>
+	                                
+	                                            <ul class="dropdown-menu dropdown-menu-right">
+	                                                <li ng-show="!notificacion.leido">
+	                                                    <a href="">Marcar como leida</a>
+	                                                </li>
+	                                                <li>
+	                                                    <a href="">Eliminar</a>
+	                                                </li>
+	                                            </ul>
+	                                        </div>
+	                                    </div>
+	                                </div>
+                                </c:forEach>
                             </div>
                             </div>
                         </div>
                         
                         
                     </div>
-                </div>
-</sec:authorize>
+		</div>
+		
+		
+	</sec:authorize>
+
 </body>
 </html>

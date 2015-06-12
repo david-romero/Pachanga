@@ -25,7 +25,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.p.infrastructure.CustomJsonDateDeserializer;
+import com.p.infrastructure.CustomJsonDateSerializer;
 @Entity
 public class Partido extends BaseEntity{
 
@@ -41,6 +43,7 @@ public class Partido extends BaseEntity{
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
+	@JsonSerialize(using = CustomJsonDateSerializer.class)
 	protected Date fecha;
 	@NotNull
 	protected String titulo;
@@ -88,7 +91,7 @@ public class Partido extends BaseEntity{
 	@Transient
 	@JsonProperty(value="categoriaTitulo")
 	private String categoriaTitulo;
-	
+	@JsonProperty(value="fechaRepresentacion")
 	public String getFechaRepresentacion() {
 		PrettyTime p = new PrettyTime(new Locale("ES","es"));
 		fechaRepresentacion = p.format(getFecha());

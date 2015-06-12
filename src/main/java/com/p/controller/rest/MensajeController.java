@@ -2,9 +2,10 @@ package com.p.controller.rest;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.p.controller.AbstractController;
 import com.p.model.Mensaje;
 import com.p.model.User;
+import com.p.service.MensajeService;
 
 @RestController
+@Transactional()
 @RequestMapping(value = "/rest/mensaje")
-public class MensajeController {
+public class MensajeController extends AbstractController{
+	
+	private static final Logger log = Logger.getLogger(MensajeController.class);
+	
+	@Autowired
+	protected MensajeService mensajeService;
 
 	@RequestMapping(value = "/conversacion/{idUsuario}", method = RequestMethod.GET)
 	public List<Mensaje> getConversacion(Model model,
@@ -27,44 +36,44 @@ public class MensajeController {
 
 		List<Mensaje> list = Lists.newArrayList();
 		
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User userSigned = findUserSigned();
+		User userReceptor = null;
+		userReceptor = getUserById(idUsuario);
 		
-		User userConversation = new User();
-		userConversation.setId((idUsuario));
-		
-		User userConversationSigned = new User();
-		userConversationSigned.setEmail(userSigned.getUsername());
-		userConversationSigned.setId(999);
-		
-		
-		Random rd = new Random();
-		Integer numeroMensajes = rd.nextInt(15);
-		for ( int i = 0; i < numeroMensajes; i++  ){
-		
-			Mensaje msj = new Mensaje();
-			msj.setContenido("Nuevo mensaje  de " + idUsuario + " para  " + userSigned.getUsername());
-			Date fecha = new Date(System.currentTimeMillis());
-			msj.setFecha(fecha);
-			msj.setEmisor(userConversation);
-			msj.setReceptor(userConversationSigned);
-			list.add(msj );
-			
-			msj = new Mensaje();
-			msj.setContenido("Nuevo mensaje  de " + userSigned.getUsername() + " para  " + idUsuario);
-			fecha = new Date(System.currentTimeMillis());
-			msj.setFecha(fecha);
-			msj.setEmisor(userConversationSigned);
-			msj.setReceptor(userConversation);
-			list.add(msj );
-		
+		try{
+			beginTransaction(true);
+			list.addAll(mensajeService.findConversacion(userSigned,userReceptor));
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
 		}
-		
-		
-		
 		
 
 		return list;
 	}
+	
+	@RequestMapping(value = "/getMensajesSinLeer", method = RequestMethod.GET)
+	public List<Mensaje> getMensajesSinLeer(Model model) {
+
+		List<Mensaje> list = Lists.newArrayList();
+		
+		User userSigned = findUserSigned();
+		
+		try{
+			beginTransaction(true);
+			list.addAll(mensajeService.findMensajesSinLeer(userSigned));
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		
+
+		return list;
+	}
+	
+	
 	
 	@RequestMapping(value = "/conversacion/{idUsuarioEmisor}/{idUsuarioReceptor}", method = RequestMethod.POST)
 	public Mensaje addMensaje(Model model,
@@ -73,20 +82,46 @@ public class MensajeController {
 			@RequestBody Mensaje mensaje) {
 		Assert.notNull(mensaje.getContenido());
 		Assert.isTrue(mensaje.getContenido().length() > 0);
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		User userConversation = new User();
-		userConversation.setId(idUsuarioReceptor);
+		User userSigned = findUserSigned();
 		
-		User userConversationSigned = new User();
-		userConversationSigned.setId(idUsuarioEmisor);
-		userConversationSigned.setEmail(userSigned.getUsername());
+		User userReceptor = null;
+		User userEmisor = null;
+		//Si el receptor no es el usuario loguqeado
+		if ( !idUsuarioReceptor.equals(userSigned.getId())  ){
+			userReceptor = getUserById(idUsuarioReceptor);
+			//el id del usuario emisor recibido tiene que ser igual al del usuario signed
+			if ( !userSigned.getId().equals(idUsuarioEmisor) ){
+				throw new IllegalArgumentException("El usuario emisor debe ser el usuario registrado en el sistema");
+			}else{
+				userEmisor = userSigned;
+			}
+		}else{
+			//El receptor es el usuario logueado
+			userEmisor = getUserById(idUsuarioEmisor);
+			userReceptor = userSigned;
+		}
 		
-		mensaje.setContenido(mensaje.getContenido());
+		
 		Date fecha = new Date(System.currentTimeMillis());
 		mensaje.setFecha(fecha);
-		mensaje.setEmisor(userConversationSigned);
-		mensaje.setReceptor(userConversation);
+		mensaje.setEmisor(userEmisor);
+		mensaje.setReceptor(userReceptor);
+		
+		mensaje = save(mensaje);
+		
+		return mensaje;
+	}
+
+	protected Mensaje save(Mensaje mensaje) {
+		try{
+			beginTransaction(true);
+			mensaje = mensajeService.save(mensaje);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
 		return mensaje;
 	}
 	
@@ -96,20 +131,36 @@ public class MensajeController {
 			@RequestBody Mensaje mensaje) {
 		Assert.notNull(mensaje.getContenido());
 		Assert.isTrue(mensaje.getContenido().length() > 0);
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		User userConversation = new User();
-		userConversation.setId(idUsuarioReceptor);
+		User userReceptor = null;
+		User userSigned = findUserSigned();
 		
-		User userConversationSigned = new User();
-		userConversationSigned.setEmail(userSigned.getUsername());
+		userReceptor = getUserById(idUsuarioReceptor);
 		
+		Assert.isTrue(!userReceptor.equals(userSigned));
+
 		mensaje.setContenido(mensaje.getContenido());
 		Date fecha = new Date(System.currentTimeMillis());
 		mensaje.setFecha(fecha);
-		mensaje.setEmisor(userConversationSigned);
-		mensaje.setReceptor(userConversation);
+		mensaje.setEmisor(userSigned);
+		mensaje.setReceptor(userReceptor);
+		
+		mensaje = save(mensaje);
+		
 		return mensaje;
+	}
+
+	protected User getUserById(Integer idUsuarioReceptor) {
+		User userReceptor = null;
+		try{
+			beginTransaction(true);
+			userReceptor = userService.findOne(idUsuarioReceptor);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		return userReceptor;
 	}
 	
 }

@@ -14,7 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +36,7 @@ import com.p.service.MensajeService;
 import com.p.service.UsersService;
 
 @RestController
+@Transactional()
 @RequestMapping(value = "/rest/comunidad")
 public class ComunidadController extends AbstractController{
 	
@@ -55,12 +56,13 @@ public class ComunidadController extends AbstractController{
 		Grupo grp = null;
 		List<Partido> partidosCreados = Lists.newArrayList();
 		try{
-			beginTransaction();
+			beginTransaction(true);
 			grp = service.findOne(idComunidad);
 			Hibernate.initialize(grp.getPartidosCreados());
 			partidosCreados.addAll(grp.getPartidosCreados());
 			commitTransaction();
 		}catch(Exception e){
+			log.error(e);
 			e.printStackTrace();
 			rollbackTransaction();
 		}
@@ -172,19 +174,6 @@ public class ComunidadController extends AbstractController{
 		return mensajeCopia;
 	}
 	
-	private User findUserSigned() {
-		User usr = null;
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal();
-		try {
-			beginTransaction(true);
-			usr = userService.getByEmail(userSigned.getUsername());
-			commitTransaction();
-		} catch (Exception e) {
-			log.error(e);
-			rollbackTransaction();
-		}
-		return usr;
-	}
+
 	
 }

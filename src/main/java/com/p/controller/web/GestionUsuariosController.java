@@ -39,8 +39,6 @@ public class GestionUsuariosController extends AbstractController{
 	protected static Logger logger = Logger
 			.getLogger(GestionUsuariosController.class);
 
-	@Resource(name = "usersService")
-	private UsersService usersService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getLoginAction(Model model,
@@ -150,7 +148,15 @@ public class GestionUsuariosController extends AbstractController{
 
 		response.setContentType("image/jpeg");
 		byte[] buffer = null;
-		User user = usersService.findOne(id);
+		User user = null;
+		try {
+			beginTransaction(true);
+			user = userService.findOne(id);
+			commitTransaction();
+		} catch (Exception e) {
+			logger.error(e);
+			rollbackTransaction();
+		}
 		if (user == null || user.getImagen() == null || user.getImagen().length == 0) {
 			InputStream in = this.getClass().getResourceAsStream("/profile-pic-300px.jpg");
 
@@ -169,7 +175,7 @@ public class GestionUsuariosController extends AbstractController{
 		User usr = null;
 		try {
 			beginTransaction(true);
-			usr = usersService.getByEmail(principal.getUsername());
+			usr = userService.getByEmail(principal.getUsername());
 			commitTransaction();
 			res = "profile";
 		} catch (Exception e) {
@@ -187,7 +193,7 @@ public class GestionUsuariosController extends AbstractController{
 		User usr = null;
 		try {
 			beginTransaction(true);
-			usr = usersService.findOne(idUsuario);
+			usr = userService.findOne(idUsuario);
 			commitTransaction();
 			res = "profile";
 		} catch (Exception e) {
@@ -205,6 +211,8 @@ public class GestionUsuariosController extends AbstractController{
 
 		try {
 			//TODO - DRA - Chat
+			User usr = findUserSigned();
+			model.addAttribute("userSigned",usr);
 			res = "chat";
 		} catch (Exception e) {
 			model.addAttribute("errorweb", e);
@@ -214,19 +222,6 @@ public class GestionUsuariosController extends AbstractController{
 		return res;
 	}
 	
-	@RequestMapping(value = "/notificaciones", method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getNotificaciones(Model model) {
-		String res = "";
-
-		try {
-			//TODO - DRA - Notificaciones
-			res = "notificaciones";
-		} catch (Exception e) {
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
-		}
-
-		return res;
-	}
+	
 
 }

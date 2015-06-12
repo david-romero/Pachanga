@@ -32,8 +32,19 @@ public class UsuarioController extends AbstractController{
 	
 	
 	@RequestMapping(value = "/inicio",method = RequestMethod.GET)
-    public List<User> inicio() {		
-        return Lists.newArrayList(userService.findAll());
+    public List<User> inicio() {	
+		List<User> list = Lists.newArrayList();
+		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+        try{
+			beginTransaction(true);
+			list = Lists.newArrayList(userService.findAllDifferent(userSigned.getUsername()));
+			commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			rollbackTransaction();
+		}
+        return list;
     }
 	
 	@RequestMapping(value = "/editImage",method = RequestMethod.POST)

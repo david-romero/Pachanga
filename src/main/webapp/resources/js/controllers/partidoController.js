@@ -2,6 +2,8 @@ angular.module('pachanga').controller('PartidoController',
 		[ '$scope', '$http' , "partidoService" ,
 		  	function($scope, $http, partidoService) {
 				 $scope.activeTab = 1;
+				 $scope.userSigned = new Object()
+				 $scope.userSigned.id = 0;
 				 $scope.getProfileTabCss = function(tab){
 					var cssClass = "";
 					if ( tab == $scope.activeTab ){
@@ -22,12 +24,14 @@ angular.module('pachanga').controller('PartidoController',
 					var plazas = $scope.formScope.plazas
 					var fecha = $scope.formScope.fecha;
 					var propietario = $scope.formScope.propietario;
+					var publico = $scope.formScope.propietario;
 					var partido = new Object()
 					partido.categoria = categoria;
 					partido.titulo = titulo;
 					partido.plazas = plazas;
 					partido.precio = precio;
 					partido.fecha = fecha;
+					partido.publico = ( publico != undefinied ? publico : false )
 					partido.propietario = propietario;
 					partidoService.save(partido)
 					    .then(function(data) {

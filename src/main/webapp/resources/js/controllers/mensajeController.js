@@ -1,47 +1,111 @@
 /**
  * 
  */
-angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' , 'mensajeService' ,
-	function($scope, $http , mensajeService) {
+angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' , '$timeout' , 'mensajeService', 'usuarioService' ,
+	function($scope, $http, $timeout , mensajeService, usuarioService) {
 		$scope.conversacion = new Object();
-		$scope.conversacion.receptor = "";
-		$scope.conversacion.emisor = "";
+		$scope.conversacion.receptor = new Object();
+		$scope.conversacion.emisor = new Object();
 		$scope.conversacion.mensajes = [];
-		  $scope.loadContactos = function() {
-			  $scope.usuarios = [];
-			 
-			  $scope.conversacion.mensajes = [];
-			  $http.get('/P/rest/usuarios/inicio').success(function(data) {
-					for (var i=0; i<data.length; i++){
-						if ( i == 0 ){
-							data[i].active=true;
-							$scope.conversacion.receptor = data[i];
-						}else{
-							data[i].active=false;
-						}
-						var cssClass = avatarCss[Math.floor(Math.random() * 21) + 1];
-						data[i].avatarCssClass = cssClass;
-						$scope.usuarios.push(data[i])
+		$scope.mensajesPorLeer = [];
+		$scope.numeroMensajesPorLeer = 0;
+		
+		$scope.loadMensajesSinLeer = function(){
+			mensajeService.getMensajesSinLeer()
+			.then(function(data) {
+				$scope.numeroMensajesPorLeer = data.length;
+				for ( var i = 0; i < data.length; i++ ){
+					$scope.mensajesPorLeer.push(data[i]);
+				}
+			}).catch(function(error) {
+		    	console.log(error);
+		    	notify('Se ha producido un error subiendo la imagen', 'inverse');
+		  });
+		}
+		
+		$scope.verConversacion = function(usuario){
+			window.location.href = '/P/usuarios/chat/' + usuario.id;
+		}
+		
+		var recibirMensaje = function(event){
+			console.log(event.data);
+			var mensajes = JSON.parse(event.data)
+			for ( var i ; i < mensajes.length; i++ ){
+				var mensaje = mensajes[i];
+				var existeMensaje = false;
+				for ( var ii = 0; ii < $scope.conversacion.mensajes.length; ii++ ){
+					if ( $scope.conversacion.mensajes[ii].id == mensaje.id ){
+						existeMensaje = true;
 					}
-					$http.get('/P/rest/mensaje/conversacion/'+$scope.conversacion.receptor.id).success(function(data) {
-						for (var i=0; i<data.length; i++){
-							if ( i == 0 ){
-								if ( data[i].emisor.id == $scope.conversacion.receptor.id  ){
-									/*
-									 * Si el emisor del mensaje es el usuario que esta establecido como receptor 
-									 * entonces el usuario logueado es el receptor del mensaje en caso contrario
-									 * el usuario logueado es el emisor
-									 */
-									$scope.conversacion.emisor = data[i].receptor;
-								}else{
-									$scope.conversacion.emisor = data[i].emisor;
-								}
+				}
+				if ( !existeMensaje ){
+					$scope.conversacion.mensajes.push(mensaje);
+					$scope.numeroMensajesPorLeer = $scope.numeroMensajesPorLeer + 1;
+				}
+			}
+		}
+		
+		var errorAlRecibirMensaje = function(event){
+			console.log(event);
+		}
+		
+		$scope.iniciarEventos = function(){
+			if ( $scope.conversacion.receptor.id != undefined ){
+				var source = new EventSource('/P/mensajes/alertas/' + $scope.conversacion.receptor.id);
+	            /* handle incoming messages */
+	            source.onmessage = recibirMensaje;
+	            
+	            source.onerror = errorAlRecibirMensaje;
+			}
+		}
+		
+		$scope.loadConversacionReceptor = function(){
+			mensajeService.loadConversacion($scope.conversacion.receptor.id).then(function(data) {
+				  for ( var i = 0; i < data.length; i++ ){
+					  if ( i == 0 ){
+							if ( data[i].emisor.id == $scope.conversacion.receptor.id  ){
+								/*
+								 * Si el emisor del mensaje es el usuario que esta establecido como receptor 
+								 * entonces el usuario logueado es el receptor del mensaje en caso contrario
+								 * el usuario logueado es el emisor
+								 */
+								$scope.conversacion.emisor = data[i].receptor;
+							}else{
+								$scope.conversacion.emisor = data[i].emisor;
 							}
-							$scope.conversacion.mensajes.push(data[i])
 						}
-					});
-				});
-		  }
+					  $scope.conversacion.mensajes.push(data[i]);
+				  }
+			  });
+		}
+		
+	  $scope.loadContactos = function() {
+		  $scope.usuarios = [];
+		  
+		  $scope.conversacion.mensajes = [];
+		  usuarioService.getUsuarios()
+		  .then(function(data) {
+			  for (var i=0; i<data.length; i++){
+					if ( i == 0 ){
+						data[i].active=true;
+						$scope.conversacion.receptor = data[i];
+						console.log(data[i]);
+					}else{
+						data[i].active=false;
+					}
+					$scope.usuarios.push(data[i])
+			  }//End For
+			  $scope.loadConversacionReceptor();
+			  $timeout(function(){
+				  $scope.iniciarEventos();
+			  },5000);
+		  })
+		  .catch(function(error) {
+		    	console.log(error);
+		    	notify('Se ha producido un error subiendo la imagen', 'inverse');
+		  });
+
+	  }
 		  
 		  $scope.getCssClass = function(usuario) {
 			  return usuario.active;
@@ -60,33 +124,7 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 			  });
 		  }
 		  
-		  var avatarCss = {
-			        1: "bgm-red",
-			        2: "bgm-white",
-			        3: "bgm-black",
-			        4: "bgm-brown",
-			        5: "bgm-pink",
-			        6: "bgm-blue",
-			        7: "bgm-purple",
-			        8: "bgm-deeppurple",
-			        9: "bgm-lightblue",
-			        10: "bgm-cyan",
-			        11: "bgm-teal",
-			        12: "bgm-green",
-			        13: "bgm-lightgreen",
-			        14: "bgm-lime",
-			        15: "bgm-yellow",
-			        16: "bgm-amber",
-			        17: "bgm-orange",
-			        18: "bgm-deeporange",
-			        19: "bgm-gray",
-			        20: "bgm-bluegray",
-			        21: "bgm-indigo"
-			      };
-		  
-		  $scope.getAvatarCssClass = function(usuario){
-			  return usuario.avatarCssClass;
-		  }	
+		  	
 		  
 		  $scope.getMensajeCssClass = function(mensaje){
 			  var cssClass= ""
@@ -110,7 +148,9 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 			  var idDe = $scope.conversacion.emisor.id;
 			  var idPara = $scope.conversacion.receptor.id;
 			  if ( idDe == undefined || idPara == undefined  ){
-				  idPara = $scope.receptor;
+				  if (idPara == undefined){
+					  idPara = $scope.receptor;
+				  }
 				  mensajeService.sendMensaje(idPara,mensajeContenido).then(function(data) {
 					  $scope.conversacion.mensajes.push(data)
 				    })

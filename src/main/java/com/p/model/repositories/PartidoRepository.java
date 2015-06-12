@@ -13,7 +13,7 @@ import com.p.model.User;
 @Repository
 public interface PartidoRepository extends JpaRepository<Partido, Integer>{
 
-	@Query("select p from Partido p where p.fecha > CURRENT_DATE and p.publico = true and p.plazasOcupadas < p.plazas")
+	@Query("select p from Partido p where p.fecha > CURRENT_DATE and p.publico = true and p.plazasOcupadas < p.plazas order by p.fecha ASC")
 	public Page<Partido> getAllFuturosPublicosNoLlenos(Pageable page);
 	@Query("select p from Partido p where ?1 MEMBER OF p.jugadores order by p.fecha DESC ")
 	public Collection<Partido> getAllJugados(User user);

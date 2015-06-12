@@ -20,6 +20,7 @@ import com.p.model.User;
 import com.p.service.UsersService;
 
 @Controller
+@Transactional()
 @RequestMapping(value="/")
 public class WelcomeController extends AbstractController{
 

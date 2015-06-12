@@ -26,10 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import com.p.controller.AbstractController;
 import com.p.model.Categoria;
+import com.p.model.Grupo;
 import com.p.model.Partido;
 import com.p.model.PropietarioPartido;
 import com.p.model.User;
 import com.p.service.CategoriaService;
+import com.p.service.NotificacionService;
 import com.p.service.PartidoService;
 import com.p.service.PropietarioPartidoService;
 import com.p.service.UsersService;
@@ -50,6 +52,9 @@ public class PartidoController extends AbstractController{
 	
 	@Autowired
 	protected CategoriaService categoriaService;
+	
+	@Autowired
+	protected NotificacionService notificacionService;
 	
 	private final static Logger log = Logger.getLogger(PartidoController.class);
 	
@@ -125,6 +130,20 @@ public class PartidoController extends AbstractController{
 			response = new ResponseEntity<Partido>(p, HttpStatus.SERVICE_UNAVAILABLE);
 		}
 		
+		
+		if ( response.getStatusCode().equals(HttpStatus.OK) ){
+			//Si Todo ha ido bien debemos enviar una notificacion al creador y a los otros jugadores 
+			try {
+				beginTransaction();
+				notificacionService.usuarioApuntado(p,usr);
+				commitTransaction();
+			} catch (Exception e) {
+				log.error(e);
+				rollbackTransaction();
+				//Si no se ha podido enviar la notificacion, no devuelvo una respuesta mala
+			}
+		}
+		
 		return response;
 		
 		
@@ -163,10 +182,16 @@ public class PartidoController extends AbstractController{
 					prop.getPartidosCreados().add(partido);
 					prop = propietarioPartidoService.save(prop);
 					commitTransaction();
-					response = new ResponseEntity<Partido>(partido, HttpStatus.CREATED);
+					
 				}catch(Exception e){
 					log.error(e);
 					rollbackTransaction();
+					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
+				}
+				ResponseEntity<Partido> respApuntarse = apuntarse(partido.getId());
+				if ( respApuntarse.getStatusCode().equals(HttpStatus.OK) ){
+					response = new ResponseEntity<Partido>(partido, HttpStatus.CREATED);
+				}else{
 					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
 				}
 			}else{
@@ -180,9 +205,11 @@ public class PartidoController extends AbstractController{
 	private Pair<PropietarioPartido,Boolean> gestionarPropietarioPartido(Partido partido) {
 		boolean bandera = true;
 		PropietarioPartido prop = null;
+		
 		try{
-			beginTransaction();
+			beginTransaction(true);
 			prop = propietarioPartidoService.findOne(partido.getPropietario().getId());
+			validarPropietario(prop);
 			Hibernate.initialize(prop.getPartidosCreados());
 			partido.setPropietario(prop);
 			commitTransaction();
@@ -193,6 +220,15 @@ public class PartidoController extends AbstractController{
 		}
 		Pair<PropietarioPartido,Boolean> result = Pair.create(prop, bandera);
 		return result;
+	}
+
+	private void validarPropietario(PropietarioPartido prop) {
+		User usr = findUserSigned();
+		if ( prop instanceof User ){
+			Assert.isTrue(usr.getId().equals(prop.getId()));
+		}else if ( prop instanceof Grupo ){
+			Assert.isTrue( ( (Grupo) prop).getUsuarios().contains(usr)  );
+		}
 	}
 
 	private void validarPartido(Partido partido) {
@@ -279,19 +315,6 @@ public class PartidoController extends AbstractController{
 		return new Partido();
 	}
 	
-	private User findUserSigned() {
-		User usr = null;
-		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal();
-		try {
-			beginTransaction(true);
-			usr = userService.getByEmail(userSigned.getUsername());
-			commitTransaction();
-		} catch (Exception e) {
-			log.error(e);
-			rollbackTransaction();
-		}
-		return usr;
-	}
+	
 
 }

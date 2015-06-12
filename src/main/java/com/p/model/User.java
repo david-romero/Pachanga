@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Sets;
 import com.p.service.SocialMediaService;
 
@@ -83,13 +84,24 @@ public class User extends PropietarioPartido {
 	}
 
 	@Transient
+	@JsonProperty(value="tieneAvatar")
     private boolean tieneAvatar;
     
     @Transient
     private float karma;
     
- 
-    public Integer[] getKarmaPoints() {
+    @NotNull
+    private String avatar;
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public Integer[] getKarmaPoints() {
 		return karmaPoints;
 	}
 
@@ -183,8 +195,30 @@ public class User extends PropietarioPartido {
 		return karma;
 	}
 
-	
-	
+	@Transient
+	public static String[] avatarCss = {
+	        "bgm-red",
+	        "bgm-white",
+	        "bgm-black",
+	        "bgm-brown",
+	        "bgm-pink",
+	        "bgm-blue",
+	        "bgm-purple",
+	        "bgm-deeppurple",
+	        "bgm-lightblue",
+	        "bgm-cyan",
+	        "bgm-teal",
+	        "bgm-green",
+	        "bgm-lightgreen",
+	        "bgm-lime",
+	        "bgm-yellow",
+	        "bgm-amber",
+	        "bgm-orange",
+	        "bgm-deeporange",
+	        "bgm-gray",
+	        "bgm-bluegray",
+	        "bgm-indigo"
+	      };
     
 
 }

@@ -2,7 +2,7 @@
  * 
  */
 angular.module('pachanga').controller('GrupoController', 
-		[ '$scope', '$http' , 'grupoService' ,
+		[ '$scope', '$http'  , 'grupoService' ,
 		  	function($scope, $http, grupoService) {
 			
 			$scope.idComunidad = 0;

@@ -3,10 +3,57 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id = "prettyTime" class = "org.ocpsoft.prettytime.PrettyTime" />
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Index</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/P/resources/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/P/resources/css/shop-homepage.css" rel="stylesheet">
+    
+    <!-- APP -->
+    <link href="/P/resources/css/app.css" rel="stylesheet">
+	
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	
+	 <!-- Vendor CSS -->
+     <link href="/P/resources/css/fullcalendar.css" rel="stylesheet">
+     <link href="/P/resources/css/animate.min.css" rel="stylesheet">
+     <link href="/P/resources/css/sweet-alert.min.css" rel="stylesheet">
+     <link href="/P/resources/css/material-design-iconic-font.min.css" rel="stylesheet">
+     <link href="/P/resources/css/socicon.min.css" rel="stylesheet">
+         
+     <!-- CSS -->
+     <link href="/P/resources/css/app.min.1.css" rel="stylesheet">
+     <link href="/P/resources/css/app.min.2.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+
+
+</head>
+
+<body ng-app="pachanga">
 <sec:authorize access="isAuthenticated()" >
 		<jsp:include page="masterPage.jsp"></jsp:include>
 		
-		<div class="container" id="content" ng-app="pachanga">
+		<div class="container" id="content">
                     
                     <div class="block-header">
                         <h2><c:out value="${grupo.titulo}"></c:out></h2>
@@ -51,7 +98,7 @@
                                 
                                 
                                 <div class="pmo-stat">
-                                    <h2 class="m-0 c-white"><c:out value="${grupo.usuarios.size()}"></c:out> </h2>
+                                    <h2 class="m-0 c-white"><c:out value="${grupoSize}"></c:out> </h2>
                                     Usuarios
                                 </div>
                             </div>
@@ -60,16 +107,6 @@
                                 <h2>Datos</h2>
                                 <ul>
                                     <li><i class="md md-alarm"></i> <c:out value="${grupo.fechaRepresentacion}"></c:out></li>
-                                    <li><i class="md md-attach-money"></i> 0.7 &euro;</li>
-                                    <li><i class="md md-gps-fixed"></i> Hytasa</li>
-                                    <li>
-                                        <i class="md fa fa-map-marker"></i>
-                                        <address class="m-b-0">
-                                            10098 ABC Towers, <br>
-                                            Dubai Silicon Oasis, Dubai, <br>
-                                            United Arab Emirates
-                                        </address>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -105,10 +142,10 @@
 	                                </div>
 	                                
 	                                <div class="contacts clearfix row">
-	                                	<c:forEach items="${grupo.usuarios}" var="usuario">
+	                                	<c:forEach items="${usuariosGrupo}" var="usuario">
 		                                    <div class="col-md-3 col-sm-6 col-xs-6" ng-click="showUser(${usuario.id})">
 		                                        <div class="c-item">
-		                                            <a href="" class="ci-avatar">
+		                                            <a href="/P/usuarios/profile/${usuario.id}" class="ci-avatar">
 		                                                <img src="${pageContext.request.contextPath}/usuarios/getUserImage/${usuario.id}" alt="">
 		                                            </a>
 		                                            
@@ -132,9 +169,11 @@
 			                                        <div ng-if="mensaje.emisor.id == conversacion.emisor.id" class="lv-avatar" ng-class="getMensajeAvatarCssClass(mensaje)">
 				                                        <img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{mensaje.emisor.id}}" alt="">
 				                                    </div>
-			                                        <div  ng-if="mensaje.emisor.id != conversacion.emisor.id"  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar {{mensaje.emisor.avatarCssClass}} ">
+			                                        <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && !mensaje.emisor.tieneAvatar "  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar {{mensaje.emisor.avatar}} ">
 			                                        	{{mensaje.emisor.email.substring( 0, 1 )}}
-			                                        	
+			                                        </div>
+			                                        <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && mensaje.emisor.tieneAvatar"  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar ">
+			                                        	<img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{mensaje.emisor.id}}" alt="">
 			                                        </div>
 				                                    
 			                                        <div class="media-body">
@@ -228,3 +267,5 @@
             	}
                 </script>
 </sec:authorize>
+</body>
+</html>
