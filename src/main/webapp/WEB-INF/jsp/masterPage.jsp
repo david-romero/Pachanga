@@ -257,6 +257,18 @@
      <!-- jQuery AutoSize -->
     <script src="/P/resources/js/jquery.autosize.min.js"></script>
     
+    <!-- jQuery Flot -->
+    <script src="/P/resources/js/jquery.flot.js"></script>
+    
+    <!-- jQuery Flot -->
+    <script src="/P/resources/js/jquery.flot.resize.js"></script>
+    
+    <!-- jQuery Spark Line -->
+    <script src="/P/resources/js/jquery.sparkline.min.js"></script>
+    
+    <!-- jQuery Easy Pie Chart -->
+    <script src="/P/resources/js/jquery.easypiechart.min.js"></script>
+    
      <!-- Light Gallery -->
     <script src="/P/resources/js/lightGallery.min.js"></script>
 
@@ -274,6 +286,9 @@
     
     <!-- Bootstrap Growl -->
     <script src="/P/resources/js/bootstrap-growl.min.js"></script>
+    
+    <!-- Charts -->
+    <script src="/P/resources/js/curvedLines.js"></script>
     
     <!-- Waves -->
     <script src="/P/resources/js/waves.min.js"></script>

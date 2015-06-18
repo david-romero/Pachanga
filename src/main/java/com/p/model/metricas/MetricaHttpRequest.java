@@ -1,5 +1,7 @@
 package com.p.model.metricas;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,14 +15,17 @@ public class MetricaHttpRequest {
 	
 	private Integer count;
 	
+	private Date fecha;
+	
 	public MetricaHttpRequest() {
 		super();
 	}
 
-	public MetricaHttpRequest(String id, String request, Integer count) {
+	public MetricaHttpRequest(String id, String request,Date fecha ,Integer count) {
 		super();
 		this.id = id;
 		this.request = request;
+		this.fecha = fecha;
 		this.count = count;
 	}
 
@@ -46,6 +51,14 @@ public class MetricaHttpRequest {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 	
 	

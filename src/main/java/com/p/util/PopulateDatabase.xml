@@ -61,6 +61,15 @@
 			</set>
 		</property>
 	</bean>
+	
+	<bean id="admin" class="com.p.model.User">
+		<property name="email" value="admin@pachanga.com" />
+		<property name="role" value="ROLE_ADMIN"></property>
+		<property name="firstName" value="David" />
+		<property name="lastName" value="David" />
+		<property name="avatar" value="bgm-blue"></property>
+		<property name="password" value="$2a$10$FXQtCCPEVHxj1VOTwAvhru.VA6RBDwViiwE5e4v30C.hiQRh.6yPy"></property>
+	</bean>
 
 	<bean id="futbol" class="com.p.model.Categoria">
 		<property name="titulo" value="Futbol" />

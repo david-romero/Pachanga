@@ -91,6 +91,234 @@
 	            </li>
 	        </ul>        
         </div>
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+        	<div class="card">
+                <div class="card-header">
+                    <h2>Sales Statistics <small>Vestibulum purus quam scelerisque, mollis nonummy metus</small></h2>
+
+                    <ul class="actions">
+                        <li>
+                            <a href="">
+                                <i class="md md-cached"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="md md-file-download"></i>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="" data-toggle="dropdown" aria-expanded="false">
+                                <i class="md md-more-vert"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="">Change Date Range</a>
+                                </li>
+                                <li>
+                                    <a href="">Change Graph Type</a>
+                                </li>
+                                <li>
+                                    <a href="">Other Settings</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-edge">
+                        <div class="flot-chart" data-curvedline-chart="" style="padding: 0px; position: relative;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mini-charts">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-cyan">
+                            <div class="clearfix">
+                                <div class="chart stats-bar" data-sparkline-bar=""></div>
+                                <div class="count">
+                                    <small>Website Traffics</small>
+                                    <h2>987,459</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-lightgreen">
+                            <div class="clearfix">
+                                <div class="chart stats-bar-2" data-sparkline-bar=""></div>
+                                <div class="count">
+                                    <small>Website Impressions</small>
+                                    <h2>356,785K</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-orange">
+                            <div class="clearfix">
+                                <div class="chart stats-line" data-sparkline-line=""></div>
+                                <div class="count">
+                                    <small>Total Sales</small>
+                                    <h2>$ 458,778</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-bluegray">
+                            <div class="clearfix">
+                                <div class="chart stats-line-2" data-sparkline-line=""></div>
+                                <div class="count">
+                                    <small>Support Tickets</small>
+                                    <h2>23,856</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dash-widgets">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <div id="site-visits" class="dash-widget-item bgm-teal">
+                            <div class="dash-widget-header">
+                                <div class="p-20">
+                                    <div class="dash-widget-visits" data-sparkline-line=""></div>
+                                </div>
+
+                                <div class="dash-widget-title">For the past 30 days</div>
+
+                                <ul class="actions actions-alt">
+                                    <li class="dropdown">
+                                        <a href="" data-toggle="dropdown">
+                                            <i class="md md-more-vert"></i>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a href="">Refresh</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Widgets</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Widgets Settings</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-20">
+
+                                <small>Page Views</small>
+                                <h3 class="m-0 f-400">47,896,536</h3>
+
+                                <br>
+
+                                <small>Site Visitors</small>
+                                <h3 class="m-0 f-400">24,456,799</h3>
+
+                                <br>
+
+                                <small>Total Clicks</small>
+                                <h3 class="m-0 f-400">13,965</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <div id="pie-charts" class="dash-widget-item">
+                            <div class="bgm-pink">
+                                <div class="dash-widget-header">
+                                    <div class="dash-widget-title">Email Statistics</div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="text-center p-20 m-t-25">
+                                    <div class="easy-pie main-pie" data-percent="75" data-easypie-chart="">
+                                        <div class="percent">45</div>
+                                        <div class="pie-title">Total Emails Sent</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-t-20 p-b-20 text-center">
+                                <div class="easy-pie sub-pie-1" data-percent="56" data-easypie-chart="">
+                                    <div class="percent">56</div>
+                                    <div class="pie-title">Bounce Rate</div>
+                                </div>
+                                <div class="easy-pie sub-pie-2" data-percent="84" data-easypie-chart="">
+                                    <div class="percent">84</div>
+                                    <div class="pie-title">Total Opened</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<div class="col-sm-6">
+                    <!-- Recent Items -->
+                    <div class="card ng-scope" >
+                        <div class="card-header">
+                            <h2>Recent Items <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
+                            <ul class="actions">
+                                <li class="dropdown">
+                                    <a href="" data-toggle="dropdown">
+                                        <i class="md md-more-vert"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li>
+                                            <a href="">Refresh</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Settings</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Other Settings</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body m-t-0">
+                            <table class="table table-inner table-vmiddle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th style="width: 60px">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  class="ng-scope">
+                                        <td class="f-500 c-cyan ng-binding">2569</td>
+                                        <td class="ng-binding">Samsung Galaxy Mega</td>
+                                        <td class="f-500 c-cyan ng-binding">521</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="recent-items-chart" class="flot-chart" data-line-chart="" style="padding: 0px; position: relative;">
+                        
+                        </div>
+                    </div>
+
+                    
+                </div>
+                    
+                </div>
+            </div>
+        </sec:authorize>
         <sec:authorize access="isAuthenticated()" >
 	        <div class="mini-charts">
 	             <div class="row">
