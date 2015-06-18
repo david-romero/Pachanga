@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,18 +27,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Sets;
 import com.p.infrastructure.CustomJsonDateDeserializer;
 import com.p.infrastructure.CustomJsonDateSerializer;
 @Entity
 public class Partido extends BaseEntity{
 
+	public Partido(){
+		jugadores = Sets.newHashSet();
+	}
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -181161949409988033L;
 	@NotNull
 	@Valid
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER,cascade=CascadeType.REMOVE)
 	protected Collection<User> jugadores;
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull

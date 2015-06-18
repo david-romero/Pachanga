@@ -63,6 +63,20 @@ public class NotficacionController extends AbstractController {
 		}
 	}
 	
+	@RequestMapping(value = "/eliminar/ids", method = RequestMethod.POST)
+	public void eliminarIds(Model model, @RequestBody Map<String,List<Integer>> notificaciones) {
+		for ( Integer idNotificacion : notificaciones.get("notificaciones") ){
+			try{
+				beginTransaction(false);
+				notificacionService.remove(idNotificacion);
+				commitTransaction();
+			}catch(Exception e){
+				log.error(e);
+				rollbackTransaction();
+			}
+		}
+	}
+	
 	@RequestMapping(value = "/marcarLeidas", method = RequestMethod.POST)
 	public void marcarLeidas(Model model, @RequestBody Map<String,List<Notificacion>> notificaciones) {
 		for ( Notificacion notificacion : notificaciones.get("notificaciones") ){

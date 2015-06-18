@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <jsp:useBean id = "prettyTime" class = "org.ocpsoft.prettytime.PrettyTime" />
 <!DOCTYPE html>
 <html lang="en" >
@@ -158,8 +159,8 @@
 			                                </div>
 			
 			                                <div class="card-body card-padding list-view bgm-green" style="background-image:url('/P/resources/imgs/futbolsala.png');background-repeat: no-repeat;min-height: 415px;">
-			                                	<div class="col-lg-12">&nbsp;</div>
-			                                    <div class="col-lg-12 "><!-- Fila 1 -->
+			                                	<div class="col-lg-12 m-t-25">&nbsp;</div>
+			                                    <div class="col-lg-12 " ><!-- Fila 1 -->
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
@@ -169,7 +170,16 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 0}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[0].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -180,48 +190,124 @@
 			                                    		
 			                                    	</div>
 			                                 		<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                 			<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 1}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[1].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
+			                                    	</div>
+			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
 			                                    		
 			                                    	</div>
 			                                    </div>
-			                                    <div class="col-lg-12">&nbsp;</div>
+			                                    <div class="col-lg-12" style="margin-top: 50px;">&nbsp;</div>
 			                                    <div class="col-lg-12"><!-- Fila 2 -->
-			                                    	<div class="col-lg-1"><!-- Espacio -->
-			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 2}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[2].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
+			                                    	</div>
+			                                    	<div class="col-lg-1"><!-- Espacio -->
+			                                    		&nbsp;
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 3}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[3].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 4}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[4].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
-			                                    	<div class="col-lg-1"><!-- Espacio -->
+			                                    	<div class="col-lg-1" style="display:none;"><!-- Espacio -->
 			                                    	</div>
-			                                    	<div class="col-lg-1"><!-- Ataque -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    	<div class="col-lg-1" style="margin-left: 20px;"><!-- Ataque -->
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 5}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[5].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		
+			                                    		&nbsp;
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/2" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 6}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[6].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
+			                                    	</div>
+			                                    	<div class="col-lg-1"><!-- Espacio -->
+			                                    		&nbsp;
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/3" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 7}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[7].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	
 			                                    </div>
-			                                    <div class="col-lg-12">&nbsp;</div>
+			                                    <div class="col-lg-12" style="margin-top: 100px;">&nbsp;</div>
 			                                    <div class="col-lg-12"><!-- Fila 3 -->
 			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
@@ -232,7 +318,17 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 8}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[8].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		
@@ -243,10 +339,22 @@
 			                                    		
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Medio -->
-			                                    		<img style="height: 30px;" class="lv-img-sm profilePartido" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/1" alt="">
+			                                    		<c:choose>
+			                                    		<c:when test="${fn:length(partido.jugadores) gt 9}">
+			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
+			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[9].id}"/>" alt="">
+			                                    		</c:when>
+			                                    		<c:otherwise>
+			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
+				                                        		<i class="md md-person-add"></i>
+				                                        	</button>
+			                                    		</c:otherwise>
+			                                    		</c:choose>
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		
+			                                    	</div>
+			                                    	<div class="col-lg-1"><!-- Espacio -->
 			                                    	</div>
 			                                    	<div class="col-lg-1"><!-- Portero -->
 			                                    		
@@ -277,7 +385,16 @@
 					                                	<c:forEach items="${partido.jugadores}" var="jugador">
 						                                    <tr>
 						                                        <td>1</td>
-						                                        <td><img style="height: 30px;border-radius: 50%;" class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.id}" alt=""></td>
+						                                        <td>
+						                                        	<c:if test="${jugador.tieneAvatar}">
+						                                        		<img style="height: 30px;border-radius: 50%;" class="lv-img-sm" src="${pageContext.request.contextPath}/usuarios/getUserImage/${jugador.id}" alt="">
+						                                        	</c:if>
+						                                        	<c:if test="${!jugador.tieneAvatar}">
+						                                        		<div class="lv-avatar ${jugador.avatar }">
+						                                        			<c:out value="${fn:substring(jugador.email, 0, 1)}"></c:out>
+						                                        		</div>
+						                                        	</c:if>
+						                                        </td>
 						                                        <td><c:out value=" ${jugador.firstName}"></c:out></td>
 						                                        <td><c:out value=" ${jugador.lastName}"></c:out></td>
 						                                        <td><c:out value=" ${jugador.email}"></c:out></td>

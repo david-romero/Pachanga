@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,10 +24,23 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired
+    private LoginAttemptService loginAttemptService;
+	
+	@Autowired
+    private HttpServletRequest request;
+	
+	
 
 	public UserDetails loadUserByUsername(String login)
 			throws UsernameNotFoundException {
 
+		String ip = request.getRemoteAddr();
+        if (loginAttemptService.isBlocked(ip)) {
+            throw new RuntimeException("blocked");
+        }
+        
 		com.p.model.User domainUser = usersService.getByEmail(login);
 
 		if (domainUser != null) {

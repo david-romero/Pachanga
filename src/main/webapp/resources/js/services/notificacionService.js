@@ -55,17 +55,31 @@ angular.module('pachanga').factory('notificacionService' ,
 		var eliminarNotificaciones = function(arrayNotificaciones){
 			var deferred = $q.defer();
 			var promise = deferred.promise;
-			$http.post('/P/rest/notificacion/eliminar', 
-					  {
-				  notificaciones:arrayNotificaciones
-			  })
-			.success(function(data) {
-				deferred.resolve();
-			}).error(function(err, status, headers, config) {
-			    // called asynchronously if an error occurs
-			    // or server returns response with an error status.
-			  deferred.reject(err);
-		   });
+			if ( arrayNotificaciones[0].id != undefined ){
+				$http.post('/P/rest/notificacion/eliminar', 
+						  {
+					  notificaciones:arrayNotificaciones
+				  })
+				.success(function(data) {
+					deferred.resolve();
+				}).error(function(err, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+				  deferred.reject(err);
+			   });
+			}else{
+				$http.post('/P/rest/notificacion/eliminar/ids', 
+						  {
+					  notificaciones:arrayNotificaciones
+				  })
+				.success(function(data) {
+					deferred.resolve();
+				}).error(function(err, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+				  deferred.reject(err);
+			   });
+			}
 		   return promise;
 		}
 		

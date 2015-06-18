@@ -6,9 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -100,6 +98,50 @@ public class PartidoService {
 		partido = save(partido);
 		
 		return partido;
+	}
+	@Transactional(readOnly=true)
+	public Page<Partido> findAllRelacionados(com.p.model.modelAux.Page page) {
+		PageRequest request = new PageRequest(page.getPage() - 1, page.getPageSize(),
+				Sort.Direction.DESC, "fecha");
+		User usr = userService.getPrincipal();
+		Assert.notNull(usr);
+		return repository.getAllVinculados(usr,usr.getId(),request);
+	}
+	@Transactional
+	public void remove(Integer idPartido) {
+		Assert.notNull(idPartido);
+		Assert.isTrue(idPartido > 0);
+		Partido p = findOne(idPartido);
+		
+		p.getPropietario().getPartidosCreados().remove(p);
+		
+		p.setPropietario(null);
+		
+		repository.delete(p);
+	}
+	
+	@Transactional
+	public Partido eliminarJugador(User userSigned, User usuarioAEliminar, Partido pachanga) {
+		Assert.notNull(pachanga);
+		Assert.notNull(usuarioAEliminar);
+		Assert.notNull(userSigned);
+		Assert.isTrue(!usuarioAEliminar.equals(userSigned));
+		Assert.isTrue(pachanga.getPropietario().equals(userSigned));
+		Assert.isTrue(pachanga.getJugadores().contains(usuarioAEliminar));
+		Assert.isTrue(usuarioAEliminar.getPartidosJugados().contains(pachanga));
+		boolean eliminado = pachanga.getJugadores().remove(usuarioAEliminar);
+		
+		Assert.isTrue(eliminado);
+		
+		eliminado = usuarioAEliminar.getPartidosJugados().remove(pachanga);
+		
+		Assert.isTrue(eliminado);
+		
+		save(pachanga);
+		
+		userService.save(usuarioAEliminar);
+		
+		return pachanga;
 	}
 
 }

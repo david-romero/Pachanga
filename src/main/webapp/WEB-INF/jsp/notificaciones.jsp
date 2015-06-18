@@ -48,11 +48,11 @@
 
 <body ng-app="pachanga">
 <sec:authorize access="isAuthenticated()">
-	
+	<jsp:include page="masterPage.jsp"></jsp:include>
 	<sec:authentication var="user" property="principal" />
 	<div class="container" id="content" >
-	<jsp:include page="masterPage.jsp"></jsp:include>
-	    <div ng-controller="NotificacionController" ng-init="loadNotificaciones(1)">
+	
+	    <div ng-controller="NotificacionController" ng-init="loadAllNotificacionesSinLeer();">
                     <div class="block-header">
                         <h2>Notificaciones</h2>
                     </div>

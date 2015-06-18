@@ -49,3 +49,22 @@ angular.module('pachanga').directive('scroll', function($timeout) {
 	    }
 	  }
 	});
+
+angular.module('pachanga').directive(
+		'searchBar', function(){
+			return {
+			    restrict: 'A',
+			    scope : {
+			    	busqueda : '='
+			    },
+			    template: '<div class="form-group">' +
+			    		  	'<input type="text" ' +
+			    		  		'class="form-control"' +
+			    		  		'placeholder="Introduce tu texto a buscar"' +
+			    		  		'value={{busqueda}}' +
+			    		  '</div>'
+			    		  
+			}
+});
+
+

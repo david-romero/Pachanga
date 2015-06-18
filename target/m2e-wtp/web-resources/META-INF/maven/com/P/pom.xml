@@ -87,21 +87,28 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.2.3</version>
+			<version>2.5.3</version>
 		</dependency>
 			
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.2.3</version>
+			<version>2.5.3</version>
 		</dependency>
 			
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-		<version>2.2.3</version>
+			<version>2.5.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>2.5.3</version>
+		</dependency>
 
-</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -120,14 +127,14 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+	      <groupId>org.hibernate</groupId>
+	      <artifactId>hibernate-ehcache</artifactId>
+	      <version>4.3.9.Final</version>
+	    </dependency>
+		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>c3p0</groupId>
@@ -314,10 +321,39 @@
 		</dependency>
 		
 		<dependency>
+		   <groupId>commons-fileupload</groupId>
+		   <artifactId>commons-fileupload</artifactId>
+		   <version>1.2.1</version> <!-- makesure correct version here -->
+		</dependency>
+		
+		<!-- MYSQL -->
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.21</version>
 		</dependency>
+		
+		<!-- Google JSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		
+		<!-- Mongo DB -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		
+		<!-- Spring + MongoDB -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.4.1.RELEASE</version>
+		</dependency>
+		
 		
 	</dependencies>
 

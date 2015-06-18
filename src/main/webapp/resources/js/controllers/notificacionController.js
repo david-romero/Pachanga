@@ -2,14 +2,13 @@
  * 
  */
 angular.module('pachanga').controller('NotificacionController', 
-		[ '$scope', '$http' , '$timeout' , 'notificacionService' ,
-		  function($scope, $http,  $timeout, notificacionService) {
+		[ '$rootScope' ,'$scope', '$http' , '$timeout' , 'notificacionService' ,
+		  function($rootScope, $scope, $http,  $timeout, notificacionService) {
 				//Atributos
 				$scope.notificaciones = [];
 				$scope.notificacionesALeer = [];
 				$scope.selected = [];
 				$scope.numeroNotificaciones = 0;
-				
 				var recibirMensaje = function(event) {
 	            	$scope.$apply(function () {
 			        	var notificaciones = JSON.parse(event.data)
@@ -37,12 +36,11 @@ angular.module('pachanga').controller('NotificacionController',
 	            }
 				
 				$timeout(function() {
-					var source = new EventSource('/P/notificaciones/alertas');
-		            /* handle incoming messages */
-		            source.onmessage = recibirMensaje;
-		            
-		            source.onerror = errorAlRecibirMensaje;
-
+					if ( $rootScope.source != undefined ){
+						$rootScope.source.addEventListener('notificaciones', function(e) {
+							recibirMensaje(e);
+							}, false);
+					}
 		            
 				}, 10000);
 		        
@@ -55,10 +53,23 @@ angular.module('pachanga').controller('NotificacionController',
 					$scope.selected.push(notificacion);
 				}
 				
+				$scope.actualizarNotificacionesALeer = function(){
+					for ( var i = 0; i < $scope.selected.length; i++ ){
+						for ( var ii = 0; ii < $scope.notificacionesALeer.length; ii++ ){
+							if ( $scope.selected[i].id == $scope.notificacionesALeer[ii].id ){
+								$scope.notificacionesALeer.slice(ii);
+								$scope.numeroNotificaciones = $scope.numeroNotificaciones-1;
+							}
+						}
+					}
+				}
+				
+				
 				$scope.eliminarSeleccionadas = function(){
 					notificacionService.eliminarNotificaciones($scope.selected)
 					.then(function(data) {
 						notify('Eliminadas ' + $scope.selected.length + ' notificaciones'  , 'inverse');
+						$scope.actualizarNotificacionesALeer();
 						$scope.selected = [];
 				    })
 				    .catch(function(error) {
@@ -69,6 +80,7 @@ angular.module('pachanga').controller('NotificacionController',
 				$scope.leerSeleccionadas = function(){
 					notificacionService.marcarComoLeidas($scope.selected)
 					.then(function(data) {
+						$scope.actualizarNotificacionesALeer();
 						$scope.selected = [];
 				    })
 				    .catch(function(error) {
@@ -93,6 +105,7 @@ angular.module('pachanga').controller('NotificacionController',
 				$scope.leerTodasNoLeidas = function(){
 					notificacionService.leerTodasNoLeidas()
 					.then(function() {
+						$scope.actualizarNotificacionesALeer();
 						$scope.numeroNotificaciones = 0;
 				    })
 				    .catch(function(error) {
@@ -111,17 +124,16 @@ angular.module('pachanga').controller('NotificacionController',
 				
 				$scope.loadAllNotificacionesSinLeer = function() {
 					$scope.notificaciones = [];
-					$timeout(function() {
-						notificacionService.loadAllNotificacionesSinLeer()
-						.then(function(data) {
-							for (var i=0; i<data.length; i++){
-								$scope.notificaciones.push(data[i])
-							}
-					    })
-					    .catch(function(error) {
-					    	console.log(error);
-					    });
-					} , 1000 );
+					notificacionService.loadAllNotificacionesSinLeer()
+					.then(function(data) {
+						for (var i=0; i<data.length; i++){
+							$scope.notificaciones.push(data[i])
+						}
+				    })
+				    .catch(function(error) {
+				    	console.log(error);
+				    });
+					
 				}
 				
 

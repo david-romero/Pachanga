@@ -1,12 +1,18 @@
 package com.p.controller.rest;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -24,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.p.controller.AbstractController;
 import com.p.model.Categoria;
 import com.p.model.Grupo;
@@ -35,7 +42,6 @@ import com.p.service.NotificacionService;
 import com.p.service.PartidoService;
 import com.p.service.PropietarioPartidoService;
 import com.p.service.UsersService;
-import com.p.util.Pair;
 
 @RestController
 @RequestMapping(value = "/rest/partido")
@@ -91,18 +97,12 @@ public class PartidoController extends AbstractController{
 		Assert.isTrue(idPartido>0);
 		ResponseEntity<Partido> response = null;
 		Partido p = null;
-		try{
-			beginTransaction(true);
-			p = partidoService.findOne(idPartido);
-			Hibernate.initialize(p.getJugadores());
-			commitTransaction();
-		}catch(Exception e){
-			log.error(e);
-			rollbackTransaction();
-			response = new ResponseEntity<Partido>(p, HttpStatus.BAD_REQUEST);
-		}
-		Assert.notNull(p);
+		Optional<Partido> optionalPartido  = findPartido(idPartido);
+		Assert.isTrue(optionalPartido.isPresent());
 		
+		if ( optionalPartido.isPresent() ){
+			p = optionalPartido.get();
+		}
 		
 		org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -119,19 +119,11 @@ public class PartidoController extends AbstractController{
 			response = new ResponseEntity<Partido>(p, HttpStatus.FORBIDDEN);
 		}
 		Assert.notNull(usr);
-		try{
-			beginTransaction();
-			p = partidoService.apuntarse(p,usr);
-			commitTransaction();
+		optionalPartido = aniadirUsuarioAPartido(p, usr);
+		
+		if ( optionalPartido.isPresent() ){
 			response = new ResponseEntity<Partido>(p, HttpStatus.OK);
-		}catch(Exception e){
-			log.error(e);
-			rollbackTransaction();
-			response = new ResponseEntity<Partido>(p, HttpStatus.SERVICE_UNAVAILABLE);
-		}
-		
-		
-		if ( response.getStatusCode().equals(HttpStatus.OK) ){
+			p = optionalPartido.get();
 			//Si Todo ha ido bien debemos enviar una notificacion al creador y a los otros jugadores 
 			try {
 				beginTransaction();
@@ -142,12 +134,49 @@ public class PartidoController extends AbstractController{
 				rollbackTransaction();
 				//Si no se ha podido enviar la notificacion, no devuelvo una respuesta mala
 			}
+		}else{
+			response = new ResponseEntity<Partido>(p, HttpStatus.SERVICE_UNAVAILABLE);
 		}
 		
+		
 		return response;
-		
-		
-		
+	}
+
+	/**
+	 * @param idPartido
+	 * @param p
+	 * @return
+	 */
+	protected Optional<Partido> findPartido(Integer idPartido) {
+		try{
+			beginTransaction(true);
+			Partido p = partidoService.findOne(idPartido);
+			Hibernate.initialize(p.getJugadores());
+			commitTransaction();
+			return Optional.of(p);
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * @param p
+	 * @param usr
+	 * @return
+	 */
+	protected Optional<Partido> aniadirUsuarioAPartido(Partido p, User usr) {
+		try{
+			beginTransaction();
+			p = partidoService.apuntarse(p,usr);
+			commitTransaction();
+			return Optional.of(p);
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+			return Optional.empty();
+		}
 	}
 	
 	@RequestMapping(value = "/save",method = RequestMethod.POST, headers = "Accept=application/json")
@@ -161,9 +190,11 @@ public class PartidoController extends AbstractController{
 			validarPartido(partido);
 			bandera = gestionarCategoriaPartido(partido);
 			if (bandera){
-				Pair<PropietarioPartido,Boolean> pair = gestionarPropietarioPartido(partido);
-				bandera = pair.getSecond();
-				prop = pair.getFirst();
+				Optional<PropietarioPartido> propietario = gestionarPropietarioPartido(partido);
+				bandera = propietario.isPresent();
+				if ( propietario.isPresent() ){
+					prop = propietario.get();
+				}
 			}else{
 				response = new ResponseEntity<Partido>(partido, HttpStatus.NOT_FOUND);
 			}
@@ -171,27 +202,16 @@ public class PartidoController extends AbstractController{
 				try{
 					beginTransaction();
 					partido = partidoService.save(partido);
-					commitTransaction();
-				}catch(Exception e){
-					log.error(e);
-					rollbackTransaction();
-					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
-				}
-				try{
-					beginTransaction();
 					prop.getPartidosCreados().add(partido);
 					prop = propietarioPartidoService.save(prop);
+					if ( prop instanceof User ){
+						partido = partidoService.apuntarse(partido,(User) prop);
+					}
 					commitTransaction();
-					
+					response = new ResponseEntity<Partido>(partido, HttpStatus.CREATED);
 				}catch(Exception e){
 					log.error(e);
 					rollbackTransaction();
-					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
-				}
-				ResponseEntity<Partido> respApuntarse = apuntarse(partido.getId());
-				if ( respApuntarse.getStatusCode().equals(HttpStatus.OK) ){
-					response = new ResponseEntity<Partido>(partido, HttpStatus.CREATED);
-				}else{
 					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
 				}
 			}else{
@@ -202,24 +222,22 @@ public class PartidoController extends AbstractController{
 		return response;
 	}
 
-	private Pair<PropietarioPartido,Boolean> gestionarPropietarioPartido(Partido partido) {
-		boolean bandera = true;
-		PropietarioPartido prop = null;
-		
+	private Optional<PropietarioPartido> gestionarPropietarioPartido(Partido partido) {
+		Optional<PropietarioPartido> opt = null;
 		try{
 			beginTransaction(true);
-			prop = propietarioPartidoService.findOne(partido.getPropietario().getId());
+			PropietarioPartido prop = propietarioPartidoService.findOne(partido.getPropietario().getId());
 			validarPropietario(prop);
 			Hibernate.initialize(prop.getPartidosCreados());
 			partido.setPropietario(prop);
 			commitTransaction();
+			opt = Optional.of(prop);
 		}catch(Exception e){
-			bandera = false;
 			log.error(e);
 			rollbackTransaction();
+			opt = Optional.empty();
 		}
-		Pair<PropietarioPartido,Boolean> result = Pair.create(prop, bandera);
-		return result;
+		return opt;
 	}
 
 	private void validarPropietario(PropietarioPartido prop) {
@@ -238,6 +256,7 @@ public class PartidoController extends AbstractController{
 		Assert.notNull(partido.getPropietario());
 		Assert.notNull(partido.getPropietario().getId());
 		Assert.isTrue(partido.getPropietario().getId()>0);
+		Assert.isTrue(partido.getFecha().after(new Date(System.currentTimeMillis())));
 	}
 
 	private boolean gestionarCategoriaPartido(Partido partido) {
@@ -261,17 +280,11 @@ public class PartidoController extends AbstractController{
 	public Partido save(Model model,@RequestParam("foto") MultipartFile file,
 			@PathVariable(value = "idPartido") Integer idPartido) {
 		Partido p = null;
+		Optional<Partido> partido = findPartido(idPartido);
+		Assert.isTrue(partido.isPresent());
 		try {
 			beginTransaction();
-			p = partidoService.findOne(idPartido);
-			commitTransaction();
-		} catch (Exception e) {
-			rollbackTransaction();
-			e.printStackTrace();
-		}
-		Assert.notNull(p);
-		try {
-			beginTransaction();
+			p = partido.get();
 			p.setImagen(file.getBytes());
 			p = partidoService.save(p);
 			commitTransaction();
@@ -284,7 +297,7 @@ public class PartidoController extends AbstractController{
 	
 	@RequestMapping(value = "/jugados", method = RequestMethod.GET)
 	public List<Partido> jugados() {
-		List<Partido> partidos = Lists.newArrayList();
+		Set<Partido> partidos = Sets.newHashSet();
 		if ( !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) ){
 			User usr = null;
 			org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
@@ -302,17 +315,86 @@ public class PartidoController extends AbstractController{
 			partidos.addAll(usr.getPartidosJugados());
 			partidos.addAll(usr.getPartidosCreados());
 		}
-		partidos = partidos.subList(0, partidos.size() > 5 ? 5 : partidos.size());
-		return partidos;
+		List<Partido> result = Lists.newArrayList(partidos);
+		Collections.sort(result,new Comparator<Partido>(){
+
+			@Override
+			public int compare(Partido arg0, Partido arg1) {
+				return arg0.getFecha().compareTo(arg1.getFecha());
+			}
+			
+		});
+		if ( result.size() > 5 ){
+			result = result.subList(0, 5);
+		}
+		return result;
 	}
 	
 	@RequestMapping(value = "/eliminarJugador/{idPartido}/{idJugador}", method = RequestMethod.POST)
 	public Partido eliminarJugador(
 			@PathVariable(value = "idPartido") Integer idPartido,
 			@PathVariable(value = "idJugador") Integer idJugador) {
-		//TODO
+	
+		User userSigned = findUserSigned();
+		Partido p = null;
+		User usrAEliminar = null;
+		try{
+			beginTransaction(true);
+			p = partidoService.findOne(idPartido);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		try{
+			beginTransaction(true);
+			usrAEliminar = userService.findOne(idJugador);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		
+		try{
+			beginTransaction();
+			p = partidoService.eliminarJugador(userSigned,usrAEliminar,p);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
 
-		return new Partido();
+		return p;
+	}
+	
+	@RequestMapping(value = "/eliminar/{idPartido}",method = RequestMethod.GET, headers = "Accept=application/json")
+	public void remove(Model model,@PathVariable(value="idPartido") Integer idPartido) {
+		try{
+			beginTransaction(true);
+			partidoService.remove(idPartido);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+
+	}
+	
+	
+	@RequestMapping(value = "/relacionados", method = RequestMethod.POST)
+	public Page<Partido> relacionados(@RequestBody com.p.model.modelAux.Page page) {
+		Page<Partido> pageObtained = null;
+		if ( !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) ){
+			try {
+				beginTransaction(true);
+				pageObtained = partidoService.findAllRelacionados(page);
+				commitTransaction();
+			} catch (Exception e) {
+				log.error(e);
+				rollbackTransaction();
+			}
+		}
+		return pageObtained;
 	}
 	
 	

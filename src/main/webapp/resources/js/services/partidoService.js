@@ -16,6 +16,7 @@ angular.module('pachanga').factory('partidoService' ,
 							  precio:partido.precio,
 							  plazas:partido.plazas,
 							  fecha: partido.fecha,
+							  publico: partido.publico,
 							  categoriaTitulo:partido.categoria,
 							  propietario:partido.propietario
 						  })
@@ -108,7 +109,36 @@ angular.module('pachanga').factory('partidoService' ,
 		var refreshPartidosJugados = function(){
 			var deferred = $q.defer();
 			var promise = deferred.promise;
-			$http.get('/P/rest/partido/jugados').success(function(data) {
+			$http.get('/P/rest/partido/jugados')
+			.success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err) {
+				deferred.reject(err);
+			});
+			return promise;
+		}
+		
+		var eliminar = function(idPartido){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.get('/P/rest/partido/eliminar/'+idPartido)
+			.success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err) {
+				deferred.reject(err);
+			});
+			return promise;
+		}
+		
+		var relacionados = function(page, pageSize){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.post('/P/rest/partido/relacionados',
+					{
+						page : page,
+						pageSize : pageSize
+					})
+			.success(function(data) {
 				deferred.resolve(data);
 			}).error(function(err) {
 				deferred.reject(err);
@@ -123,7 +153,9 @@ angular.module('pachanga').factory('partidoService' ,
 			getPartidosComunidad : getPartidosComunidad ,
 			eliminarJugador : eliminarJugador ,
 			loadMorePartidos : loadMorePartidos ,
-			refreshPartidosJugados : refreshPartidosJugados
+			refreshPartidosJugados : refreshPartidosJugados ,
+			eliminar : eliminar ,
+			relacionados : relacionados
 		}
 	}
 ]);

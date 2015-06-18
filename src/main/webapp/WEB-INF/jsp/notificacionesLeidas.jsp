@@ -51,7 +51,8 @@
 	<sec:authorize access="isAuthenticated()">
 		
 		<sec:authentication var="user" property="principal" />
-		<div class="container" id="content" >
+		<jsp:include page="masterPage.jsp"></jsp:include>
+		<div class="container" id="content" ng-controller="NotificacionController"  >
 			<div>
                     <div class="block-header">
                         <h2>Notificaciones</h2>
@@ -63,16 +64,6 @@
                                 
                                 
                                 <ul class="lv-actions actions">
-                                    <li>
-                                    	<a href="" data-clear="notification" ng-click="leerTodasNoLeidas()">
-                                                <i class="md md-done-all"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                    	<a href="" data-clear="seleccionados" ng-click="leerSeleccionadas()">
-                                                <i class="md md-done"></i>
-                                        </a>
-                                    </li>
                                     <li>
                                     	<a href="" data-clear="seleccionados" ng-click="eliminarSeleccionadas()">
                                                 <i class="md md-delete"></i>
@@ -121,11 +112,11 @@
                             </div>
                             
                             <div class="lv-body">
-                            	<c:forEach items="notificaciones"  var="notificacion">
+                            	<c:forEach items="${notificaciones}"  var="notificacion">
 	                                <div class="lv-item media"><!-- Bloque Notificacion -->
 	                                    <div class="checkbox pull-left">
 	                                        <label>
-	                                            <input  type="checkbox" value="${notificacion.id}" >
+	                                            <input  type="checkbox" value="${notificacion.id}" ng-click="addToSelected(${notificacion.id})" >
 	                                            <i class="input-helper"></i>
 	                                        </label>
 	                                    </div>
@@ -138,7 +129,6 @@
 	                                        <ul class="lv-attrs">
 	                                            <li>${notificacion.fechaRepresentacion}</li>
 	                                            <li>Usuarios: 78954</li>
-	     
 	                                        </ul>
 	                                        
 	                                        <div class="lv-actions actions dropdown">
@@ -147,11 +137,8 @@
 	                                            </a>
 	                                
 	                                            <ul class="dropdown-menu dropdown-menu-right">
-	                                                <li ng-show="!notificacion.leido">
-	                                                    <a href="">Marcar como leida</a>
-	                                                </li>
 	                                                <li>
-	                                                    <a href="">Eliminar</a>
+	                                                    <a href="" data-clear="seleccionados" ng-click="addToSelected(${notificacion.id});eliminarSeleccionadas();">Eliminar</a>
 	                                                </li>
 	                                            </ul>
 	                                        </div>

@@ -55,10 +55,26 @@ angular.module('pachanga').factory('mensajeService' ,
 			return promise;
 		}
 		
+		var leerMensajes = function(idEmisor,idReceptor){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.get('/P/rest/mensaje/leerMensajes/'+idEmisor+'/'+idReceptor+'/')
+			.success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+			  deferred.reject(err);
+		   });
+			
+			return promise;
+		}
+		
 		return {
 			sendMensaje : sendMensaje ,
 			loadConversacion : loadConversacion ,
-			getMensajesSinLeer : getMensajesSinLeer
+			getMensajesSinLeer : getMensajesSinLeer ,
+			leerMensajes : leerMensajes
 		}
 	}
 ]);

@@ -1,6 +1,12 @@
 package com.p.controller.web;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.p.controller.AbstractController;
 import com.p.model.Partido;
 import com.p.model.PropietarioPartido;
@@ -59,6 +67,20 @@ public class PachangaController extends AbstractController{
 		return "partido";
 	}
 	
+	@RequestMapping(value = "/remove/{idPartido}",method = RequestMethod.GET, headers = "Accept=application/json")
+	public String remove(Model model,@PathVariable(value="idPartido") Integer idPartido) {
+		try{
+			beginTransaction(true);
+			partidoService.remove(idPartido);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+
+		return "redirect:/partido/all";
+	}
+	
 	@RequestMapping(value = "/show/{partidoId}",method = RequestMethod.GET, headers = "Accept=application/json")
 	public String show(Model model,
 			@PathVariable(value = "partidoId") Integer partidoId) {
@@ -84,6 +106,78 @@ public class PachangaController extends AbstractController{
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("partido", p);
 		return "partido";
+	}
+	
+	@RequestMapping(value = "/all",method = RequestMethod.GET, headers = "Accept=application/json")
+	public String showAll(Model model) {
+		Set<Partido> partidos = Sets.newHashSet();
+		User usr = null;
+		if ( !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) ){
+			
+			org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			try {
+				beginTransaction(true);
+				usr = userService.getByEmail(userSigned.getUsername());
+				Hibernate.initialize(usr.getPartidosJugados());
+				Hibernate.initialize(usr.getPartidosCreados());
+				commitTransaction();
+			} catch (Exception e) {
+				log.error(e);
+				rollbackTransaction();
+			}
+			partidos.addAll(usr.getPartidosJugados());
+			partidos.addAll(usr.getPartidosCreados());
+		}
+		List<Partido> result = Lists.newArrayList(partidos);
+		Collections.sort(result,new Comparator<Partido>(){
+
+			@Override
+			public int compare(Partido arg0, Partido arg1) {
+				return arg0.getFecha().compareTo(arg1.getFecha());
+			}
+			
+		});
+		
+		model.addAttribute("userSigned", usr);
+		model.addAttribute("partidos", partidos);
+		return "partidos";
+	}
+	
+	@RequestMapping(value = "/calendario",method = RequestMethod.GET, headers = "Accept=application/json")
+	public String calendario(Model model) {
+		Set<Partido> partidos = Sets.newHashSet();
+		User usr = null;
+		if ( !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) ){
+			
+			org.springframework.security.core.userdetails.User userSigned = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			try {
+				beginTransaction(true);
+				usr = userService.getByEmail(userSigned.getUsername());
+				Hibernate.initialize(usr.getPartidosJugados());
+				Hibernate.initialize(usr.getPartidosCreados());
+				commitTransaction();
+			} catch (Exception e) {
+				log.error(e);
+				rollbackTransaction();
+			}
+			partidos.addAll(usr.getPartidosJugados());
+			partidos.addAll(usr.getPartidosCreados());
+		}
+		List<Partido> result = Lists.newArrayList(partidos);
+		Collections.sort(result,new Comparator<Partido>(){
+
+			@Override
+			public int compare(Partido arg0, Partido arg1) {
+				return arg0.getFecha().compareTo(arg1.getFecha());
+			}
+			
+		});
+		
+		model.addAttribute("userSigned", usr);
+		model.addAttribute("partidos", partidos);
+		return "calendario";
 	}
 	
 	private User findUser() {

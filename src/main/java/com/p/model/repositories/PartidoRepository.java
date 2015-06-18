@@ -17,5 +17,7 @@ public interface PartidoRepository extends JpaRepository<Partido, Integer>{
 	public Page<Partido> getAllFuturosPublicosNoLlenos(Pageable page);
 	@Query("select p from Partido p where ?1 MEMBER OF p.jugadores order by p.fecha DESC ")
 	public Collection<Partido> getAllJugados(User user);
+	@Query("select p from Partido p where ?1 MEMBER OF p.jugadores or p.propietario.id = ?2 order by p.fecha DESC ")
+	public Page<Partido> getAllVinculados(User user,Integer userId,Pageable page);
 	
 }

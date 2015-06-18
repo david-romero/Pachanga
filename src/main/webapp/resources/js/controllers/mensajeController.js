@@ -1,15 +1,16 @@
 /**
  * 
  */
-angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' , '$timeout' , 'mensajeService', 'usuarioService' ,
-	function($scope, $http, $timeout , mensajeService, usuarioService) {
+angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$scope', '$http' , '$timeout' , 'mensajeService', 'usuarioService' ,
+	function($rootScope, $scope, $http, $timeout , mensajeService, usuarioService) {
 		$scope.conversacion = new Object();
 		$scope.conversacion.receptor = new Object();
 		$scope.conversacion.emisor = new Object();
 		$scope.conversacion.mensajes = [];
 		$scope.mensajesPorLeer = [];
 		$scope.numeroMensajesPorLeer = 0;
-		
+		$scope.source = undefined;
+		$rootScope.source = undefined;
 		$scope.loadMensajesSinLeer = function(){
 			mensajeService.getMensajesSinLeer()
 			.then(function(data) {
@@ -27,35 +28,56 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 			window.location.href = '/P/usuarios/chat/' + usuario.id;
 		}
 		
+		
 		var recibirMensaje = function(event){
-			console.log(event.data);
-			var mensajes = JSON.parse(event.data)
-			for ( var i ; i < mensajes.length; i++ ){
-				var mensaje = mensajes[i];
-				var existeMensaje = false;
-				for ( var ii = 0; ii < $scope.conversacion.mensajes.length; ii++ ){
-					if ( $scope.conversacion.mensajes[ii].id == mensaje.id ){
-						existeMensaje = true;
-					}
+			$scope.$apply(function () {
+				var mensajes = JSON.parse(event.data)
+				
+				for (i = 0; i < mensajes.length; i++) {
+					var existe = false;
+				    for (j = 0; j < $scope.conversacion.mensajes.length; j++) {
+				        if (mensajes[i].id === $scope.conversacion.mensajes[j].id) {
+				        	existe = true;
+				        }
+				    }
+				    if(!existe && mensajes[i].emisor.id == $scope.conversacion.receptor.id){
+				    	$scope.conversacion.mensajes.push(mensajes[i]);
+				    }
+				    existe = false;
+				    for ( var j = 0; j < $scope.mensajesPorLeer.length ; j++ ){
+				    	if (mensajes[i].id === $scope.mensajesPorLeer[j].id) {
+				        	existe = true;
+				        }
+				    }
+				    if(!existe){
+				    	$scope.mensajesPorLeer.push(mensajes[i]);
+				    	$scope.numeroMensajesPorLeer = $scope.numeroMensajesPorLeer + 1;
+				    }
 				}
-				if ( !existeMensaje ){
-					$scope.conversacion.mensajes.push(mensaje);
-					$scope.numeroMensajesPorLeer = $scope.numeroMensajesPorLeer + 1;
-				}
-			}
+			});
 		}
 		
 		var errorAlRecibirMensaje = function(event){
-			console.log(event);
+			if ( event.target.readyState == EventSource.CLOSED ){
+				console.log('Connection failed. Will not retry.');
+			}
 		}
 		
 		$scope.iniciarEventos = function(){
 			if ( $scope.conversacion.receptor.id != undefined ){
-				var source = new EventSource('/P/mensajes/alertas/' + $scope.conversacion.receptor.id);
-	            /* handle incoming messages */
-	            source.onmessage = recibirMensaje;
-	            
-	            source.onerror = errorAlRecibirMensaje;
+				if ( $rootScope.source != undefined ){
+					$rootScope.source.close();
+				}
+				$rootScope.source = new EventSource('/P/alertas/'+ $scope.conversacion.receptor.id);
+
+				
+				$rootScope.source.addEventListener('mensajes', function(e) {
+					recibirMensaje(e)
+				}, false);
+
+				$rootScope.source.addEventListener('error', function(e) {
+					errorAlRecibirMensaje(e);
+				}, false);
 			}
 		}
 		
@@ -76,6 +98,7 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 						}
 					  $scope.conversacion.mensajes.push(data[i]);
 				  }
+				  
 			  });
 		}
 		
@@ -118,10 +141,15 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 			  usuario.active = true;
 			  $scope.conversacion.receptor = usuario;
 			  $scope.conversacion.mensajes = [];
-			  mensajeService.loadConversacion(usuario.id).then(function(data) {
+			  $scope.iniciarEventos();
+			  mensajeService.loadConversacion(usuario.id)
+			  .then(function(data) {
 				  for ( var i = 0; i < data.length; i++ )
 					  $scope.conversacion.mensajes.push(data[i]);
+				  
 			  });
+			  
+			  $scope.leerMensajes($scope.conversacion.emisor.id,$scope.conversacion.receptor.id);
 		  }
 		  
 		  	
@@ -141,6 +169,25 @@ angular.module('pachanga').controller('MensajeController', [ '$scope', '$http' ,
 				  cssClass = "pull-right";
 			  }
 			  return cssClass;
+		  }
+		  
+		  $scope.leerMensajes = function(idEmisor,idReceptor){
+			  mensajeService.leerMensajes(idEmisor,idReceptor)
+			  .then(function(data) {
+				  for ( var i = 0; i < $scope.mensajesPorLeer.length; i++ ){
+					  var mensajeEnLista = $scope.mensajesPorLeer[i]
+					  for ( var ii = 0; ii < data.length; ii++ ){
+						  var mensajeLeido = data[ii];
+						  if ( mensajeLeido.id == mensajeEnLista.id ){
+							  $scope.numeroMensajesPorLeer = $scope.numeroMensajesPorLeer - 1;
+							  $scope.mensajesPorLeer.splice(i, 1);
+						  }
+					  }
+				  }
+			  }).catch(function(error) {
+			    	console.log(error);
+			    	notify('Se ha producido un error leyendo tus mensajes... :(', 'inverse');
+			    });
 		  }
 		  
 		  $scope.sendMensaje = function(){

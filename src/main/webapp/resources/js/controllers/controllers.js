@@ -6,6 +6,47 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		$scope.userSigned = new Object()
 		$scope.userSigned.id = 0;
 		$scope.hayMasPaginas = true;
+		var date = new Date();
+	    var d = date.getDate();
+	    var m = date.getMonth();
+	    var y = date.getFullYear();
+		$scope.uiConfig = {
+			      calendar:{
+			    	  contentHeight: 'auto',
+				        theme: true,
+				        editable: false,
+				        selectable: false,
+		                lang : 'es',
+		                header: {
+		                    right: '',
+		                    center: 'prev, title, next',
+		                    left: ''
+		                },
+		                defaultDate: new Date(),
+			      }
+			    };
+		
+		/* event source that pulls from google.com */
+	    $scope.eventSource = {
+	            url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+	            className: 'gcal-event',           // an option!
+	            currentTimezone: 'America/Chicago' // an option!
+	    };
+	    /* event source that contains custom events on the scope */
+	    $scope.events = [ ];
+	    /* event source that calls a function on every view switch */
+	    $scope.eventsF = function (start, end, timezone, callback) {
+	      var s = new Date(start).getTime() / 1000;
+	      var e = new Date(end).getTime() / 1000;
+	      var m = new Date(start).getMonth();
+	      var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
+	      callback(events);
+	    };
+	    
+	    
+	    /* event sources array*/
+	    $scope.eventSources = [$scope.events];
+		
 		$scope.inicio = function() {
 			$scope.partidos = [];
 			$scope.partidosJugados = [];
@@ -103,7 +144,43 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		
 		$scope.setFormScope= function(scope){
 			   $scope.formScope = scope;
-			} 
+		}
+		
+		$scope.getAllPartidos = function(){
+			 partidoService.relacionados(1,999999999)
+			 	.then(function(data) {
+			 		for ( var indice = 0; indice < data.content.length; indice++ ){
+			 			var partido = data.content[indice];
+			 			var fechaParseada = partido.fecha.split(" ")[0]
+			 			var horasParseada = partido.fecha.split(" ")[1]
+			 			var diaParseado = fechaParseada.split("/")[0];
+			 			var mesParseado = fechaParseada.split("/")[1];
+			 			var anioParseado = fechaParseada.split("/")[2];
+			 			var horaParseada = horasParseada.split(":")[0]
+			 			var minutoParseada = horasParseada.split(":")[1]
+			 			var fechaStart = new Date(anioParseado,(mesParseado-1),diaParseado,horaParseada,minutoParseada,0,0);
+			 			var miliseconds = fechaStart.getUTCMilliseconds();
+			 			miliseconds += 3600000
+			 			var fechaEnd = new Date(miliseconds)
+			 			console.log(fechaStart);
+			 			console.log(fechaEnd);
+			 			$scope.events.push({
+			 				id: partido.id,
+			 		        title: partido.titulo,
+			 		        start: fechaStart,
+			 		        end: fechaEnd,
+			 		        className: ['bgm-red'] ,
+			 		        url : '/P/partido/show/' + partido.id
+			 		      });
+			 		}
+			 		
+			    })
+			    .catch(function(error) {
+			    	console.log(error);
+			    	notify('Se ha producido un error obteniendo tus partidos... :(', 'inverse');
+			    });
+
+		}
 		 
 		$scope.savePartido = function(){
 			var precio = $scope.formScope.precio
@@ -140,6 +217,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		}
 		
 		$scope.isInDate = function(partido){
+			console.log("Partido: " + partido.titulo + " " + Date.parse(partido.fecha) >= new Date().getTime());
 			return Date.parse(partido.fecha) >= new Date().getTime();
 		}
 		

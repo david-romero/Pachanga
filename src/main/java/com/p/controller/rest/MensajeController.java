@@ -1,5 +1,6 @@
 package com.p.controller.rest;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -162,5 +163,39 @@ public class MensajeController extends AbstractController{
 		}
 		return userReceptor;
 	}
+	
+	@RequestMapping(value = "/leerMensajes/{idUsuarioEmisor}/{idUsuarioReceptor}/", method = RequestMethod.GET)
+	public Collection<Mensaje> establecerMensajesALeidos(Model model,
+			@PathVariable(value = "idUsuarioEmisor") Integer idUsuarioEmisor,
+			@PathVariable(value = "idUsuarioReceptor") Integer idUsuarioReceptor) {
+		List<Mensaje> mensajes = Lists.newArrayList();
+		try{
+			beginTransaction(true);
+			mensajes.addAll(mensajeService.findMensajesSinLeer(idUsuarioEmisor, idUsuarioReceptor));
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		
+		
+		
+		try{
+			beginTransaction();
+			for ( Mensaje mensaje : mensajes ){
+				mensaje.setLeido(true);
+				mensajeService.save(mensaje);
+			}
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		
+		return mensajes;
+		
+		
+	}
+	
 	
 }

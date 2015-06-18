@@ -189,8 +189,8 @@
                                         <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && mensaje.emisor.id == conversacion.receptor.id && conversacion.receptor.tieneAvatar == false"  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar {{conversacion.receptor.avatar}} ">
                                         	{{conversacion.receptor.email.substring( 0, 1 )}}
                                         </div>
-                                        <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && mensaje.emisor.id == conversacion.receptor.id && conversacion.receptor.tieneAvatar == true"  ng-class=""  class="lv-avatar  ">
-                                        	<img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{conversacion.receptor.id}}" alt="">
+                                        <div  ng-if="mensaje.emisor.id != conversacion.emisor.id && mensaje.emisor.id == conversacion.receptor.id && conversacion.receptor.tieneAvatar == true"  ng-class="getMensajeAvatarCssClass(mensaje)"  class="lv-avatar  ">
+                                        	<img ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{conversacion.receptor.id}}" alt="">
                                         </div>
 	                                    
                                         <div class="media-body">

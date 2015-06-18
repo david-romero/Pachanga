@@ -76,7 +76,7 @@ public class NotificacionService {
 					.getResultList();
 			return list;
 		}else{
-			return repository.findUltimasNoLeidas(usr.getId());
+			return repository.findNoLeidas(usr.getId());
 		}
 	}
 	@Transactional
@@ -96,7 +96,19 @@ public class NotificacionService {
 	
 	@Transactional(readOnly=true)
 	public Collection<? extends Notificacion> findLeidas(User usr) {
+		return repository.findLeidas(usr.getId());
+	}
+	
+	@Transactional(readOnly=true)
+	public Collection<? extends Notificacion> findNoLeidas(User usr) {
 		return repository.findNoLeidas(usr.getId());
+	}
+	
+	@Transactional
+	public void remove(Integer idNotificacion) {
+		Assert.notNull(idNotificacion);
+		Assert.isTrue(idNotificacion > 0);
+		repository.delete(idNotificacion);
 	}
 
 }

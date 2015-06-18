@@ -182,8 +182,8 @@
                         </div>
                 
                         <ul class="main-menu">
-                            <li><a href="/P/app"><i class="md md-home"></i> Home</a></li>
-                            <li><a href="/P/notificaciones/leidas"><i class="md md-format-underline"></i> Notificaciones Le&iacute;das</a></li>
+                            <li><a href="/P/app"><i class="md md-home"></i> Inicio</a></li>
+                            <li><a href="/P/notificaciones/leidas"><i class="md md-done"></i> Notificaciones Le&iacute;das</a></li>
                             <li class="sub-menu">
                                 <a href=""><i class="md md-now-widgets"></i> Widgets</a>
 
@@ -232,8 +232,8 @@
                                     <li><a href="other-charts.html">Other Charts</a></li>
                                 </ul>
                             </li>
-                            <li><a href="calendar.html"><i class="md md-today"></i> Calendar</a></li>
-                            <li><a href="generic-classes.html"><i class="md md-layers"></i> Generic Classes</a></li>
+                            <li><a href="/P/partido/calendario"><i class="md md-today"></i> Calendario</a></li>
+                            <li><a href="/P/partido/all"><i class="md md-recent-actors"></i> Partidos</a></li>
                             <li class="sub-menu active toggled">
                                 <a href=""><i class="md md-content-copy"></i> Sample Pages</a>
                                 <ul>
@@ -280,8 +280,12 @@
     
     <!-- Fullcalendar -->
     <script src="/P/resources/js/calendar.min.js"></script>
+    <!-- i18n Fullcalendar -->
+    <script type="text/javascript" src="/P/resources/js/lang-all.js"></script>
     <!-- Functions -->
     <script src="/P/resources/js/functions.js"></script>
+    
+    
     
     <!-- ANGULAR JS -->
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
@@ -333,7 +337,9 @@
     <!-- Angular JS Services -->
     <script src="/P/resources/js/controllers/directives.js"></script>
 	
-
+	<!-- Fullcalendar -->
+    <script src="/P/resources/js/calendar.js"></script>
+	
 	
 </body>
 </html>

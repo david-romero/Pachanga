@@ -2,7 +2,6 @@ package com.p.config;
 
 import java.util.Properties;
 
-import javax.inject.Singleton;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -72,7 +71,6 @@ public class DbConfig{
  
    Properties additionalProperties() {
       Properties properties = new Properties();
-      properties.setProperty("hibernate.hbm2ddl.auto", "verify");
       properties.setProperty("hibernate.ejb.entitymanager_factory_name", "default");
       properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
       //isolation level

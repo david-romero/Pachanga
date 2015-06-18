@@ -8,6 +8,9 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +82,38 @@ public class UsersService {
 	public Collection<User> findAllDifferent(String email) {
 		
 		return repository.findAllDifferent(email);
+	}
+	
+	@Transactional(readOnly=true)
+	/**
+	 * 
+	 * @author David Romero Alcaide
+	 * @return
+	 */
+	public  User getPrincipal() {
+		User result;
+		SecurityContext context;
+		Authentication authentication;
+		Object principal;
+
+		// If the asserts in this method fail, then you're
+		// likely to have your Tomcat's working directory
+		// corrupt. Please, clear your browser's cache, stop
+		// Tomcat, update your Maven's project configuration,
+		// clean your project, clean Tomcat's working directory,
+		// republish your project, and start it over.
+
+		context = SecurityContextHolder.getContext();
+		Assert.notNull(context);
+		authentication = context.getAuthentication();
+		Assert.notNull(authentication);
+		principal = authentication.getPrincipal();
+		Assert.isTrue(principal instanceof org.springframework.security.core.userdetails.User);
+		result =  getByEmail( ((org.springframework.security.core.userdetails.User) principal).getUsername() );
+		Assert.notNull(result);
+		Assert.isTrue(result.getId() != 0);
+
+		return result;
 	}
 
 }

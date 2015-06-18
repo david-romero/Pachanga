@@ -80,7 +80,7 @@
      <jsp:include page="masterPage.jsp"></jsp:include>
 
     <!-- Page Content -->
-    <div class="container" id="content" ng-controller="InitController" ng-init="inicio();userSigned.id = ${userSigned.id}">
+    <div class="container" id="content" ng-controller="InitController" ng-init="inicio();getAllPartidos();userSigned.id = ${userSigned.id}">
 
         <div class="block-header">
 	        <ul class="actions">
@@ -255,8 +255,11 @@
                                     <div class="listview p-t-5">
                                         <a href="/P/usuarios/profile/{{jugador.id}}" class="lv-item" href="" ng-repeat='jugador in partido.jugadores'>
                                             <div class="media">
-                                                <div class="pull-left">
+                                                <div class="pull-left" ng-if="jugador.tieneAvatar">
                                                     <img class="lv-img-sm" ng-src="${pageContext.request.contextPath}/usuarios/getUserImage/{{jugador.id}}" alt="">
+                                                </div>
+                                                <div class="pull-left lv-avatar {{jugador.avatar}}" ng-if="!jugador.tieneAvatar">
+                                                	{{jugador.email.substring( 0, 1 )}}
                                                 </div>
                                                 <div class="media-body">
                                                     <div class="lv-title">{{jugador.email}}</div>
@@ -293,7 +296,7 @@
 	            	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	               	<div class="col-sm-6 col-xs-12">
 	                           <!-- Calendar -->
-	                           <div class="fc fc-ltr ui-widget" id="calendar-widget">
+	                           <div class="fc fc-ltr ui-widget" ui-calendar="uiConfig.calendar" ng-model="eventSources">
 	                           </div>
 	                           
 	                           
@@ -391,12 +394,12 @@
 	                                                    <img class="lv-img-sm" ng-src="{{partido.urlImagen}}" alt="">
 	                                                </div>
 	                                                <div class="media-body">
-	                                                    <div class="lv-title">{{partido.propietario.firstName}}&nbsp;{{partido.propietario.lastName}} </div>
+	                                                    <div class="lv-title">{{partido.titulo}}&nbsp;-&nbsp;{{partido.propietario.firstName}}&nbsp;{{partido.propietario.lastName}} </div>
 	                                                    <small class="lv-small">{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}} - {{partido.precio}}&euro;</small>
 	                                                </div>
 	                                            </div>
 	                                        </a>
-	                                        <a class="lv-footer" href="">Ver Todos</a>
+	                                        <a class="lv-footer" href="/P/partido/all">Ver Todos</a>
 	                                    </div>
 	                                </div>
 	                            </div><!-- Card -->
@@ -464,6 +467,29 @@
 	    	var loginName = '<c:out value="${userSigned.email}" />'
 	        notify('Bienvenido ' + loginName, 'inverse');
 	    } 
+	    
+	    
+	    /*
+	     * Calendar Widget
+	     */
+	    if($('#calendar-widget')[0]) {
+	        (function(){
+	            $('#calendar-widget').fullCalendar({
+			        contentHeight: 'auto',
+			        theme: true,
+			        editable: false,
+			        selectable: false,
+	                lang : 'es',
+	                header: {
+	                    right: '',
+	                    center: 'prev, title, next',
+	                    left: ''
+	                },
+	                defaultDate: new Date(),
+	                events: angular.element('[ng-controller=InitController]').scope().partidosCalendario
+	            });
+	        })();
+	    }
 	    
 	    
 	});

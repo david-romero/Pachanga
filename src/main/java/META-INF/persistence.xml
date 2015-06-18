@@ -27,5 +27,7 @@
 		</properties>
 		
 	</persistence-unit>
+	
+
 </persistence>
 

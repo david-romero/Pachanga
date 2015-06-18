@@ -20,8 +20,10 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Inte
 	public Collection<? extends Notificacion> findUltimasNoLeidas(Integer id);
 	@Query("select m from Notificacion m where m.receptor.id = ?1 or m.emisor.id = ?1  order by fecha ASC ")
 	public Page<Notificacion> findAll(Integer id,Pageable pageable);
-	@Query("select m from Notificacion m where m.receptor.id = ?1 or m.emisor.id = ?1 and m.leido = true order by fecha ASC ")
+	@Query("select m from Notificacion m where m.leido = false and  (m.receptor.id = ?1 or m.emisor.id = ?1) order by fecha ASC ")
 	public Collection<? extends Notificacion> findNoLeidas(Integer idUsuario);
+	@Query("select m from Notificacion m where m.leido = true and ( m.receptor.id = ?1 or m.emisor.id = ?1 )  order by fecha ASC ")
+	public Collection<? extends Notificacion> findLeidas(Integer idUsuario);
 
 	
 }

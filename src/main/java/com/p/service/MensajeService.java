@@ -17,6 +17,11 @@ public class MensajeService {
 	@Autowired
 	protected MensajeRepository repository;
 	
+	//Other Bussiness Services...
+	
+	@Autowired
+	protected UsersService userService;
+	
 	@Transactional(readOnly=true)
 	public Collection<Mensaje> findAllGrupo(Integer idComunidad){
 		Assert.notNull(idComunidad);
@@ -46,6 +51,15 @@ public class MensajeService {
 		Assert.notNull(emisor.getId());
 		return repository.findMensajesSinLeer(emisor.getId());
 	}
+	
+	@Transactional(readOnly=true)
+	public Collection<? extends Mensaje> findMensajesSinLeer() {
+		User emisor = userService.getPrincipal();
+		Assert.notNull(emisor);
+		Assert.notNull(emisor.getId());
+		return repository.findMensajesSinLeer(emisor.getId());
+	}
+	
 	@Transactional(readOnly=true)
 	public Collection<? extends Mensaje> findMensajesSinLeer(User emisor, User receptor) {
 		Assert.notNull(emisor);
@@ -53,6 +67,20 @@ public class MensajeService {
 		Assert.notNull(emisor.getId());
 		Assert.notNull(receptor.getId());
 		return repository.findMensajesSinLeer(emisor.getId(),receptor.getId());
+	}
+	
+	@Transactional(readOnly=true)
+	public Collection<? extends Mensaje> findMensajesSinLeer(Integer idReceptor) {
+		Assert.notNull(idReceptor);
+		User emisor = userService.getPrincipal();
+		return repository.findMensajesSinLeer(emisor.getId(),idReceptor);
+	}
+	
+	@Transactional(readOnly=true)
+	public Collection<? extends Mensaje> findMensajesSinLeer(Integer idEmisor, Integer idEeceptor) {
+		Assert.notNull(idEmisor);
+		Assert.notNull(idEeceptor);
+		return repository.findMensajesSinLeer(idEmisor,idEeceptor);
 	}
 	
 }
