@@ -9,8 +9,7 @@ angular.module('pachanga').factory('partidoService' ,
 				var deferred = $q.defer();
 				var promise = deferred.promise;
 				$http.post(
-						  '/P/rest/partido/save'
-						, 
+						  '/P/rest/partido/save', 
 						  {
 							  titulo:partido.titulo,
 							  precio:partido.precio,
@@ -71,14 +70,11 @@ angular.module('pachanga').factory('partidoService' ,
 		var getPartidosComunidad = function(idComunidad){
 			var deferred = $q.defer();
 			var promise = deferred.promise;
-			$timeout( function(){ 
-				$http.get('/P/rest/comunidad/partidos/' + idComunidad).success(function(data) {
-					deferred.resolve(data);
-				}).error(function(err, status) {   
-			    	deferred.reject(err);
-			     });
-			}, 5000);
-			
+			$http.get('/P/rest/comunidad/partidos/' + idComunidad).success(function(data) {
+				deferred.resolve(data);
+			}).error(function(err, status) {   
+		    	deferred.reject(err);
+		     });
 			return promise;
 		}
 		

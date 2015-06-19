@@ -28,29 +28,8 @@ angular.module('pachanga').controller('PartidoController',
 					      }
 					    };
 				
-				/* event source that pulls from google.com */
-			    $scope.eventSource = {
-			            url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-			            className: 'gcal-event',           // an option!
-			            currentTimezone: 'America/Chicago' // an option!
-			    };
 			    /* event source that contains custom events on the scope */
-			    $scope.events = [
-			      {title: 'All Day Event',start: new Date(y, m, 1)},
-			      {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
-			      {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
-			      {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
-			      {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
-			      {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-			    ];
-			    /* event source that calls a function on every view switch */
-			    $scope.eventsF = function (start, end, timezone, callback) {
-			      var s = new Date(start).getTime() / 1000;
-			      var e = new Date(end).getTime() / 1000;
-			      var m = new Date(start).getMonth();
-			      var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
-			      callback(events);
-			    };
+			    $scope.events = [];
 			    
 			    
 			    /* event sources array*/
@@ -65,83 +44,38 @@ angular.module('pachanga').controller('PartidoController',
 				}
 				 
 				$scope.getEventosCalendario = function(){
-					alert(new Date());
-					var y = 2015;
-					var m = 6;
-					$scope.partidos = [
-				                        {
-				                            title: 'Hangout with friends',
-				                            start: new Date(y, m, 1),
-				                            end: new Date(y, m, 2),
-				                            className: 'bgm-cyan'
-				                        },
-				                        {
-				                            title: 'Meeting with client',
-				                            start: new Date(y, m, 10),
-				                            allDay: true,
-				                            className: 'bgm-red'
-				                        },
-				                        {
-				                            title: 'Repeat Event',
-				                            start: new Date(y, m, 18),
-				                            allDay: true,
-				                            className: 'bgm-blue'
-				                        },
-				                        {
-				                            title: 'Semester Exam',
-				                            start: new Date(y, m, 20),
-				                            end: new Date(y, m, 23),
-				                            className: 'bgm-green'
-				                        },
-				                        {
-				                            title: 'Soccor match',
-				                            start: new Date(y, m, 5),
-				                            end: new Date(y, m, 6),
-				                            className: 'bgm-purple'
-				                        },
-				                        {
-				                            title: 'Coffee time',
-				                            start: new Date(y, m, 21),
-				                            className: 'bgm-orange'
-				                        },
-				                        {
-				                            title: 'Job Interview',
-				                            start: new Date(y, m, 5),
-				                            className: 'bgm-dark'
-				                        },
-				                        {
-				                            title: 'IT Meeting',
-				                            start: new Date(y, m, 5),
-				                            className: 'bgm-cyan'
-				                        },
-				                        {
-				                            title: 'Brunch at Beach',
-				                            start: new Date(y, m, 1),
-				                            className: 'bgm-purple'
-				                        },
-				                        {
-				                            title: 'Live TV Show',
-				                            start: new Date(y, m, 15),
-				                            end: new Date(y, m, 17),
-				                            className: 'bgm-orange'
-				                        },
-				                        {
-				                            title: 'Software Conference',
-				                            start: new Date(y, m, 25),
-				                            end: new Date(y, m, 28),
-				                            className: 'bgm-blue'
-				                        },
-				                        {
-				                            title: 'Coffee time',
-				                            start: new Date(y, m, 30),
-				                            className: 'bgm-orange'
-				                        },
-				                        {
-				                            title: 'Job Interview',
-				                            start: new Date(y, m, 30),
-				                            className: 'bgm-dark'
-				                        },
-				                    ];
+					partidoService.relacionados(1,999999999)
+				 	.then(function(data) {
+				 		for ( var indice = 0; indice < data.content.length; indice++ ){
+				 			var partido = data.content[indice];
+				 			var fechaParseada = partido.fecha.split(" ")[0]
+				 			var horasParseada = partido.fecha.split(" ")[1]
+				 			var diaParseado = fechaParseada.split("/")[0];
+				 			var mesParseado = fechaParseada.split("/")[1];
+				 			var anioParseado = fechaParseada.split("/")[2];
+				 			var horaParseada = horasParseada.split(":")[0]
+				 			var minutoParseada = horasParseada.split(":")[1]
+				 			var fechaStart = new Date(anioParseado,(mesParseado-1),diaParseado,horaParseada,minutoParseada,0,0);
+				 			var miliseconds = fechaStart.getUTCMilliseconds();
+				 			miliseconds += 3600000
+				 			var fechaEnd = new Date(miliseconds)
+				 			console.log(fechaStart);
+				 			console.log(fechaEnd);
+				 			$scope.events.push({
+				 				id: partido.id,
+				 		        title: partido.titulo,
+				 		        start: fechaStart,
+				 		        end: fechaEnd,
+				 		        className: ['bgm-red'] ,
+				 		        url : '/P/partido/show/' + partido.id
+				 		      });
+				 		}
+				 		
+				    })
+				    .catch(function(error) {
+				    	console.log(error);
+				    	notify('Se ha producido un error obteniendo tus partidos... :(', 'inverse');
+				    });
 				}
 				 
 				$scope.setFormScope= function(scope){
@@ -163,6 +97,7 @@ angular.module('pachanga').controller('PartidoController',
 						" " + hora.split(" ")[0].split(":")[0] + ":" + hora.split(" ")[0].split(":")[1];
 					}else{
 						var fechaParseada = new Date(fecha);
+						console.log(fechaParseada);
 						fecha = fechaParseada.getUTCDate() + "/" + (fechaParseada.getUTCMonth()+1) + "/" + fechaParseada.getFullYear() +
 						" " + fechaParseada.getUTCHours() + ":" + fechaParseada.getUTCMinutes();
 					}
@@ -181,7 +116,9 @@ angular.module('pachanga').controller('PartidoController',
 						partido.propietario = propietario;
 						partidoService.save(partido)
 						    .then(function(data) {
-						      $scope.partidos.push(data)
+						    	if ( $scope.partidos != undefined ){
+						    		$scope.partidos.push(data)
+						    	}
 						    })
 						    .catch(function(error) {
 						    	console.log(error);
@@ -214,8 +151,7 @@ angular.module('pachanga').controller('PartidoController',
 				}
 				
 				$scope.isInDate = function(partido){
-					console.log("Partido: " + partido.titulo + " " + Date.parse(partido.fecha) >= new Date().getTime());
-					return partido.fecha >= new Date().getTime()
+					return new Date(partido.fecha) >= new Date().getTime()
 				}
 				
 				$scope.isFull = function(partido){
@@ -338,12 +274,15 @@ angular.module('pachanga').controller('PartidoController',
 				 
 				 $scope.apuntarseAPartido = function(partidoId){
 					 partidoService.apuntarse(partidoId)
-					    .then(function(data) {
-					    	console.log($scope);
-					      for ( var indice = 0; indice < $scope.partidos; indice++ ){
-					    	  var partido = $scope.partidos[indice]
-					    	  console.log(partido);
-					      }
+					    .then(function(partido) {
+					    	for (var i=0; i<$scope.partidos.length; i++){
+								  var partidoEnLista = $scope.partidos[i]
+								  if ( partidoEnLista.id == partido.id ){
+									  $scope.partidos[i] = partido;
+									  break;
+								  }
+							}
+					    	notify('Te has apuntado a ' + partido.titulo , 'inverse');
 					    })
 					    .catch(function(error) {
 					    	console.log(error);

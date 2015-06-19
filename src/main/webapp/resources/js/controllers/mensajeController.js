@@ -24,8 +24,13 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 		  });
 		}
 		
-		$scope.verConversacion = function(usuario){
-			window.location.href = '/P/usuarios/chat/' + usuario.id;
+		$scope.verConversacion = function(mensaje){
+			$scope.leerMensajes(mensaje.emisor.id,mensaje.receptor.id)
+			if ( mensaje.propietario == undefined ){
+				window.location.href = '/P/mensajes/' + mensaje.emisor.id;
+			}else{
+				window.location.href = '/P/grupo/show/' + mensaje.propietario.id;
+			}
 		}
 		
 		
@@ -64,11 +69,10 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 		}
 		
 		$scope.iniciarEventos = function(){
-			if ( $scope.conversacion.receptor.id != undefined ){
 				if ( $rootScope.source != undefined ){
 					$rootScope.source.close();
 				}
-				$rootScope.source = new EventSource('/P/alertas/'+ $scope.conversacion.receptor.id);
+				$rootScope.source = new EventSource('/P/alertas/');
 
 				
 				$rootScope.source.addEventListener('mensajes', function(e) {
@@ -78,7 +82,6 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 				$rootScope.source.addEventListener('error', function(e) {
 					errorAlRecibirMensaje(e);
 				}, false);
-			}
 		}
 		
 		$scope.loadConversacionReceptor = function(){
@@ -109,13 +112,21 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 		  usuarioService.getUsuarios()
 		  .then(function(data) {
 			  for (var i=0; i<data.length; i++){
-					if ( i == 0 ){
-						data[i].active=true;
-						$scope.conversacion.receptor = data[i];
-						console.log(data[i]);
-					}else{
-						data[i].active=false;
-					}
+				    if ($scope.receptor != undefined){
+						if ( i == 0 ){
+							data[i].active=true;
+							$scope.conversacion.receptor = data[i];
+						}else{
+							data[i].active=false;
+						}
+				    }else{
+				    	if ( data[i].id == $scope.receptor ){
+				    		data[i].active=true;
+							$scope.conversacion.receptor = data[i];
+				    	}else{
+				    		data[i].active=false;
+				    	}
+				    }
 					$scope.usuarios.push(data[i])
 			  }//End For
 			  $scope.loadConversacionReceptor();

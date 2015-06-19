@@ -66,6 +66,8 @@ public class ObjectCodec extends com.fasterxml.jackson.core.ObjectCodec{
 			jgen.writeStringField("email", usr.getEmail());
 			jgen.writeStringField("firstName", usr.getFirstName());
 			jgen.writeStringField("lastName", usr.getLastName());
+			jgen.writeBooleanField("tieneAvatar", usr.isTieneAvatar());
+			jgen.writeStringField("avatar", usr.getAvatar());
 			jgen.writeEndObject();
 		}
 	}

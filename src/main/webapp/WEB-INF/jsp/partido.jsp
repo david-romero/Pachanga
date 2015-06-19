@@ -46,16 +46,19 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     
+    <!-- Angular Bootstrap DateTimePicker -->
+    <link href="/P/resources/css/datetimepicker.css" rel="stylesheet">
+    
 
 
 </head>
 
 <body ng-app="pachanga">
-		
+		<jsp:include page="masterPage.jsp"></jsp:include>
 		
 		<div class="container" id="content" >
 		
-			<jsp:include page="masterPage.jsp"></jsp:include>
+			
                     
                     <div class="block-header">
                         <h2 id="tituloValue"><c:out value="${partido.titulo}"></c:out></h2>
@@ -172,7 +175,14 @@
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 0}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[0].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[0].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[0].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[0].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[0].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[0].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -192,8 +202,14 @@
 			                                 		<div class="col-lg-1"><!-- Medio -->
 			                                 			<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 1}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[1].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[1].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[1].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[1].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[1].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[1].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -216,8 +232,14 @@
 			                                    	<div class="col-lg-1"><!-- Portero -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 2}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[2].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[2].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[2].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[2].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[2].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[2].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -232,8 +254,15 @@
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 3}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[3].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[3].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[3].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[3].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[3].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[3].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
+			                                    			
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -248,8 +277,15 @@
 			                                    	<div class="col-lg-1"><!-- Ataque -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 4}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[4].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[4].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[4].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[4].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[4].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[4].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
+			                                    			
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -263,8 +299,14 @@
 			                                    	<div class="col-lg-1" style="margin-left: 20px;"><!-- Ataque -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 5}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[5].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[5].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[5].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[5].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[5].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[5].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -279,8 +321,14 @@
 			                                    	<div class="col-lg-1"><!-- Defensa -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 6}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[6].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[6].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[6].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[6].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[6].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[6].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -295,8 +343,14 @@
 			                                    	<div class="col-lg-1"><!-- Portero -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 7}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[7].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[7].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[7].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[7].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[7].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[7].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -320,8 +374,14 @@
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 8}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[8].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[8].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[8].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[8].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[8].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[8].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -341,8 +401,14 @@
 			                                    	<div class="col-lg-1"><!-- Medio -->
 			                                    		<c:choose>
 			                                    		<c:when test="${fn:length(partido.jugadores) gt 9}">
-			                                    			<img style="height: 50px;" class="lv-img-sm profilePartido" 
-			                                    			src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[9].id}"/>" alt="">
+			                                    			<c:if test="${partido.jugadores[9].tieneAvatar}">
+			                                    				<img style="height: 50px;" class="lv-img-sm profilePartido" src="${pageContext.request.contextPath}/usuarios/getUserImage/<c:out value="${partido.jugadores[9].id}"/>" alt="">
+			                                    			</c:if>
+			                                    			<c:if test="${!partido.jugadores[9].tieneAvatar}">
+			                                    				<div class="lv-avatar ${partido.jugadores[9].avatar }">
+						                                        			<c:out value="${fn:substring(partido.jugadores[9].email, 0, 1)}"></c:out>
+						                                        </div>
+			                                    			</c:if>
 			                                    		</c:when>
 			                                    		<c:otherwise>
 			                                    			<button  ng-click="apuntarseAPartido(${partido.id})" class="btn bgm-red btn-float waves-effect waves-button waves-float" title="Apuntate">
@@ -528,9 +594,17 @@
 	                                        <dl class="dl-horizontal">
 	                                            <dt class="p-t-10">Fecha</dt>
 	                                            <dd>
-	                                                <div class="dtp-container dropdown fg-line">
-	                                                    <input ng-model="fecha" name="fecha" class="form-control date-time-picker" data-toggle="dropdown" placeholder="${partido.fechaRepresentacion}" type="text" >
-	                                                </div>
+	                                                    <div class="dropdown">
+														      <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+														        <div class="input-group"><input type="text" class="form-control" data-ng-model="fecha">
+														        	<span class="input-group-addon" style="padding-bottom: 5px;padding-right: 0px;"><i class="glyphicon glyphicon-calendar"></i>
+														        </span>
+														        </div>
+														      </a>
+														      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+														        <datetimepicker data-ng-model="fecha" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+														      </ul>
+														    </div>
 	                                            </dd>
 	                                        </dl>
 	                                        <dl class="dl-horizontal">

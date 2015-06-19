@@ -18,7 +18,7 @@ angular.module('pachanga').controller('NotificacionController',
 			        		var esNueva = true;
 			        		for ( var ii = 0; ii < $scope.notificacionesALeer.length ; ii++ ){
 			        			var notificacionEnScope = $scope.notificacionesALeer[ii];
-			        			if ( notificacionEnScope.id = notificacionNueva.id ){
+			        			if ( notificacionEnScope.id == notificacionNueva.id ){
 				        			esNueva = false;
 				        		}
 			        		}
@@ -40,6 +40,9 @@ angular.module('pachanga').controller('NotificacionController',
 						$rootScope.source.addEventListener('notificaciones', function(e) {
 							recibirMensaje(e);
 							}, false);
+					}else{
+						console.log($rootScope);
+						console.log("EventSource is not initialized");
 					}
 		            
 				}, 10000);

@@ -205,22 +205,7 @@ public class GestionUsuariosController extends AbstractController{
 		return res;
 	}
 	
-	@RequestMapping(value = "/chat", method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getChat(Model model) {
-		String res = "";
-
-		try {
-			//TODO - DRA - Chat
-			User usr = findUserSigned();
-			model.addAttribute("userSigned",usr);
-			res = "chat";
-		} catch (Exception e) {
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
-		}
-
-		return res;
-	}
+	
 	
 	
 

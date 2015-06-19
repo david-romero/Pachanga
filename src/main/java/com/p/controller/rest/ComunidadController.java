@@ -63,7 +63,6 @@ public class ComunidadController extends AbstractController{
 			commitTransaction();
 		}catch(Exception e){
 			log.error(e);
-			e.printStackTrace();
 			rollbackTransaction();
 		}
 		Assert.notNull(grp);
@@ -79,7 +78,7 @@ public class ComunidadController extends AbstractController{
 			grp = service.findOne(idComunidad);
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		Assert.notNull(grp);
@@ -90,7 +89,7 @@ public class ComunidadController extends AbstractController{
 			txStatus.flush();
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		return grp;
@@ -108,7 +107,7 @@ public class ComunidadController extends AbstractController{
 			grp = service.findOne(id);
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		if ( grp.getImagen() == null || grp.getImagen().length == 0) {
@@ -129,7 +128,7 @@ public class ComunidadController extends AbstractController{
 			mensajes = service.findMensajes(idComunidad);
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		return mensajes;
@@ -148,7 +147,7 @@ public class ComunidadController extends AbstractController{
 			Hibernate.initialize(grp.getUsuarios());
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		Assert.notNull(grp);
@@ -168,7 +167,7 @@ public class ComunidadController extends AbstractController{
 			mensajeCopia = mensajeService.save(mensajeCopia);
 			commitTransaction();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.error(e);
 			rollbackTransaction();
 		}
 		return mensajeCopia;

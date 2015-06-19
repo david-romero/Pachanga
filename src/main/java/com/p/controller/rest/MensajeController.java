@@ -21,7 +21,7 @@ import com.p.model.Mensaje;
 import com.p.model.User;
 import com.p.service.MensajeService;
 
-@RestController
+@RestController(value="mensajeRestController")
 @Transactional()
 @RequestMapping(value = "/rest/mensaje")
 public class MensajeController extends AbstractController{

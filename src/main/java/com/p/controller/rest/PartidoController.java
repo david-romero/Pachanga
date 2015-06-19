@@ -208,7 +208,7 @@ public class PartidoController extends AbstractController{
 						partido = partidoService.apuntarse(partido,(User) prop);
 					}
 					commitTransaction();
-					response = new ResponseEntity<Partido>(partido, HttpStatus.CREATED);
+					response = new ResponseEntity<Partido>(partido, HttpStatus.OK);
 				}catch(Exception e){
 					log.error(e);
 					rollbackTransaction();

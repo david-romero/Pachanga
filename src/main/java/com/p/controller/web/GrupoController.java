@@ -2,6 +2,7 @@ package com.p.controller.web;
 
 import java.util.Set;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.collect.Sets;
 import com.p.controller.AbstractController;
@@ -70,6 +75,8 @@ public class GrupoController extends AbstractController{
 			rollbackTransaction();
 		}
 		
+		Assert.isTrue(usuariosGrupo.contains(usr));
+		
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("grupo", grupo);
 		model.addAttribute("grupoSize", size);
@@ -77,6 +84,23 @@ public class GrupoController extends AbstractController{
 		return "comunidad";
 	}
 
+	@ExceptionHandler(IllegalArgumentException.class)
+	/**
+	 * panic
+	 * @author David Romero Alcaide
+	 * @param oops
+	 * @return
+	 */
+	public ModelAndView panic(IllegalArgumentException oops) {
+		log.error(oops);
+		ModelAndView result;
 
+		result = new ModelAndView("error");
+		result.addObject("name", ClassUtils.getShortName(oops.getClass()));
+		result.addObject("exceptionMessage", oops.getMessage());
+		result.addObject("stackTrace", ExceptionUtils.getStackTrace(oops));
+
+		return result;
+	}
 	
 }

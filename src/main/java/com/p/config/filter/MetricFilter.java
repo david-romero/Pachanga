@@ -9,6 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.p.service.MetricService;
@@ -16,6 +17,8 @@ import com.p.service.MetricService;
 public class MetricFilter implements Filter {
 	 
     private MetricService metricService;
+    
+    protected static final Logger log = Logger.getLogger(MetricFilter.class);
  
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -27,13 +30,13 @@ public class MetricFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
       throws java.io.IOException, ServletException {
-        HttpServletRequest httpRequest = ((HttpServletRequest) request);
-        String req = httpRequest.getMethod() + " " + httpRequest.getRequestURI();
- 
         chain.doFilter(request, response);
- 
-        int status = ((HttpServletResponse) response).getStatus();
-        metricService.increaseCount(req, status);
+        try{
+        	metricService.saveMetrics( (HttpServletRequest) request, (HttpServletResponse) response);
+        	//Si hay algun fallo no paramos la aplicacion. Las metricas son secundarias.
+        }catch(Exception e ){
+        	log.error(e);
+        }
     }
 
 	@Override

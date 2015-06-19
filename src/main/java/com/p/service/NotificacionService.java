@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.p.model.Grupo;
 import com.p.model.Notificacion;
 import com.p.model.Partido;
 import com.p.model.User;
@@ -45,13 +46,13 @@ public class NotificacionService {
 	}
 	@Transactional
 	public void usuarioApuntado(Partido p, User usr) {
-		Notificacion notificacion = create();
+		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
 		//Primero enviamos una notificacion al propietario del partido en caso de que no sea un grupo
 		if ( p.getPropietario() instanceof User ){
-			
+			Notificacion notificacion = create();
 			notificacion.setReceptor((User) p.getPropietario());
 			notificacion.setTitulo("El usuario " + usr.getEmail() + " se ha apuntado a una de tus pachangas");
 			notificacion.setContenido("El usuario " + usr.getEmail() + " se ha apuntado a "
@@ -60,6 +61,21 @@ public class NotificacionService {
 							". Ya solo quedan " + ( p.getPlazas() - p.getPlazasOcupadas() ) + " plazas!");
 			notificacion.setEmisor(usr);
 			save(notificacion);
+		}else if ( p.getPropietario() instanceof Grupo ){
+			
+			//Si el partido es de una comunidad avisamos a todos los usuarios para que lo sepan
+			Grupo grupo = (Grupo) p.getPropietario();
+			grupo.getUsuarios().stream().forEach(usuario->{
+				Notificacion notificacion = create();
+				notificacion.setReceptor(usuario);
+				notificacion.setTitulo("El usuario " + usr.getEmail() + " se ha apuntado a una de las  pachangas del grupo " + grupo.getTitulo());
+				notificacion.setContenido("El usuario " + usr.getEmail() + " se ha apuntado a "
+						+ "la pachanga creada por ti con t&iacute;tulo " + p.getTitulo() + 
+						"  para el día  " + sdf1.format(p.getFecha()) + " a la hora " + sdf3.format(p.getFecha()) +
+								". Ya solo quedan " + ( p.getPlazas() - p.getPlazasOcupadas() ) + " plazas!");
+				notificacion.setEmisor(usr);
+				save(notificacion);
+			});
 		}
 	}
 	@Transactional

@@ -63,7 +63,7 @@
                             <i class="md md-add"></i>
                         </a>
                         
-                        <div class="ms-menu">
+                        <div class="ms-menu" <c:if value="${usrReceptor not eq null }"> ng-init="receptor=${usrReceptor.id}" </c:if>>
                             <div class="ms-block">
                                 <div class="media ">
                                 	<c:if test="${userSigned.tieneAvatar == true}">
@@ -79,8 +79,8 @@
                                     <div class="media-body">
                                         <div  class="lv-title">${userSigned.email}</div>
                                         <div class="lv-small">${userSigned.firstName}&nbsp;${userSigned.lastName}</div>
-                                    </div>
-                                </div>
+                                    
+                                
                             </div>
                             
                             <div class="ms-block">

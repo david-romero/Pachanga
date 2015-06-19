@@ -16,7 +16,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,7 +43,7 @@ public class AlertasController extends AbstractController{
 	@Autowired
 	protected MensajeService mensajeService;
 
-	@RequestMapping(value="/{idReceptor}",method = RequestMethod.GET)
+	@RequestMapping(value="/",method = RequestMethod.GET)
 	public void sendMessage(HttpServletResponse response) throws IOException {
 		response.setContentType("text/event-stream");
 		response.setHeader("Cache-Control", "no-cache");
