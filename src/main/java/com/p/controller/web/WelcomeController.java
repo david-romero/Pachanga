@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.collect.Maps;
 import com.p.controller.AbstractController;
+import com.p.model.Role;
 import com.p.model.User;
+import com.p.model.modelAux.Pair;
+import com.p.service.MetricService;
 import com.p.service.UsersService;
 
 @Controller
@@ -26,6 +30,9 @@ public class WelcomeController extends AbstractController{
 
 	@Resource(name = "usersService")
 	private UsersService usersService;
+	
+	@Autowired
+	private MetricService metricService; 
 	
 	@RequestMapping(value="/app",method = RequestMethod.GET, headers = "Accept=application/json")
 	@Transactional
@@ -49,6 +56,25 @@ public class WelcomeController extends AbstractController{
 			} catch (Exception e) {
 				rollbackTransaction();
 				model.addAttribute("errorweb", e);
+			}
+			if ( usr.getRole().equals(Role.ROLE_ADMIN) ){
+				Pair<Integer,Integer> stadistics = null;
+				Integer siteVisitors = null;
+				Integer peticiones = null;
+				try{
+					stadistics = metricService.getSystemStadistics();
+					siteVisitors = metricService.siteVisitors();
+					peticiones = metricService.peticiones();
+				}catch( Exception e ){
+					//Capturamos cualquier exception. Estadisticas son secundarias
+					stadistics = Pair.create(0, 0);
+					siteVisitors = 0;
+					peticiones = 0;
+				}
+				model.addAttribute("mobilePorcentaje", stadistics.getFirst());
+				model.addAttribute("desktopPorcentaje", stadistics.getSecond());
+				model.addAttribute("siteVisitors", siteVisitors);
+				model.addAttribute("peticiones", peticiones);
 			}
 		}else{
 			usr.setEmail("anonymous@anonymous.com");

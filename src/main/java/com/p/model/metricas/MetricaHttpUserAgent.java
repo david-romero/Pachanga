@@ -1,7 +1,11 @@
 package com.p.model.metricas;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Document(collection = "userAgent")
 public class MetricaHttpUserAgent {
@@ -12,6 +16,9 @@ public class MetricaHttpUserAgent {
 	private String os;
 
 	private String browser;
+	
+	@DateTimeFormat(iso = ISO.DATE)
+	private Date fecha;
 
 	private Integer count;
 
@@ -19,12 +26,13 @@ public class MetricaHttpUserAgent {
 		super();
 	}
 
-	public MetricaHttpUserAgent(String id, String os, String browser,
+	public MetricaHttpUserAgent(String id, String os,Date fecha, String browser,
 			Integer count) {
 		super();
 		this.id = id;
 		this.os = os;
 		this.browser = browser;
+		this.fecha = fecha;
 		this.count = count;
 	}
 
@@ -59,5 +67,15 @@ public class MetricaHttpUserAgent {
 	public void setBrowser(String browser) {
 		this.browser = browser;
 	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+	
+	
 
 }

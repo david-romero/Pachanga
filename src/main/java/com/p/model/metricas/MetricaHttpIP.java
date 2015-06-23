@@ -7,36 +7,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-@Document(collection="metricas")
-public class MetricaHttpStatus {
+@Document(collection="ip")
+public class MetricaHttpIP {
 
-	
 	@Id
 	private String id;
 	
-	private Integer status;
+	private String ip;
+	
+	private Integer count;
 	@DateTimeFormat(iso = ISO.DATE)
 	private Date fecha;
 	
-	private Integer count;
-	
-	
+	public MetricaHttpIP() {
+		super();
+	}
 
-	public MetricaHttpStatus(String id, Integer status,Date fecha, Integer count) {
+	public MetricaHttpIP(String id, String ip,Date fecha ,Integer count) {
 		super();
 		this.id = id;
-		this.status = status;
+		this.ip = ip;
 		this.fecha = fecha;
 		this.count = count;
 	}
-	
-	
-
-	public MetricaHttpStatus() {
-		super();
-	}
-
-
 
 	public String getId() {
 		return id;
@@ -45,13 +38,14 @@ public class MetricaHttpStatus {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
 
-	public Integer getStatus() {
-		return status;
+	public String getIp() {
+		return ip;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 	public Integer getCount() {
@@ -66,10 +60,10 @@ public class MetricaHttpStatus {
 		return fecha;
 	}
 
-
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+	
 	
 	
 }

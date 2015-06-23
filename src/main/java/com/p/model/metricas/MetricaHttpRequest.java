@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Document(collection="request")
 public class MetricaHttpRequest {
@@ -14,7 +16,7 @@ public class MetricaHttpRequest {
 	private String request;
 	
 	private Integer count;
-	
+	@DateTimeFormat(iso = ISO.DATE)
 	private Date fecha;
 	
 	public MetricaHttpRequest() {

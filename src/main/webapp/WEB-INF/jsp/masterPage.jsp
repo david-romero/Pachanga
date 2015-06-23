@@ -258,10 +258,10 @@
     <script src="/P/resources/js/jquery.autosize.min.js"></script>
     
     <!-- jQuery Flot -->
-    <script src="/P/resources/js/jquery.flot.js"></script>
+    <script src="/P/resources/js/jquery.flot.min.js"></script>
     
     <!-- jQuery Flot -->
-    <script src="/P/resources/js/jquery.flot.resize.js"></script>
+    <script src="/P/resources/js/jquery.flot.resize.min.js"></script>
     
     <!-- jQuery Spark Line -->
     <script src="/P/resources/js/jquery.sparkline.min.js"></script>
@@ -349,11 +349,14 @@
     <!-- Angular JS Services -->
     <script src="/P/resources/js/services/usuarioService.js"></script>
     
-    <!-- Angular JS Services -->
+    <!-- Angular JS Directives -->
     <script src="/P/resources/js/controllers/directives.js"></script>
 	
 	<!-- Fullcalendar -->
     <script src="/P/resources/js/calendar.js"></script>
+    
+    <!-- Angular Bootstrap DateTimePicker -->
+    <script src="/P/resources/js/datetimepicker.js"></script>
 	
 	
 </body>

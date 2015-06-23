@@ -220,12 +220,12 @@
                             <div class="p-20">
 
                                 <small>Page Views</small>
-                                <h3 class="m-0 f-400">47,896,536</h3>
+                                <h3 class="m-0 f-400">${peticiones}</h3>
 
                                 <br>
 
                                 <small>Site Visitors</small>
-                                <h3 class="m-0 f-400">24,456,799</h3>
+                                <h3 class="m-0 f-400">${siteVisitors}</h3>
 
                                 <br>
 
@@ -253,13 +253,13 @@
                             </div>
 
                             <div class="p-t-20 p-b-20 text-center">
-                                <div class="easy-pie sub-pie-1" data-percent="56" data-easypie-chart="">
-                                    <div class="percent">56</div>
-                                    <div class="pie-title">Bounce Rate</div>
+                                <div class="easy-pie sub-pie-1" data-percent="${mobilePorcentaje}" data-easypie-chart="">
+                                    <div class="percent">${mobilePorcentaje}</div>
+                                    <div class="pie-title">Mobile</div>
                                 </div>
-                                <div class="easy-pie sub-pie-2" data-percent="84" data-easypie-chart="">
-                                    <div class="percent">84</div>
-                                    <div class="pie-title">Total Opened</div>
+                                <div class="easy-pie sub-pie-2" data-percent="${desktopPorcentaje}" data-easypie-chart="">
+                                    <div class="percent">${desktopPorcentaje}</div>
+                                    <div class="pie-title">Desktop</div>
                                 </div>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		$scope.userSigned = new Object()
 		$scope.userSigned.id = 0;
 		$scope.hayMasPaginas = true;
+		$scope.desktopPorcentaje = 46;
 		var date = new Date();
 	    var d = date.getDate();
 	    var m = date.getMonth();
@@ -51,7 +52,6 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 			$scope.partidos = [];
 			$scope.partidosJugados = [];
 			$http.get('/P/rest/partido/inicio').success(function(data) {
-				console.log(data);
 				for (var i=0; i<data.length; i++){
 					$scope.partidos.push(data[i])
 				}
@@ -162,8 +162,6 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 			 			var miliseconds = fechaStart.getUTCMilliseconds();
 			 			miliseconds += 3600000
 			 			var fechaEnd = new Date(miliseconds)
-			 			console.log(fechaStart);
-			 			console.log(fechaEnd);
 			 			$scope.events.push({
 			 				id: partido.id,
 			 		        title: partido.titulo,
