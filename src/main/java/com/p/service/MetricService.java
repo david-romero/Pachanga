@@ -353,7 +353,7 @@ public class MetricService {
 		}
 		return pair;
 	}
-
+	@Transactional(readOnly = true)
 	public Integer siteVisitors() {
 		Aggregation agg = newAggregation(
 			    group("ip").count().as("n"),
@@ -367,7 +367,7 @@ public class MetricService {
 		}
 		return siteVisitors;
 	}
-
+	@Transactional(readOnly = true)
 	public Integer peticiones() {
 		GroupByResults<MetricaHttpRequest> results = mongoOperation.group(
 				"request",
