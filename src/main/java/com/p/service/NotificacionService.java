@@ -48,7 +48,7 @@ public class NotificacionService {
 	public void usuarioApuntado(Partido p, User usr) {
 		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		//SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
 		//Primero enviamos una notificacion al propietario del partido en caso de que no sea un grupo
 		if ( p.getPropietario() instanceof User ){
@@ -86,6 +86,7 @@ public class NotificacionService {
 	public Collection<? extends Notificacion> findUltimasNoLeidas(User usr, Optional<Integer> limit) {
 		if ( limit.isPresent() ){
 			EntityManager em = emf.createEntityManager();
+			@SuppressWarnings("unchecked")
 			List<Notificacion> list = em.createQuery("select m from Notificacion m where m.receptor.id = :idUsuario and m.leido = false order by fecha ASC")
 					.setMaxResults(limit.get())
 					.setParameter("idUsuario", usr.getId())

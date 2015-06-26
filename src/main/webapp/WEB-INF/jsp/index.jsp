@@ -1,5 +1,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en" >
 
@@ -139,10 +140,10 @@
                     <div class="col-sm-6 col-md-3">
                         <div class="mini-charts-item bgm-cyan">
                             <div class="clearfix">
-                                <div class="chart stats-bar" data-sparkline-bar=""></div>
+                                <div id="traffic" class="chart stats-bar" data-sparkline-bar="" datos="${listRequest}"></div>
                                 <div class="count">
                                     <small>Website Traffics</small>
-                                    <h2>987,459</h2>
+                                    <h2>${siteTraffic}</h2>
                                 </div>
                             </div>
                         </div>
@@ -151,10 +152,10 @@
                     <div class="col-sm-6 col-md-3">
                         <div class="mini-charts-item bgm-lightgreen">
                             <div class="clearfix">
-                                <div class="chart stats-bar-2" data-sparkline-bar=""></div>
+                                <div id="login" class="chart stats-bar-2" data-sparkline-bar="" datos="${listLogin}" ></div>
                                 <div class="count">
-                                    <small>Website Impressions</small>
-                                    <h2>356,785K</h2>
+                                    <small>Usuarios Activos</small>
+                                    <h2>${usuariosActivos}</h2>
                                 </div>
                             </div>
                         </div>
@@ -163,10 +164,10 @@
                     <div class="col-sm-6 col-md-3">
                         <div class="mini-charts-item bgm-orange">
                             <div class="clearfix">
-                                <div class="chart stats-line" data-sparkline-line=""></div>
+                                <div id="errores-sparkline" class="chart stats-line" data-sparkline-line="" datos="${listErrores}"></div>
                                 <div class="count">
-                                    <small>Total Sales</small>
-                                    <h2>$ 458,778</h2>
+                                    <small>Errores Totales</small>
+                                    <h2>${errores}</h2>
                                 </div>
                             </div>
                         </div>
@@ -175,10 +176,10 @@
                     <div class="col-sm-6 col-md-3">
                         <div class="mini-charts-item bgm-bluegray">
                             <div class="clearfix">
-                                <div class="chart stats-line-2" data-sparkline-line=""></div>
+                                <div id="others-sparkline" class="chart stats-line-2" data-sparkline-line="" datos="${listMensajes}"></div>
                                 <div class="count">
-                                    <small>Support Tickets</small>
-                                    <h2>23,856</h2>
+                                    <small>Mensajes</small>
+                                    <h2>${mensajes}</h2>
                                 </div>
                             </div>
                         </div>
@@ -191,10 +192,10 @@
                         <div id="site-visits" class="dash-widget-item bgm-teal">
                             <div class="dash-widget-header">
                                 <div class="p-20">
-                                    <div class="dash-widget-visits" data-sparkline-line=""></div>
+                                    <div id="visitantes-sparkline" class="dash-widget-visits" data-sparkline-line="" datos="${listSiteVisitors}"></div>
                                 </div>
 
-                                <div class="dash-widget-title">For the past 30 days</div>
+                                <div class="dash-widget-title">Visitantes Últimos <c:out value="${fn:length(listSiteVisitors)}"></c:out> días</div>
 
                                 <ul class="actions actions-alt">
                                     <li class="dropdown">
@@ -219,18 +220,18 @@
 
                             <div class="p-20">
 
-                                <small>Page Views</small>
+                                <small>Peticiones</small>
                                 <h3 class="m-0 f-400">${peticiones}</h3>
 
                                 <br>
 
-                                <small>Site Visitors</small>
+                                <small>Visitantes</small>
                                 <h3 class="m-0 f-400">${siteVisitors}</h3>
 
                                 <br>
 
-                                <small>Total Clicks</small>
-                                <h3 class="m-0 f-400">13,965</h3>
+                                <small>Peticiones Sin Recursos</small>
+                                <h3 class="m-0 f-400">${paginas}</h3>
                             </div>
                         </div>
                     </div>
@@ -268,7 +269,7 @@
                     <!-- Recent Items -->
                     <div class="card ng-scope" >
                         <div class="card-header">
-                            <h2>Recent Items <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
+                            <h2>Ranking Usuarios <small>Usuarios que han creado m&aacute;s partidos</small></h2>
                             <ul class="actions">
                                 <li class="dropdown">
                                     <a href="" data-toggle="dropdown">
@@ -294,21 +295,23 @@
                             <table class="table table-inner table-vmiddle">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th style="width: 60px">Price</th>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th style="width: 60px">Partidos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr  class="ng-scope">
-                                        <td class="f-500 c-cyan ng-binding">2569</td>
-                                        <td class="ng-binding">Samsung Galaxy Mega</td>
-                                        <td class="f-500 c-cyan ng-binding">521</td>
-                                    </tr>
+                                	<c:forEach var="usuario" items="${partidosUsuarios}">
+	                                    <tr  class="">
+	                                        <td class="f-500 c-cyan">${usuario.username}</td>
+	                                        <td class="ng-binding">${usuario.fullName}</td>
+	                                        <td class="f-500 c-cyan">${usuario.count}</td>
+	                                    </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
-                        <div id="recent-items-chart" class="flot-chart" data-line-chart="" style="padding: 0px; position: relative;">
+                        <div id="recent-items-chart" class="flot-chart" data-line-chart="" datos="${listPartidos}" style="padding: 0px; position: relative;">
                         
                         </div>
                     </div>

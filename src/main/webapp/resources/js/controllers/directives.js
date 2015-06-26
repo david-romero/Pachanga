@@ -182,9 +182,16 @@ angular.module('pachanga').directive('sparklineBar', function(){
                         barSpacing: barSpacing
                    });
                 }
-                
-                sparkLineBar('.stats-bar', [6,4,8,6,5,6,7,8,3,5,9,5,8,4,3,6,8], '45px', 3, '#fff', 2);
-                sparkLineBar('.stats-bar-2', [4,7,6,2,5,3,8,6,6,4,8,6,5,8,2,4,6], '45px', 3, '#fff', 2);
+                var datos = [];
+                console.log(element);
+                var id = element[0].id;
+                if ( element[0].attributes[0].value != undefined && element[0].attributes[0].value != "" && element[0].attributes[0].value.length > 0 ){
+                	datos = JSON.parse(element[0].attributes[0].value)
+                }else{
+                	datos = [9,4,6,5,6,4,5,7,9,3,6,5];
+                }
+                sparkLineBar('#'+id, datos, '45px', 3, '#fff', 2);
+                //sparkLineBar('.stats-bar-2', [4,7,6,2,5,3,8,6,6,4,8,6,5,8,2,4,6], '45px', 3, '#fff', 2);
             }
         }
     });
@@ -212,10 +219,21 @@ angular.module('pachanga').directive('sparklineLine', function(){
                     highlightLineColor: hLineColor
                 });
             }
-
-            sparkLineLine('.stats-line', [9,4,6,5,6,4,5,7,9,3,6,5], 85, 45, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
-            sparkLineLine('.stats-line-2', [5,6,3,9,7,5,4,6,5,6,4,9], 85, 45, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
-            sparkLineLine('.dash-widget-visits', [9,4,6,5,6,4,5,7,9,3,6,5], '100%', '95px', 'rgba(255,255,255,0.7)', 'rgba(0,0,0,0)', 2, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 5, 'rgba(255,255,255,0.4)', '#fff');
+            var datos = [];
+            var id = element[0].id;
+            if ( element[0].attributes[0].value != undefined && element[0].attributes[0].value != "" && element[0].attributes[0].value.length > 0 ){
+            	datos = JSON.parse(element[0].attributes[0].value)
+            }else{
+            	datos = [9,4,6,5,6,4,5,7,9,3,6,5];
+            }
+            if ( id == "errores-sparkline" || id == "others-sparkline" ){
+            	sparkLineLine('#'+id, datos , 85, 45, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
+            }else if ( id == "visitantes-sparkline" ){
+            	sparkLineLine('#'+id, datos, '100%', '95px', 'rgba(255,255,255,0.7)', 'rgba(0,0,0,0)', 2, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 5, 'rgba(255,255,255,0.4)', '#fff');
+            }
+            //sparkLineLine('.stats-line', datos , 85, 45, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
+            //sparkLineLine('.stats-line-2', [5,6,3,9,7,5,4,6,5,6,4,9], 85, 45, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
+            
 
         }
     }
@@ -256,19 +274,34 @@ angular.module('pachanga').directive('easypieChart', function(){
             restrict: 'A',
             link: function(scope, element){
                 
+            	//DRA - Obteniendo datos desde la BBDD
+            	var id = element[0].id;
+            	var datos = []
+            	var totalPoints = 100;
+                var updateInterval = 30;
+                
+                if ( element[0].attributes[1].value != undefined && element[0].attributes[1].value != "" && element[0].attributes[1].value.length > 0 ){
+                	var aux = JSON.parse(element[0].attributes[1].value);
+                	for ( var i = 0; i < aux.length; i++ ){
+                		datos.push([i,aux[i]])
+                	}
+                }else{
+                	datos = getRandomData();
+                }
+            	
+            	
                 /* Make some random data for Recent Items chart */
 
-                var data = [];
-                var totalPoints = 100;
-                var updateInterval = 30;
+                
+                
 
                 function getRandomData() {
-                    if (data.length > 0)
-                        data = data.slice(1);
+                    if (datos.length > 0)
+                    	datos = datos.slice(1);
 
-                    while (data.length < totalPoints) {
+                    while (datos.length < totalPoints) {
 
-                        var prev = data.length > 0 ? data[data.length - 1] : 50,
+                        var prev = datos.length > 0 ? datos[datos.length - 1] : 50,
                             y = prev + Math.random() * 10 - 5;
                         if (y < 0) {
                             y = 0;
@@ -276,12 +309,12 @@ angular.module('pachanga').directive('easypieChart', function(){
                             y = 90;
                         }
 
-                        data.push(y);
+                        datos.push(y);
                     }
 
                     var res = [];
-                    for (var i = 0; i < data.length; ++i) {
-                        res.push([i, data[i]])
+                    for (var i = 0; i < datos.length; ++i) {
+                        res.push([i, datos[i]])
                     }
 
                     return res;
@@ -349,7 +382,7 @@ angular.module('pachanga').directive('easypieChart', function(){
                 /* Recent Items Table Chart */
                 if ($("#recent-items-chart")[0]) {
                     $.plot($("#recent-items-chart"), [
-                        {data: getRandomData(), lines: { show: true, fill: 0.8 }, label: 'Items', stack: true, color: '#00BCD4' },
+                        {data: datos, lines: { show: true, fill: 0.8 }, label: 'Partidos', stack: true, color: '#00BCD4' },
                     ], options);
                 }
             }

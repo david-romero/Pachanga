@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.p.model.ChangePass;
 import com.p.model.User;
@@ -39,40 +35,6 @@ public class LoginController {
 	
 	@Resource(name = "usersService")
 	private UsersService usersService;
-	
-	@RequestMapping(value = "/vista", method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getLoginAction(Model model) {
-		String res;
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String name = auth.getName();
-		
-		final ExecutorService service = Executors.newFixedThreadPool(50);
-		
-		
-		List<Long> listadosCer_ori = new ArrayList<Long>();
-		
-		
-		Map<Object, Object> params = new TreeMap<Object, Object>();
-		ArrayList<Object> listMapCTboxEnvio = new ArrayList<Object>();
-
-
-		model.addAttribute("listCTbox", params);
-		
-
-		
-		service.shutdown();
-		
-		model.addAttribute("listMapCTbox", listMapCTboxEnvio);
-		res = "index";
-		return res;
-	}
-	
-	
-
-	
-	
-	
 
 	@RequestMapping(value = "/secure", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getLogin(Model model,
@@ -109,8 +71,8 @@ public class LoginController {
 	@RequestMapping(value = "/changePass", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getChangePass(Model model) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String name = auth.getName();
+		/*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();*/
 
 		List<Long> listadosCer = new ArrayList<Long>();
 		

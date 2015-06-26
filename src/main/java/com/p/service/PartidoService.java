@@ -25,6 +25,9 @@ public class PartidoService {
 	
 	@Autowired
 	protected UsersService userService;
+	
+	@Autowired
+	private MetricService metricService;
 
 	private static final int PAGE_SIZE = 4;
 
@@ -84,6 +87,12 @@ public class PartidoService {
 	
 	@Transactional
 	public Partido save(Partido p) {
+		if ( p.getId() == null || p.getId().equals(0) ){
+			metricService.savePartido();
+			if ( p.getPropietario() instanceof User ){
+				metricService.savePartidoUsuario(( (User) p.getPropietario()));
+			}
+		}
 		return repository.save(p);
 	}
 	@Transactional

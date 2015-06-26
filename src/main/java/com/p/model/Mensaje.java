@@ -12,7 +12,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
 
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;

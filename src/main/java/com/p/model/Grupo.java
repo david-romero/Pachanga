@@ -16,8 +16,7 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
+import org.hibernate.annotations.SortNatural;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -59,7 +58,7 @@ public class Grupo extends PropietarioPartido{
 	
 	@NotNull
 	@OneToMany(mappedBy = "grupo", cascade = { CascadeType.REMOVE })
-	@Sort(type = SortType.NATURAL)
+	@SortNatural
 	@Valid
 	protected Set<Comentario> comentarios;
 	

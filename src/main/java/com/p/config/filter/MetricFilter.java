@@ -30,8 +30,9 @@ public class MetricFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
       throws java.io.IOException, ServletException {
-        chain.doFilter(request, response);
+        
         try{
+        	chain.doFilter(request, response);
         	metricService.saveMetrics( (HttpServletRequest) request, (HttpServletResponse) response);
         	//Si hay algun fallo no paramos la aplicacion. Las metricas son secundarias.
         }catch(Exception e ){

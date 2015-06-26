@@ -29,6 +29,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private LoginAttemptService loginAttemptService;
 	
 	@Autowired
+	private MetricService metricService;
+	
+	@Autowired
     private HttpServletRequest request;
 	
 	
@@ -48,7 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			boolean accountNonExpired = true;
 			boolean credentialsNonExpired = true;
 			boolean accountNonLocked = true;
-
+			metricService.saveLogin(domainUser);
 			return new UsuarioSpring(domainUser.getEmail(),
 					domainUser.getPassword(), enabled, accountNonExpired,
 					credentialsNonExpired, accountNonLocked,

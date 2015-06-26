@@ -26,6 +26,7 @@ public class PopulateDatabase {
 
 	private static final Logger LOGGER = Logger.getLogger(PopulateDatabase.class);
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 
 		ApplicationContext ctx;

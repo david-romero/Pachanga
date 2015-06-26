@@ -24,6 +24,9 @@ public class MensajeService {
 	@Autowired
 	protected UsersService userService;
 	
+	@Autowired
+	protected MetricService metricService;
+	
 	@Transactional(readOnly=true)
 	public Collection<Mensaje> findAllGrupo(Integer idComunidad){
 		Assert.notNull(idComunidad);
@@ -32,9 +35,12 @@ public class MensajeService {
 	}
 	
 	@Transactional(readOnly=false)
-	public Mensaje save(Mensaje mensajeCopia) {
-		Assert.notNull(mensajeCopia);
-		return repository.save(mensajeCopia);
+	public Mensaje save(Mensaje mensaje) {
+		Assert.notNull(mensaje);
+		if ( mensaje.getId() == null || mensaje.getId().equals(0) ){
+			metricService.saveMensaje();
+		}
+		return repository.save(mensaje);
 	}
 
 	@Transactional(readOnly=true)

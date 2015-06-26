@@ -20,8 +20,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.social.security.SpringSocialConfigurer;
 
-import com.p.config.filter.MetricFilter;
-
 @Configuration
 @EnableWebSecurity
 /**

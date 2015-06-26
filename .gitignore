@@ -1,4 +1,2 @@
 target/
 /bin/
-
-src/main/java/com/p/util/ConvertCSVToJson.java

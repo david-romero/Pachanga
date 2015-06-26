@@ -147,37 +147,38 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		}
 		
 		$scope.getAllPartidos = function(){
-			 partidoService.relacionados(1,999999999)
-			 	.then(function(data) {
-			 		for ( var indice = 0; indice < data.content.length; indice++ ){
-			 			var partido = data.content[indice];
-			 			var fechaParseada = partido.fecha.split(" ")[0]
-			 			var horasParseada = partido.fecha.split(" ")[1]
-			 			var diaParseado = fechaParseada.split("/")[0];
-			 			var mesParseado = fechaParseada.split("/")[1];
-			 			var anioParseado = fechaParseada.split("/")[2];
-			 			var horaParseada = horasParseada.split(":")[0]
-			 			var minutoParseada = horasParseada.split(":")[1]
-			 			var fechaStart = new Date(anioParseado,(mesParseado-1),diaParseado,horaParseada,minutoParseada,0,0);
-			 			var miliseconds = fechaStart.getUTCMilliseconds();
-			 			miliseconds += 3600000
-			 			var fechaEnd = new Date(miliseconds)
-			 			$scope.events.push({
-			 				id: partido.id,
-			 		        title: partido.titulo,
-			 		        start: fechaStart,
-			 		        end: fechaEnd,
-			 		        className: ['bgm-red'] ,
-			 		        url : '/P/partido/show/' + partido.id
-			 		      });
-			 		}
-			 		
-			    })
-			    .catch(function(error) {
-			    	console.log(error);
-			    	notify('Se ha producido un error obteniendo tus partidos... :(', 'inverse');
-			    });
-
+			if ( $scope.userSigned.id > 0 ){ 
+				partidoService.relacionados(1,999999999)
+				 	.then(function(data) {
+				 		for ( var indice = 0; indice < data.content.length; indice++ ){
+				 			var partido = data.content[indice];
+				 			var fechaParseada = partido.fecha.split(" ")[0]
+				 			var horasParseada = partido.fecha.split(" ")[1]
+				 			var diaParseado = fechaParseada.split("/")[0];
+				 			var mesParseado = fechaParseada.split("/")[1];
+				 			var anioParseado = fechaParseada.split("/")[2];
+				 			var horaParseada = horasParseada.split(":")[0]
+				 			var minutoParseada = horasParseada.split(":")[1]
+				 			var fechaStart = new Date(anioParseado,(mesParseado-1),diaParseado,horaParseada,minutoParseada,0,0);
+				 			var miliseconds = fechaStart.getUTCMilliseconds();
+				 			miliseconds += 3600000
+				 			var fechaEnd = new Date(miliseconds)
+				 			$scope.events.push({
+				 				id: partido.id,
+				 		        title: partido.titulo,
+				 		        start: fechaStart,
+				 		        end: fechaEnd,
+				 		        className: ['bgm-red'] ,
+				 		        url : '/P/partido/show/' + partido.id
+				 		      });
+				 		}
+				 		
+				    })
+				    .catch(function(error) {
+				    	console.log(error);
+				    	notify('Se ha producido un error obteniendo tus partidos... :(', 'inverse');
+				    });
+			}
 		}
 		 
 		$scope.savePartido = function(){
@@ -215,7 +216,6 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		}
 		
 		$scope.isInDate = function(partido){
-			console.log("Partido: " + partido.titulo + " " + Date.parse(partido.fecha) >= new Date().getTime());
 			return Date.parse(partido.fecha) >= new Date().getTime();
 		}
 		

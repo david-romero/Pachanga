@@ -7,18 +7,15 @@ import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
+import org.hibernate.annotations.SortNatural;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 @Entity
@@ -45,7 +42,7 @@ public class PropietarioPartido extends BaseEntity {
 	protected String email;
 	@NotNull
 	@OneToMany(mappedBy = "propietario", cascade = { CascadeType.REMOVE })
-	@Sort(type = SortType.NATURAL)
+	@SortNatural
 	@Valid
 	protected  Collection<Partido> partidosCreados;
 

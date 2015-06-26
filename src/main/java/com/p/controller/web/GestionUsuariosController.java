@@ -3,21 +3,15 @@ package com.p.controller.web;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.io.IOUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
+import org.apache.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.p.controller.AbstractController;
 import com.p.model.User;
-import com.p.service.UsersService;
 
 @Controller
 @RequestMapping(value = "/usuarios")
@@ -54,9 +47,9 @@ public class GestionUsuariosController extends AbstractController{
 			res = "usuarios";
 
 			// Cargamos los cts para el menu de la izquierda
-			Authentication auth = SecurityContextHolder.getContext()
+			/*Authentication auth = SecurityContextHolder.getContext()
 					.getAuthentication();
-			String name = auth.getName();
+			String name = auth.getName();*/
 
 			List<Long> listadosCer = new ArrayList<Long>();
 
@@ -68,72 +61,6 @@ public class GestionUsuariosController extends AbstractController{
 				}
 			}
 			model.addAttribute("listCTbox", params);
-		} catch (Exception e) {
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
-		}
-
-		return res;
-	}
-
-	@RequestMapping(value = "/eliminarUsuario/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public String postDeleteUser(Model model, HttpSession session,
-			@PathVariable(value = "id") String idUsuario) {
-		String res;
-		try {
-			Long idCTBox = Long.parseLong(session.getAttribute("IDCtbox")
-					.toString());
-
-			// Prepare acceptable media type
-			List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
-			acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
-
-			// Prepare header
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(acceptableMediaTypes);
-			String auth = "endesa" + ":" + "endesa";
-			byte[] encodedAuth = org.springframework.security.crypto.codec.Base64
-					.encode(auth.getBytes(Charset.forName("US-ASCII")));
-
-			String authHeader = "Basic " + new String(encodedAuth);
-			headers.set("Authorization", authHeader);
-
-			res = "usuarios";
-		} catch (Exception e) {
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
-		}
-
-		return res;
-	}
-
-	@RequestMapping(value = "/anadirUsuario/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public String postAddUser(Model model, HttpSession session,
-			@PathVariable(value = "id") String idUsuario) {
-		String res;
-		try {
-			Long idCTBox = Long.parseLong(session.getAttribute("IDCtbox")
-					.toString());
-
-			// Prepare acceptable media type
-			List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
-			acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
-
-			// Prepare header
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(acceptableMediaTypes);
-			String auth = "endesa" + ":" + "endesa";
-			byte[] encodedAuth = org.springframework.security.crypto.codec.Base64
-					.encode(auth.getBytes(Charset.forName("US-ASCII")));
-
-			String authHeader = "Basic " + new String(encodedAuth);
-			headers.set("Authorization", authHeader);
-
-			// Añadimos el nuevo usuario:
-			List<String> usuarioAnadir = new ArrayList<String>();
-			usuarioAnadir.add(idUsuario);
-
-			res = "usuarios";
 		} catch (Exception e) {
 			model.addAttribute("errorweb", e);
 			res = "errorweb";

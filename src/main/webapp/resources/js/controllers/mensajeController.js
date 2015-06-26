@@ -112,7 +112,7 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 		  usuarioService.getUsuarios()
 		  .then(function(data) {
 			  for (var i=0; i<data.length; i++){
-				    if ($scope.receptor != undefined){
+				    if ($scope.receptor == undefined){
 						if ( i == 0 ){
 							data[i].active=true;
 							$scope.conversacion.receptor = data[i];
