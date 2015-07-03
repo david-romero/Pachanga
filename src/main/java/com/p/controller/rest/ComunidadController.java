@@ -9,14 +9,18 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,21 +76,31 @@ public class ComunidadController extends AbstractController{
 	@RequestMapping(value = "/editImage/{idComunidad}",method = RequestMethod.POST)
 	public Grupo save(Model model,@RequestParam("foto") MultipartFile file,
 			@PathVariable(value = "idComunidad") Integer idComunidad) {
-		Grupo grp = null;
-		try{
-			beginTransaction();
-			grp = service.findOne(idComunidad);
-			commitTransaction();
-		}catch(Exception e){
-			log.error(e);
-			rollbackTransaction();
-		}
+		Grupo grp = findGrupo(idComunidad);
 		Assert.notNull(grp);
 		try{
 			beginTransaction();
 			grp.setImagen(file.getBytes());
 			grp = service.save(grp);
 			txStatus.flush();
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		return grp;
+	}
+
+	/**
+	 * @param idComunidad
+	 * @param grp
+	 * @return
+	 */
+	protected Grupo findGrupo(Integer idComunidad) {
+		Grupo grp = null;
+		try{
+			beginTransaction(true);
+			grp = service.findOne(idComunidad);
 			commitTransaction();
 		}catch(Exception e){
 			log.error(e);
@@ -102,14 +116,7 @@ public class ComunidadController extends AbstractController{
 		response.setContentType("image/jpeg");
 		byte[] buffer = null;
 		Grupo grp = null;
-		try{
-			beginTransaction();
-			grp = service.findOne(id);
-			commitTransaction();
-		}catch(Exception e){
-			log.error(e);
-			rollbackTransaction();
-		}
+		grp = findGrupo(id);
 		if ( grp.getImagen() == null || grp.getImagen().length == 0) {
 			InputStream in = this.getClass().getResourceAsStream("/profile-pic-300px.jpg");
 			buffer = IOUtils.toByteArray(in);
@@ -173,6 +180,73 @@ public class ComunidadController extends AbstractController{
 		return mensajeCopia;
 	}
 	
-
+	@RequestMapping(value = "/getCandidatos", method = RequestMethod.GET)
+	public Collection<User> getCandidatos() {
+		List<User> usuariosCandidatos = Lists.newArrayList();
+		String email = findUsernameUserSigned();
+		try{
+			beginTransaction(true);
+			usuariosCandidatos.addAll(userService.findAllDifferent(email));
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		return usuariosCandidatos;
+	}
+	
+	@RequestMapping(value = "/save",method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<Grupo> save(Model model,@RequestBody @Valid Grupo grupo, BindingResult result) {
+		ResponseEntity<Grupo> response = null;
+		if ( result.hasErrors() ){
+			response = new ResponseEntity<Grupo>(grupo, HttpStatus.BAD_REQUEST);
+		}else{
+			try{
+				grupo.getUsuarios().add(findUserSigned());
+				beginTransaction();
+				grupo = service.save(grupo);
+				commitTransaction();
+				response = new ResponseEntity<Grupo>(grupo, HttpStatus.OK);
+			}catch(Exception e){
+				rollbackTransaction();
+				log.error(e);
+				response = new ResponseEntity<Grupo>(grupo, HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+			if ( response.getStatusCode().equals(HttpStatus.OK) ){
+				try{
+					for ( User usuario : grupo.getUsuarios() ){
+						beginTransaction();
+						if ( usuario.getGrupos() == null ){
+							usuario = userService.findOne(usuario.getId());
+						}
+						usuario.getGrupos().add(grupo);
+						userService.save(usuario);
+						commitTransaction();
+					}
+					response = new ResponseEntity<Grupo>(grupo, HttpStatus.OK);
+				}catch(Exception e){
+					rollbackTransaction();
+					log.error(e);
+					response = new ResponseEntity<Grupo>(grupo, HttpStatus.UNPROCESSABLE_ENTITY);
+				}
+			}
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/eliminar/{idGrupo}/usuario", method = RequestMethod.GET)
+	public Grupo eliminarUsuarioLogueadoDeGrupo(@PathVariable("idGrupo") Integer idGrupo) {
+		Grupo grp = findGrupo(idGrupo);
+		User userSigned = findUserSigned();
+		try{
+			beginTransaction();
+			grp = service.eliminarUsuarioGrupo(grp,userSigned);
+			commitTransaction();
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+		}
+		return grp;
+	}
 	
 }

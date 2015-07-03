@@ -170,5 +170,10 @@ public abstract class AbstractController {
 		}
 		return usr;
 	}
+	
+	protected String findUsernameUserSigned() {
+		return ((org.springframework.security.core.userdetails.User) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal()).getUsername();
+	}
 
 }

@@ -1,5 +1,5 @@
 angular.module('pachanga').controller('PartidoController', 
-		[ '$scope', '$http' , "partidoService" ,
+		[ '$scope', '$http'  , "partidoService" ,
 		  	function($scope, $http, partidoService) {
 				 $scope.activeTab = 1;
 				 $scope.userSigned = new Object()
@@ -84,7 +84,6 @@ angular.module('pachanga').controller('PartidoController',
 
 				 
 				$scope.savePartido = function(form){
-					console.log($scope.formScope);
 					var precio = $scope.formScope.precio
 					var titulo = $scope.formScope.titulo;
 					var categoria = $scope.formScope.categoria;
@@ -97,7 +96,6 @@ angular.module('pachanga').controller('PartidoController',
 						" " + hora.split(" ")[0].split(":")[0] + ":" + hora.split(" ")[0].split(":")[1];
 					}else{
 						var fechaParseada = new Date(fecha);
-						console.log(fechaParseada);
 						fecha = fechaParseada.getUTCDate() + "/" + (fechaParseada.getUTCMonth()+1) + "/" + fechaParseada.getFullYear() +
 						" " + fechaParseada.getUTCHours() + ":" + fechaParseada.getUTCMinutes();
 					}
@@ -116,9 +114,13 @@ angular.module('pachanga').controller('PartidoController',
 						partido.propietario = propietario;
 						partidoService.save(partido)
 						    .then(function(data) {
-						    	if ( $scope.partidos != undefined ){
+						    	if (data.propietario.usuarios){
+						    		//El propietario es un grupo
+						    		window.location.href= '/P/grupo/show/' + data.propietario.id
+						    	}else if ( $scope.partidos != undefined ){
 						    		$scope.partidos.push(data)
 						    	}
+						    	
 						    })
 						    .catch(function(error) {
 						    	console.log(error);
@@ -151,16 +153,23 @@ angular.module('pachanga').controller('PartidoController',
 				}
 				
 				$scope.isInDate = function(partido){
-					return new Date(partido.fecha) >= new Date().getTime()
-				}
+					var fechaParseada = partido.fecha.split(" ")[0]
+		 			var horasParseada = partido.fecha.split(" ")[1]
+		 			var diaParseado = fechaParseada.split("/")[0];
+		 			var mesParseado = fechaParseada.split("/")[1];
+		 			var anioParseado = fechaParseada.split("/")[2];
+		 			var horaParseada = horasParseada.split(":")[0]
+		 			var minutoParseada = horasParseada.split(":")[1]
+		 			var fecha = new Date(anioParseado,(mesParseado-1),diaParseado,horaParseada,minutoParseada,0,0);
+					return fecha >= new Date().getTime()
+				};
 				
 				$scope.isFull = function(partido){
 					return ( partido.jugadores.length == partido.plazas );
-				}
+				};
 				
 				$scope.setFiles = function(element) {
 				    $scope.$apply(function(scope) {
-				      console.log('files:', element.files);
 				      // Turn the FileList object into an Array
 				      $scope.files = []
 				        for (var i = 0; i < element.files.length; i++) {

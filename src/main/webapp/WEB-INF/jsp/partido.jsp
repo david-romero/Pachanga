@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Index</title>
 
     <!-- Bootstrap Core CSS -->
@@ -91,7 +90,7 @@
                                 
                                 
                                 <div class="pmo-stat">
-                                    <h2 class="m-0 c-white">1562</h2>
+                                    <h2 class="m-0 c-white">${visitas}</h2>
                                     Visitas
                                 </div>
                             </div>

@@ -20,6 +20,18 @@ angular.module('pachanga').directive('niceScroll', function() {
         }
     };
 });
+angular.module('pachanga').directive('watchChange', function() {
+    return {
+        scope: {
+            onchange: '&watchChange'
+        },
+        link: function(scope, element, attrs) {
+            element.on('input', function() {
+                scope.onchange();
+            });
+        }
+    };
+});
 angular.module('pachanga').directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
@@ -482,5 +494,26 @@ angular.module('pachanga').directive('pieDonut', function(){
         }
     }
 })
+//-------------------------------------------------------------------------------------------------
+//------------------ for Form inside ng-repeat ----------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+angular.module('pachanga').directive('triFixInputName', function () {
+        return {
+            // just postLink
+            link: function (scope, element, attrs, ngModelCtrl) {
+                // do nothing in case of no 'name' attribiute
+                if (!attrs.name) { 
+                    return;
+                }
+                // fix what should be fixed
+                ngModelCtrl.$name = attrs.name;
+            },
+            // ngModel's priority is 0
+            priority: '-100',
+            // we need it to fix it's behavior
+            require: 'ngModel'
+         };
+    });
+
 
 

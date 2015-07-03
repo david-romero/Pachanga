@@ -3,71 +3,35 @@ package com.p.controller.web;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
 
 import com.p.controller.AbstractController;
 import com.p.model.User;
+import com.p.service.MetricStadisticsService;
 
 @Controller
 @RequestMapping(value = "/usuarios")
 public class GestionUsuariosController extends AbstractController{
 
-	RestTemplate restTemplate = new RestTemplate();
 	// Definimos el controlador de logger.
 	protected static Logger logger = Logger
 			.getLogger(GestionUsuariosController.class);
-
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public String getLoginAction(Model model,
-			@PathVariable(value = "id") String ctbox) {
-		String res;
-
-		try {
-			/*
-			 * if (Funciones.isNumeric(ctbox)) { cargarDatoPagina(model, ctbox);
-			 * 
-			 * }
-			 */
-			res = "usuarios";
-
-			// Cargamos los cts para el menu de la izquierda
-			/*Authentication auth = SecurityContextHolder.getContext()
-					.getAuthentication();
-			String name = auth.getName();*/
-
-			List<Long> listadosCer = new ArrayList<Long>();
-
-			Map<Object, Object> params = new TreeMap<Object, Object>();
-
-			if (listadosCer.size() != 0) {
-				for (Long usuarioCTBox : listadosCer) {
-					params.put(usuarioCTBox, usuarioCTBox);
-				}
-			}
-			model.addAttribute("listCTbox", params);
-		} catch (Exception e) {
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
-		}
-
-		return res;
-	}
+	
+	@Autowired
+	protected MetricStadisticsService metricStadisticsService;
 
 	@RequestMapping(value = "/getUserImage/{id}")
 	public void getUserImage(HttpServletResponse response,
@@ -75,42 +39,43 @@ public class GestionUsuariosController extends AbstractController{
 
 		response.setContentType("image/jpeg");
 		byte[] buffer = null;
-		User user = null;
 		try {
 			beginTransaction(true);
-			user = userService.findOne(id);
+			buffer = userService.findImage(id);
 			commitTransaction();
 		} catch (Exception e) {
 			logger.error(e);
 			rollbackTransaction();
 		}
-		if (user == null || user.getImagen() == null || user.getImagen().length == 0) {
+		if (buffer == null  || buffer.length == 0) {
 			InputStream in = this.getClass().getResourceAsStream("/profile-pic-300px.jpg");
 
 			buffer = IOUtils.toByteArray(in);
-		} else {
-			buffer = user.getImagen();
-		}
+		} 
 		InputStream in1 = new ByteArrayInputStream(buffer);
 		IOUtils.copy(in1, response.getOutputStream());
 	}
 	
 	@RequestMapping(value = "/profile", method = RequestMethod.GET, headers = "Accept=application/json")
 	public String getProfile(Model model) {
-		String res = "";
-		org.springframework.security.core.userdetails.User principal =  (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usr = null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth instanceof AnonymousAuthenticationToken) {
+			return "redirect:/login";
+		}
+		String res = "profile";
+		User usr = findUserSigned();
+		model.addAttribute("user", usr);
+		model.addAttribute("userSigned", usr);
+		Integer visitas = 0;
 		try {
 			beginTransaction(true);
-			usr = userService.getByEmail(principal.getUsername());
+			visitas = metricStadisticsService.getProfileVisitsStadistics(usr);
 			commitTransaction();
-			res = "profile";
 		} catch (Exception e) {
+			logger.error(e);
 			rollbackTransaction();
-			model.addAttribute("errorweb", e);
-			res = "errorweb";
 		}
-		model.addAttribute("userSigned", usr);
+		model.addAttribute("visitas", visitas);
 		return res;
 	}
 	
@@ -128,7 +93,26 @@ public class GestionUsuariosController extends AbstractController{
 			model.addAttribute("errorweb", e);
 			res = "errorweb";
 		}
-		model.addAttribute("userSigned", usr);
+		User userSigned = null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			userSigned = findUserSigned();
+		}else{
+			userSigned = new User();
+			userSigned.setId(-1);
+		}
+		model.addAttribute("userSigned", userSigned);
+		model.addAttribute("user", usr);
+		Integer visitas = 0;
+		try {
+			beginTransaction(true);
+			visitas = metricStadisticsService.getProfileVisitsStadistics(usr);
+			commitTransaction();
+		} catch (Exception e) {
+			logger.error(e);
+			rollbackTransaction();
+		}
+		model.addAttribute("visitas", visitas);
 		return res;
 	}
 	

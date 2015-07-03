@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 @Entity
 public class Comentario extends BaseEntity{
@@ -26,10 +29,13 @@ public class Comentario extends BaseEntity{
 	@Valid
 	@ManyToOne()
 	private User emisor;
-	@NotNull
 	@Valid
-	@ManyToOne()
+	@ManyToOne(optional=true)
 	private Grupo grupo;
+	@Valid
+	@ManyToOne(optional=true)
+	@JsonIgnore
+	private Novedad novedad;
 	@NotNull
 	private String contenido;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -38,9 +44,6 @@ public class Comentario extends BaseEntity{
 	private Date fecha;
 	@NotNull
 	private boolean leido;
-	
-	@Transient
-	private String fechaRepresentacion;
 
 	public User getEmisor() {
 		return emisor;
@@ -80,10 +83,21 @@ public class Comentario extends BaseEntity{
 		this.leido = leido;
 	}
 
+	@Transient
+	@JsonProperty("fechaRepresentacion")
+	private String fechaRepresentacion;
+
 	public String getFechaRepresentacion() {
-		PrettyTime p = new PrettyTime(new Locale("ES","es"));
+		PrettyTime p = new PrettyTime(new Locale("ES", "es"));
 		fechaRepresentacion = p.format(fecha);
 		return fechaRepresentacion;
+	}
+	
+	public Novedad getNovedad() {
+		return novedad;
+	}
+	public void setNovedad(Novedad novedad) {
+		this.novedad = novedad;
 	}
 
 	

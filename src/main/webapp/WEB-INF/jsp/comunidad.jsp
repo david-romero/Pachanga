@@ -55,7 +55,7 @@
 		
 		<div class="container" id="content">
                     
-                    <div class="block-header">
+                    <div class="block-header" ng-controller="GrupoController">
                         <h2><c:out value="${grupo.titulo}"></c:out></h2>
                         <ul class="actions">
                             <li class="dropdown">
@@ -65,7 +65,8 @@
                                 
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li>
-                                        <a data-pmb-action="edit" href="">Edit</a>
+                                        <a data-pmb-action="edit" href="">Editar</a>
+                                        <a ng-click="eliminarUsuarioGrupo(${grupo.id})" href="">Abandonar Grupo</a>
                                     </li>
                                 </ul>
                              
@@ -160,8 +161,8 @@
 	                                
 	                            </div>
                             </div><!-- TAB 1 -->
-                           <div ng-if="activeTab == 2" ng-controller="GrupoController" ng-init="loadMensajes();conversacion.emisor.id=${userSigned.id}">
-	                            <div class="pmb-block" id="messages-main"  >
+                           <div ng-if="activeTab == 2" ng-controller="GrupoController" ng-init="conversacion.emisor.id=${userSigned.id};idComunidad=${grupo.id};">
+	                            <div class="pmb-block" id="messages-main" ng-init="loadMensajes()"  >
 	                            	<div class="ms-body" style="padding-left: 0px;" >
 			                            <div class="listview lv-message" >
 			                                <div class="lv-body" nice-scroll scroll="conversacion.mensajes">

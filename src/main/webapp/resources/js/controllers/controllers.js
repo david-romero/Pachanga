@@ -7,6 +7,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		$scope.userSigned.id = 0;
 		$scope.hayMasPaginas = true;
 		$scope.desktopPorcentaje = 46;
+		$scope.textLoadMoreButton = 'Mostrar M\u00E1s...'
 		var date = new Date();
 	    var d = date.getDate();
 	    var m = date.getMonth();
@@ -50,7 +51,6 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 		
 		$scope.inicio = function() {
 			$scope.partidos = [];
-			$scope.partidosJugados = [];
 			$http.get('/P/rest/partido/inicio').success(function(data) {
 				for (var i=0; i<data.length; i++){
 					$scope.partidos.push(data[i])
@@ -78,7 +78,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 				$scope.pagina = $scope.pagina + 1;
 		    }).catch(function(error) {
 		    	console.log(error);
-		    	notify('Algo no está funcionando correctamente... :(' , 'inverse');
+		    	notify('Algo no est\u00E1 funcionando correctamente... :(' , 'inverse');
 		    });
 		}
 		
@@ -109,6 +109,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 			}
 			if ( data.length < 4 ){
 				$scope.hayMasPaginas = false;
+				$scope.textLoadMoreButton = 'No existen m\u00E1s partidos. \u00BFTe animas a crear uno\u003F :)'
 			}else{
 				$scope.hayMasPaginas = true;
 			}
@@ -129,6 +130,7 @@ angular.module('pachanga').controller('InitController', [ '$scope', '$http' , '$
 			}
 			return css;
 		};
+		
 		
 		$scope.refreshPartidosJugados = function(){
 			$scope.partidosJugados = [];

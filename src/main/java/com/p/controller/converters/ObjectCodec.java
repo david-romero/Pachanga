@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.ResolvedType;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.p.model.Grupo;
 import com.p.model.User;
 
 public class ObjectCodec extends com.fasterxml.jackson.core.ObjectCodec{

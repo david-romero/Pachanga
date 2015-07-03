@@ -5,12 +5,20 @@ angular.module('pachanga').factory('mensajeService' ,
 		[ "$http" , "$q", function( $http , $q ) {
 		
 		
-		var sendMensaje = function(idReceptor,contenido){
+		var sendMensaje = function(idReceptor,contenido,idEmisor){
+			var url = '';
+			if ( idEmisor == undefined ){
+				url = '/P/rest/mensaje/conversacion/'+idReceptor
+			}else{
+				url = '/P/rest/mensaje/conversacion/'+idEmisor+"/"+idReceptor
+			}
 			var deferred = $q.defer();
 			var promise = deferred.promise;
-			$http.post( '/P/rest/mensaje/conversacion/'+idReceptor,  {
+			$http.post( url,  
+					{
 						  contenido:contenido
-			}).success(function(data) {
+					})
+			   .success(function(data) {
 				  deferred.resolve(data);
 			   })
 			  .error(function(err, status, headers, config) {
@@ -23,7 +31,6 @@ angular.module('pachanga').factory('mensajeService' ,
 		}
 		
 		var loadConversacion = function(idUsuario){
-			
 			var deferred = $q.defer();
 			var promise = deferred.promise;
 			if (idUsuario == undefined){
@@ -70,11 +77,28 @@ angular.module('pachanga').factory('mensajeService' ,
 			return promise;
 		}
 		
+		var eliminarConversacion = function(idReceptor){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http({
+		        method: 'DELETE',
+		        url: "/P/rest/mensaje/conversacion/"+idReceptor 
+		     })
+		    .success(function(data, status) {   
+		    	deferred.resolve(data);
+		     })
+		    .error(function(err, status) {   
+		    	deferred.reject(err);
+		     });
+			return promise;
+		}
+		
 		return {
 			sendMensaje : sendMensaje ,
 			loadConversacion : loadConversacion ,
 			getMensajesSinLeer : getMensajesSinLeer ,
-			leerMensajes : leerMensajes
+			leerMensajes : leerMensajes ,
+			eliminarConversacion : eliminarConversacion
 		}
 	}
 ]);

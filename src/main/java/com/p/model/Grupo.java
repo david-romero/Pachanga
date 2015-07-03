@@ -3,6 +3,8 @@ package com.p.model;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,10 +23,15 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 @Entity
 public class Grupo extends PropietarioPartido{
 
-
+	public Grupo(){
+		SortedSet<Comentario> setA = new TreeSet<Comentario>();
+		comentarios = setA;
+		usuarios = Sets.newHashSet();
+	}
 	
 	/**
 	 * 
@@ -64,6 +71,9 @@ public class Grupo extends PropietarioPartido{
 	
 	@Transient
 	protected Integer size;
+	
+	@Transient
+	protected Integer partidos;
 	
 
 	public Set<Comentario> getComentarios() {
@@ -113,5 +123,10 @@ public class Grupo extends PropietarioPartido{
 	public Integer getSize() {
 		return usuarios.size();
 	}
+	public Integer getPartidos() {
+		return getPartidosCreados().size();
+	}
+	
+	
 
 }

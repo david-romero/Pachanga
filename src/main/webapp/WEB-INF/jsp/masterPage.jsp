@@ -19,7 +19,7 @@
                 </sec:authorize>
             
                 <li class="logo hidden-xs">
-                    <a href="/P/">Pachanga</a>
+                    <a href="/P/app">Pachanga</a>
                 </li>
                 
                 <li class="pull-right">
@@ -185,11 +185,11 @@
                             <li><a href="/P/app"><i class="md md-home"></i> Inicio</a></li>
                             <li><a href="/P/notificaciones/leidas"><i class="md md-done"></i> Notificaciones Le&iacute;das</a></li>
                             <li class="sub-menu">
-                                <a href=""><i class="md md-now-widgets"></i> Widgets</a>
+                                <a href=""><i class="md md-account-child"></i> Grupos</a>
 
                                 <ul>
-                                    <li><a href="widget-templates.html">Templates</a></li>
-                                    <li><a class="active" href="widgets.html">Widgets</a></li>
+                                    <li><a href="/P/grupo/showAll">Mis Grupos</a></li>
+                                    <li><a class="active" href="/P/grupo/create">Crear Grupo</a></li>
                                 </ul>
                             </li>
                             <li class="sub-menu">
@@ -200,50 +200,8 @@
                                     <li><a href="data-tables.html">Data Tables</a></li>
                                 </ul>
                             </li>
-                            <li class="sub-menu">
-                                <a href=""><i class="md md-my-library-books"></i> Forms</a>
-                
-                                <ul>
-                                    <li><a href="form-elements.html">Basic Form Elements</a></li>
-                                    <li><a href="form-components.html">Form Components</a></li>
-                                    <li><a href="form-examples.html">Form Examples</a></li>
-                                    <li><a href="form-validations.html">Form Validation</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href=""><i class="md md-swap-calls"></i>User Interface</a>
-                                <ul>
-                                    <li><a href="colors.html">Colors</a></li>
-                                    <li><a href="animations.html">Animations</a></li>
-                                    <li><a href="box-shadow.html">Box Shadow</a></li>
-                                    <li><a href="buttons.html">Buttons</a></li>
-                                    <li><a href="icons.html">Icons</a></li>
-                                    <li><a href="alerts.html">Alerts</a></li>
-                                    <li><a href="notification-dialog.html">Notifications &amp; Dialogs</a></li>
-                                    <li><a href="media.html">Media</a></li>
-                                    <li><a href="components.html">Components</a></li>
-                                    <li><a href="other-components.html">Others</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href=""><i class="md md-trending-up"></i>Charts</a>
-                                <ul>
-                                    <li><a href="flot-charts.html">Flot Charts</a></li>
-                                    <li><a href="other-charts.html">Other Charts</a></li>
-                                </ul>
-                            </li>
                             <li><a href="/P/partido/calendario"><i class="md md-today"></i> Calendario</a></li>
                             <li><a href="/P/partido/all"><i class="md md-recent-actors"></i> Partidos</a></li>
-                            <li class="sub-menu active toggled">
-                                <a href=""><i class="md md-content-copy"></i> Sample Pages</a>
-                                <ul>
-                                    <li><a href="profile-about.html">Profile</a></li>
-                                    <li><a class="active" href="list-view.html">List View</a></li>
-                                    <li><a href="messages.html">Messages</a></li>
-                                    <li><a href="login.html">Login and Sign Up</a></li>
-                                    <li><a href="404.html">Error 404</a></li>
-                                </ul>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -307,8 +265,8 @@
     
     
     <!-- ANGULAR JS -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-resource.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular-resource.js"></script>
     
     
     <!-- Angular JS Controllers -->
@@ -361,6 +319,15 @@
     
     <!-- Angular Bootstrap DateTimePicker -->
     <script src="/P/resources/js/datetimepicker.js"></script>
+    
+    <!-- apiCheck is used by formly to validate its api -->
+    <script src="//rawgit.com/kentcdodds/apiCheck.js/master/dist/api-check.js"></script>
+
+    <!-- This is the current state of master for formly core. -->
+    <script src="//rawgit.com/formly-js/angular-formly/master/dist/formly.js"></script>
+    
+    <!-- This is the current state of master for the bootstrap templates -->
+    <script src="//rawgit.com/formly-js/angular-formly-templates-bootstrap/master/dist/angular-formly-templates-bootstrap.js"></script>
 	
 	
 </body>

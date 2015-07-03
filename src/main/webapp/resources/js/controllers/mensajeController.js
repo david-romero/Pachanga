@@ -105,41 +105,41 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 			  });
 		}
 		
-	  $scope.loadContactos = function() {
-		  $scope.usuarios = [];
-		  
-		  $scope.conversacion.mensajes = [];
-		  usuarioService.getUsuarios()
-		  .then(function(data) {
-			  for (var i=0; i<data.length; i++){
-				    if ($scope.receptor == undefined){
-						if ( i == 0 ){
-							data[i].active=true;
-							$scope.conversacion.receptor = data[i];
-						}else{
-							data[i].active=false;
-						}
-				    }else{
-				    	if ( data[i].id == $scope.receptor ){
-				    		data[i].active=true;
-							$scope.conversacion.receptor = data[i];
-				    	}else{
-				    		data[i].active=false;
-				    	}
-				    }
-					$scope.usuarios.push(data[i])
-			  }//End For
-			  $scope.loadConversacionReceptor();
-			  $timeout(function(){
-				  $scope.iniciarEventos();
-			  },5000);
-		  })
-		  .catch(function(error) {
-		    	console.log(error);
-		    	notify('Se ha producido un error subiendo la imagen', 'inverse');
-		  });
-
-	  }
+		  $scope.loadContactos = function() {
+			  $scope.usuarios = [];
+			  
+			  $scope.conversacion.mensajes = [];
+			  usuarioService.getUsuarios()
+			  .then(function(data) {
+				  for (var i=0; i<data.length; i++){
+					    if ($scope.receptor == undefined){
+							if ( i == 0 ){
+								data[i].active=true;
+								$scope.conversacion.receptor = data[i];
+							}else{
+								data[i].active=false;
+							}
+					    }else{
+					    	if ( data[i].id == $scope.receptor ){
+					    		data[i].active=true;
+								$scope.conversacion.receptor = data[i];
+					    	}else{
+					    		data[i].active=false;
+					    	}
+					    }
+						$scope.usuarios.push(data[i])
+				  }//End For
+				  $scope.loadConversacionReceptor();
+				  $timeout(function(){
+					  $scope.iniciarEventos();
+				  },5000);
+			  })
+			  .catch(function(error) {
+			    	console.log(error);
+			    	notify('Se ha producido un error subiendo la imagen', 'inverse');
+			  });
+	
+		  }
 		  
 		  $scope.getCssClass = function(usuario) {
 			  return usuario.active;
@@ -205,33 +205,31 @@ angular.module('pachanga').controller('MensajeController', [ "$rootScope" , '$sc
 			  var mensajeContenido = $scope.contenido;
 			  var idDe = $scope.conversacion.emisor.id;
 			  var idPara = $scope.conversacion.receptor.id;
-			  if ( idDe == undefined || idPara == undefined  ){
-				  if (idPara == undefined){
-					  idPara = $scope.receptor;
-				  }
-				  mensajeService.sendMensaje(idPara,mensajeContenido).then(function(data) {
-					  $scope.conversacion.mensajes.push(data)
-				    })
-				    .catch(function(error) {
-				    	console.log(error);
-				    	notify('Se ha producido un error subiendo la imagen', 'inverse');
-				    });
-			  }else{
-				  $http.post(
-							  '/P/rest/mensaje/conversacion/'+idDe+"/"+idPara, 
-							  {
-								  contenido:mensajeContenido
-							  }
-						    )
-				  .success(function(data) {
-					  $scope.conversacion.mensajes.push(data)
-				   })
-				  .error(function(data, status, headers, config) {
-					    // called asynchronously if an error occurs
-					    // or server returns response with an error status.
-				   });
+			  if (idPara == undefined){
+				  idPara = $scope.receptor;
 			  }
+			  mensajeService.sendMensaje(idPara,mensajeContenido)
+			    .then(function(data) {
+				  $scope.conversacion.mensajes.push(data)
+			    })
+			    .catch(function(error) {
+			    	console.log(error);
+			    	notify('Se ha producido un error subiendo la imagen', 'inverse');
+			    });
 		  }
+		  
+		  $scope.eliminarConversacion = function(usuario){
+			  mensajeService.eliminarConversacion(usuario.id)
+			  	.then(function(data) {
+			  		notify('La conversaci\u00F3n ha sido eliminada...', 'inverse');
+			  		$scope.conversacion.mensajes = [];
+			  	})
+			    .catch(function(error) {
+			    	console.log(error);
+			    	notify('Se ha producido un error eliminando la conversacion... :(', 'inverse');
+			    });
+		  }
+		  
 		}
 ]);
 //Bootstrap Growl 

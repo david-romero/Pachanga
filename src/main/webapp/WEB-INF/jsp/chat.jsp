@@ -133,7 +133,7 @@
                                     
                                     <ul class="lv-actions actions">
                                         <li>
-                                            <a href="">
+                                            <a href="" ng-click="eliminarConversacion(conversacion.receptor)">
                                                 <i class="md md-delete"></i>
                                             </a>
                                         </li>

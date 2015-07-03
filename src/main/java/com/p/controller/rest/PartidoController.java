@@ -206,6 +206,10 @@ public class PartidoController extends AbstractController{
 					prop = propietarioPartidoService.save(prop);
 					if ( prop instanceof User ){
 						partido = partidoService.apuntarse(partido,(User) prop);
+					}else{
+						//El propietario del partido es un grupo pero debemos añadir el usuario que esta logueado
+						partido = partidoService.apuntarse(partido,findUserSigned());
+						//Debemos notificar a todos los usuarios del grupo que se ha creado un partido
 					}
 					commitTransaction();
 					response = new ResponseEntity<Partido>(partido, HttpStatus.OK);
@@ -213,6 +217,15 @@ public class PartidoController extends AbstractController{
 					log.error(e);
 					rollbackTransaction();
 					response = new ResponseEntity<Partido>(partido, HttpStatus.FORBIDDEN);
+				}
+				try {
+					beginTransaction();
+					notificacionService.usuarioApuntado(partido,findUserSigned());
+					commitTransaction();
+				} catch (Exception e) {
+					log.error(e);
+					rollbackTransaction();
+					//Si no se ha podido enviar la notificacion, no devuelvo una respuesta mala
 				}
 			}else{
 				response = new ResponseEntity<Partido>(partido, HttpStatus.NOT_FOUND);

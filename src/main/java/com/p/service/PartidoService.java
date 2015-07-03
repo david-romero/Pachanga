@@ -1,5 +1,9 @@
 package com.p.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
 
@@ -98,6 +102,15 @@ public class PartidoService {
 	@Transactional
 	public Partido apuntarse(Partido partido, User user) {
 		Assert.isTrue(!partido.getJugadores().contains(user));
+		/*
+		 * Tras comprobar que no esta apuntado ya a ese partido deberiamos comprobar si ya tiene 
+		 * partidos ese dia. En caso de que los tuviera notificarselo
+		 */
+		LocalDate fechaPartido = partido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDateTime fechaInicioDia = LocalDateTime.of(fechaPartido.getYear() , fechaPartido.getMonth(), fechaPartido.getDayOfMonth(), 0, 0);
+		LocalDateTime fechaFinDia = fechaInicioDia.plusHours(23).plusMinutes(59);
+		Collection<Partido> partidosEseDia = repository.getAllApuntadoEnDia(user.getId(),Date.from(fechaInicioDia.atZone(ZoneId.systemDefault()).toInstant()),
+				Date.from(fechaFinDia.atZone(ZoneId.systemDefault()).toInstant()));
 		partido.getJugadores().add(user);
 		
 		user.getPartidosJugados().add(partido);

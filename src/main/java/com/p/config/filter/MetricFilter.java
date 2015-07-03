@@ -19,6 +19,8 @@ public class MetricFilter implements Filter {
     private MetricService metricService;
     
     protected static final Logger log = Logger.getLogger(MetricFilter.class);
+    
+	
  
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -44,4 +46,5 @@ public class MetricFilter implements Filter {
 	public void destroy() {
 		metricService = null;
 	}
+
 }

@@ -96,5 +96,15 @@ public class MensajeService {
 		Assert.notNull(idEeceptor);
 		return repository.findMensajesSinLeer(idEmisor,idEeceptor);
 	}
+
+	@Transactional()
+	public void remove(Mensaje mensaje) {
+		repository.delete(mensaje);
+	}
+	
+	@Transactional()
+	public void remove(Collection<Mensaje> mensajes) {
+		repository.delete(mensajes);
+	}
 	
 }

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "com.p.*" })
-@Import({ SecurityConfig.class , DbConfig.class, DbConfigMetricas.class })
+@Import({ SecurityConfig.class , DbConfig.class, DbConfigMetricas.class, MailConfig.class })
 /**
  * @author David
  *

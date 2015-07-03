@@ -1,11 +1,17 @@
 /**
  * 
  */
-angular.module('pachanga').controller('GrupoController', 
-		[ '$scope', '$http'  , 'grupoService' ,
-		  	function($scope, $http, grupoService) {
+angular.module('pachanga')
+	.controller('GrupoController', 
+		[ '$scope', '$http'  , 'grupoService' ,'$timeout' , 'usuarioService' ,
+		  	function($scope, $http, grupoService, $timeout, usuarioService) {
 			
 			$scope.idComunidad = 0;
+			
+			$scope.usuariosGrupo = [];
+			$scope.usuariosCandidatos = [];
+			
+			$scope.user = { name: '' };
 			
 			$scope.setFiles = function(element) {
 			    $scope.$apply(function(scope) {
@@ -21,6 +27,43 @@ angular.module('pachanga').controller('GrupoController',
 			    $scope.uploadImagen()
 			 };
 		    
+			 $scope.aniadirUsuarioAGrupo = function(usuario){
+				 $timeout(function() {
+					 $scope.usuariosGrupo.push(usuario);
+					 for ( var i = 0; i < $scope.usuariosCandidatos.length ; i++ ){
+						 if ( $scope.usuariosCandidatos[i].id == usuario.id ){
+							 $scope.usuariosCandidatos.splice(i,1);
+						 }
+					 }
+				 }, 500);
+			 }
+			 
+			 $scope.eliminarUsuarioGrupo = function(usuario){
+				 $timeout(function() {
+					 $scope.usuariosCandidatos.push(usuario);
+					 for ( var i = 0; i < $scope.usuariosGrupo.length ; i++ ){
+						 if ( $scope.usuariosGrupo[i].id == usuario.id ){
+							 $scope.usuariosGrupo.splice(i,1);
+						 }
+					 }
+				 }, 500);
+			 }
+			 
+			 $scope.update = function(){
+				 if ($scope.user.name.length > 3){
+					 usuarioService.find($scope.user.name)
+					    .then(function(data) {
+				        	$scope.usuariosCandidatos = [];
+				        	for (var i=0; i<data.length; i++){
+				        		$scope.usuariosCandidatos.push(data[i]);
+				        	}
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error consultando los usuarios', 'inverse');
+					    });
+				 }
+			 }
 			 
 		
 			 $scope.uploadImagen = function() {
@@ -36,8 +79,70 @@ angular.module('pachanga').controller('GrupoController',
 				    	console.log(error);
 				    	notify('Se ha producido un error subiendo la imagen', 'inverse');
 				    });
-			    }
+			 }
 			 
+			 
+			 
+			 $scope.obtenerUsuariosCandidatos = function(){
+				 $timeout(function() {
+					 grupoService.getUsuariosCandidatos()
+				        .then(function(data) {
+				        	$scope.usuariosCandidatos = [];
+				        	for (var i=0; i<data.length; i++){
+				        		$scope.usuariosCandidatos.push(data[i]);
+				        	}
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error obteniendo los usuarios candidatos para su grupo...', 'inverse');
+					    });
+				 }, 500);
+			 }
+			 
+			 $scope.setFormScope= function(scope){
+				 $scope.formScope = scope;
+			 }
+			 
+			 $scope.getBackgroundImage = function(id){
+				 var number = id % 9;
+				 number++;
+				 return number
+			 }
+			 
+			 $scope.saveGrupo = function(){
+					var titulo = $scope.formScope.titulo;
+					if ( titulo == undefined ){
+						notify('Para crear un grupo debes introducir  un t&iacutetulo :|' , 'inverse');
+					}else{
+						console.log($scope.usuariosGrupo);
+						var grupo = new Object()
+						grupo.titulo = titulo;
+						grupo.usuarios = $scope.usuariosGrupo;
+						grupoService.save(grupo)
+						    .then(function(grupo) {
+						    	notify('¡Tu grupo ha sido creado! A jugar! :)' , 'inverse');
+						    	window.location.href = '/P/grupo/showAll';	
+						    })
+						    .catch(function(error) {
+						    	console.log(error);
+						    	notify('Se ha producido un error creando tu grupo... :(' , 'inverse');
+						    });
+					}
+			 }
+			 
+			 $scope.eliminarUsuarioGrupo = function(idGrupo){
+				 grupoService.eliminarUsuario(idGrupo)
+				    .then(function(grupo) {
+				    	notify('Has abandonado el grupo...' , 'inverse');
+				    	 $timeout(function() {
+				    		 window.location.href = '/P/grupo/showAll';
+				    	 }, 300);
+				    })
+				    .catch(function(error) {
+				    	console.log(error);
+				    	notify('Se ha producido un error saliendo del grupo... :(' , 'inverse');
+				    });
+			 }
 			 
 			 $scope.showUser = function(userId){
 					window.location.href = '/P/usuarios/profile/' + userId
@@ -49,44 +154,36 @@ angular.module('pachanga').controller('GrupoController',
 			  $scope.conversacion.emisor = "";
 			  $scope.conversacion.mensajes = [];
 			  
+			  $scope.hasProfileName = function(usuario){
+				  return usuario != undefined && usuario.firstName != undefined && usuario.firstName != '' && 
+				  usuario.firstName.trim() != '' ;
+			  }
+			  
+			  $scope.getProfileImg = function(usuario){
+				  var number = usuario.id % 9;
+				  number++;
+				  return number
+			  }
+			  
 			  $scope.loadMensajes = function() {
 				  $scope.usuarios = [];
 				  $scope.conversacion.mensajes = [];
-						$http.get('/P/rest/comunidad/mensajes/4').success(function(data) {
-							for (var i=0; i<data.length; i++){
+				  if ($scope.idComunidad > 0){
+					    grupoService.getMensajesComunidad($scope.idComunidad)
+					    .then(function(data) {
+					    	for (var i=0; i<data.length; i++){
 								$scope.conversacion.mensajes.push(data[i])
-								var cssClass = avatarCss[Math.floor(Math.random() * 21) + 1];
-								data[i].emisor.avatarCssClass = cssClass;
 							}
-					});
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error obteniendo los mensajes del grupo', 'inverse');
+					    });
+				  }
 				};
 				
-				var avatarCss = {
-				        1: "bgm-red",
-				        2: "bgm-white",
-				        3: "bgm-black",
-				        4: "bgm-brown",
-				        5: "bgm-pink",
-				        6: "bgm-blue",
-				        7: "bgm-purple",
-				        8: "bgm-deeppurple",
-				        9: "bgm-lightblue",
-				        10: "bgm-cyan",
-				        11: "bgm-teal",
-				        12: "bgm-green",
-				        13: "bgm-lightgreen",
-				        14: "bgm-lime",
-				        15: "bgm-yellow",
-				        16: "bgm-amber",
-				        17: "bgm-orange",
-				        18: "bgm-deeporange",
-				        19: "bgm-gray",
-				        20: "bgm-bluegray",
-				        21: "bgm-indigo"
-				      };
-			  
 			  $scope.getAvatarCssClass = function(usuario){
-				  return usuario.avatarCssClass;
+				  return usuario.avatar;
 			  }	
 			  
 			  $scope.getMensajeCssClass = function(mensaje){
@@ -106,25 +203,23 @@ angular.module('pachanga').controller('GrupoController',
 				  return cssClass;
 			  }
 			  
+			  $scope.split = function(string,delimitador, indice){
+				  return string.split(delimitador)[indice]
+			  };
+			  
 			  $scope.sendMensaje = function(){
 				  var mensajeContenido = $scope.contenido;
-				  alert(mensajeContenido);
-					  $http.post(
-							  '/P/rest/comunidad/mensaje/4', 
-							  {
-								  contenido:mensajeContenido
-							  }
-						    )
-					  .success(function(data) {
-						  console.log(data);
-						  console.log($scope.conversacion.mensajes);
-						  $scope.conversacion.mensajes.push(data)
-					   })
-					  .error(function(data, status, headers, config) {
-						    // called asynchronously if an error occurs
-						    // or server returns response with an error status.
-					   });
-			  }
+				  if ($scope.idComunidad > 0){
+					  grupoService.enviarMensaje(mensajeContenido,$scope.idComunidad)
+					    .then(function(data) {
+							$scope.conversacion.mensajes.push(data)
+					    })
+					    .catch(function(error) {
+					    	console.log(error);
+					    	notify('Se ha producido un error enviando el mensaje al grupo... :(', 'inverse');
+					    });
+				  }
+			 };
 		}
 		]
 );

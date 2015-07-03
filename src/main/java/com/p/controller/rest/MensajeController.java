@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
@@ -116,7 +118,7 @@ public class MensajeController extends AbstractController{
 
 	protected Mensaje save(Mensaje mensaje) {
 		try{
-			beginTransaction(true);
+			beginTransaction();
 			mensaje = mensajeService.save(mensaje);
 			commitTransaction();
 		}catch(Exception e){
@@ -149,6 +151,30 @@ public class MensajeController extends AbstractController{
 		mensaje = save(mensaje);
 		
 		return mensaje;
+	}
+	
+	@RequestMapping(value = "/conversacion/{idUsuarioReceptor}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> eliminarConversacion(Model model,
+			@PathVariable(value = "idUsuarioReceptor") Integer idUsuarioReceptor) {
+		ResponseEntity<Void> response = new ResponseEntity<Void>(HttpStatus.CONTINUE);
+		User userReceptor = null;
+		User userSigned = findUserSigned();
+		
+		userReceptor = getUserById(idUsuarioReceptor);
+		
+		Assert.isTrue(!userReceptor.equals(userSigned));
+		
+		try{
+			beginTransaction();
+			mensajeService.remove(mensajeService.findConversacion(userSigned, userReceptor));
+			commitTransaction();
+			response = new ResponseEntity<Void>(HttpStatus.OK);
+		}catch(Exception e){
+			log.error(e);
+			rollbackTransaction();
+			response = new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+		return response;
 	}
 
 	protected User getUserById(Integer idUsuarioReceptor) {

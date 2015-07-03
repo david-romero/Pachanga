@@ -292,11 +292,13 @@ $(document).ready(function(){
                             
                 if (y == "dismiss") {
                     x.find('textarea').val('');
+                    x.find('input').val('');
                     x.removeClass('toggled'); 
                 }
                 
                 if (y == "save") {
                     x.find('textarea').val('');
+                    x.find('input').val('');
                     x.removeClass('toggled'); 
                 }
     	});

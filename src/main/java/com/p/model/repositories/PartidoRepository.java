@@ -1,6 +1,7 @@
 package com.p.model.repositories;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +20,8 @@ public interface PartidoRepository extends JpaRepository<Partido, Integer>{
 	public Collection<Partido> getAllJugados(User user);
 	@Query("select p from Partido p where ?1 MEMBER OF p.jugadores or p.propietario.id = ?2 order by p.fecha DESC ")
 	public Page<Partido> getAllVinculados(User user,Integer userId,Pageable page);
+	@Query("TODO ")
+	public Collection<Partido> getAllApuntadoEnDia(Integer id, Date from,
+			Date to);asdasdasdasdasd
 	
 }

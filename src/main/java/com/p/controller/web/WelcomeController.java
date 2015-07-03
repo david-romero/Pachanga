@@ -111,6 +111,7 @@ public class WelcomeController extends AbstractController{
 		List<Integer> listPartidos = null;
 		List<Integer> listMensajes = null;
 		List<MetricaPartidoUsuario> partidosUsuarios = null;
+		Integer mailStadistics = null;
 		try{
 			stadistics = metricStadisticsService.getSystemStadistics();
 			siteVisitors = metricStadisticsService.siteVisitors();
@@ -128,6 +129,7 @@ public class WelcomeController extends AbstractController{
 			mensajes = metricStadisticsService.mensajes();
 			listMensajes = metricStadisticsService.listMensajes();
 			partidosUsuarios = metricStadisticsService.rankingUsuariosPartidos();
+			mailStadistics = metricStadisticsService.getMailStadistics();
 		}catch( Exception e ){
 			//Capturamos cualquier exception. Estadisticas son secundarias
 			stadistics = Pair.create(0, 0);
@@ -146,6 +148,7 @@ public class WelcomeController extends AbstractController{
 			listMensajes = Lists.newArrayList();
 			mensajes = 0;
 			partidosUsuarios = Lists.newArrayList();
+			mailStadistics = 0;
 		}
 		model.addAttribute("mobilePorcentaje", stadistics.getFirst());
 		model.addAttribute("desktopPorcentaje", stadistics.getSecond());
@@ -164,6 +167,7 @@ public class WelcomeController extends AbstractController{
 		model.addAttribute("mensajes", mensajes );
 		model.addAttribute("listMensajes", listMensajes );
 		model.addAttribute("partidosUsuarios", partidosUsuarios );
+		model.addAttribute("mailStadistics", mailStadistics );
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")

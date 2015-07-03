@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.p.config.DbConfigMetricas;
 import com.p.model.User;
+import com.p.model.metricas.MetricaEmail;
 import com.p.model.metricas.MetricaHttpIP;
 import com.p.model.metricas.MetricaHttpLogin;
 import com.p.model.metricas.MetricaHttpRequest;
@@ -74,7 +75,6 @@ public class MetricService {
 			HttpServletRequest httpRequest = ((HttpServletRequest) request);
 			String req = httpRequest.getMethod() + " "
 					+ httpRequest.getRequestURI();
-
 			String browserDetails = httpRequest.getHeader("User-Agent");
 			String userAgent = browserDetails;
 			String user = userAgent.toLowerCase();
@@ -405,6 +405,42 @@ public class MetricService {
 				mongoOperation.updateFirst(query,
 						Update.update(METRIC_ATTRIBUTE_COUNT, metrica.getCount() + 1),
 						MetricaPartidoUsuario.class);
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+	}
+	
+	public void saveEmail(boolean enviadoCorrectamente) {
+		try {
+			// find
+			Query query = new Query();
+			Date current = new Date(System.currentTimeMillis());
+			String inicioDia = sdf.format(current);
+			DateTimeFormatter formatter = DateTimeFormatter
+					.ofPattern(METRIC_DATE_PATTERN);
+			LocalDateTime inicioDiaDate = LocalDateTime.parse(inicioDia
+					+ METRIC_HOUR_PATTERN, formatter);
+			LocalDateTime finDiaDate = inicioDiaDate.plusHours(23)
+					.plusMinutes(59).plusSeconds(59);
+			Date fin = Date.from(finDiaDate.toInstant(ZoneOffset.UTC));
+			Date inicio = Date.from(inicioDiaDate.toInstant(ZoneOffset.UTC));
+			query.addCriteria(Criteria.where("enviado").is(enviadoCorrectamente).and(METRIC_ATTRIBUTE_FECHA).gte(inicio)
+					.lte(fin));
+			MetricaEmail metrica = mongoOperation.findOne(query,
+					MetricaEmail.class, "email");
+
+			if (metrica == null || metrica.getId() == null
+					|| metrica.getId().isEmpty()) {
+				metrica = new MetricaEmail();
+				metrica.setEnviado(enviadoCorrectamente);
+				metrica.setCount(1);
+				metrica.setFecha(current);
+				mongoOperation.save(metrica, "email");
+			} else {
+				mongoOperation.updateFirst(query,
+						Update.update(METRIC_ATTRIBUTE_COUNT, metrica.getCount() + 1),
+						MetricaEmail.class);
 			}
 		} catch (Exception e) {
 			log.error(e);

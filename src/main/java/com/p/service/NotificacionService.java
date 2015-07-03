@@ -22,8 +22,9 @@ import com.p.model.Grupo;
 import com.p.model.Notificacion;
 import com.p.model.Partido;
 import com.p.model.User;
+import com.p.model.Voto;
+import com.p.model.modelAux.Pair;
 import com.p.model.repositories.NotificacionRepository;
-import com.p.util.Pair;
 
 @Service
 @Transactional(isolation=Isolation.READ_UNCOMMITTED)
@@ -65,7 +66,9 @@ public class NotificacionService {
 			
 			//Si el partido es de una comunidad avisamos a todos los usuarios para que lo sepan
 			Grupo grupo = (Grupo) p.getPropietario();
-			grupo.getUsuarios().stream().forEach(usuario->{
+			grupo.getUsuarios().stream().filter(usuario->{
+				return !usuario.equals(usr);
+			}).forEach(usuario->{
 				Notificacion notificacion = create();
 				notificacion.setReceptor(usuario);
 				notificacion.setTitulo("El usuario " + usr.getEmail() + " se ha apuntado a una de las  pachangas del grupo " + grupo.getTitulo());
@@ -126,6 +129,16 @@ public class NotificacionService {
 		Assert.notNull(idNotificacion);
 		Assert.isTrue(idNotificacion > 0);
 		repository.delete(idNotificacion);
+	}
+	
+	public Notificacion notificarVoto(Voto voto) {
+		Notificacion notificacion  = create();
+		notificacion.setEmisor(voto.getEmisor());
+		notificacion.setReceptor(voto.getReceptor());
+		notificacion.setTitulo("Has recibido " + voto.getValor() + " puntos de karma! ");
+		notificacion.setContenido("El usuario " + voto.getEmisor().getEmail().split("@")[0] +
+				" te ha dado " + voto.getValor() + " puntos de karma! ");
+		return save(notificacion);
 	}
 
 }

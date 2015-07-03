@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +27,7 @@ import com.p.model.Partido;
 import com.p.model.PropietarioPartido;
 import com.p.model.User;
 import com.p.service.GrupoService;
+import com.p.service.MetricStadisticsService;
 import com.p.service.PartidoService;
 import com.p.service.UsersService;
 
@@ -40,6 +42,9 @@ public class PachangaController extends AbstractController{
 	protected UsersService userService;
 	@Autowired
 	protected GrupoService grupoService;
+	
+	@Autowired
+	protected MetricStadisticsService metricStadisticsService;
 	
 	private final static Logger log = Logger.getLogger(PachangaController.class);
 	
@@ -94,6 +99,8 @@ public class PachangaController extends AbstractController{
 			rollbackTransaction();
 		}
 		
+		Assert.notNull(p);
+		
 		User usr = new User();
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -102,6 +109,17 @@ public class PachangaController extends AbstractController{
 		}else{
 			usr.setEmail("anonymous@anonymous.com");
 		}
+		
+		Integer visitas = 0;
+		try {
+			beginTransaction(true);
+			visitas = metricStadisticsService.getPartidoVisitsStadistics(p);
+			commitTransaction();
+		} catch (Exception e) {
+			log.error(e);
+			rollbackTransaction();
+		}
+		model.addAttribute("visitas", visitas);
 		
 		model.addAttribute("userSigned", usr);
 		model.addAttribute("partido", p);

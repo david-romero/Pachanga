@@ -24,6 +24,11 @@ import com.p.service.SocialMediaService;
 @Table(name = "user_accounts")
 public class User extends PropietarioPartido {
  
+	public User() {
+		partidosJugados = Sets.newHashSet();
+		grupos = Sets.newHashSet();
+    }
+	
     /**
 	 * 
 	 */
@@ -58,12 +63,14 @@ public class User extends PropietarioPartido {
     
     @ManyToMany()
 	@Valid
-	protected Set<Grupo> grupos;
+	@NotNull
+	@JsonIgnore
+	private Set<Grupo> grupos;
     
     @NotNull
 	@Valid
 	@ManyToMany()
-	protected Collection<Partido> partidosJugados;
+    private Collection<Partido> partidosJugados;
     
     
     @JsonIgnore
@@ -108,13 +115,7 @@ public class User extends PropietarioPartido {
 	public void setKarmaPoints(Integer[] karmaPoints) {
 		this.karmaPoints = karmaPoints;
 	}
-
-	public User() {
-		partidosJugados = Sets.newHashSet();
-		grupos = Sets.newHashSet();
-    }
-
-
+	
 	public String getFirstName() {
 		return firstName;
 	}

@@ -18,8 +18,22 @@ angular.module('pachanga').factory('usuarioService' ,
 			return promise;
 		}
 		
+		var find = function(text){
+			var deferred = $q.defer();
+			var promise = deferred.promise;
+			$http.get('/P/rest/usuarios/find/'+text)
+		    .success(function(data, status) {   
+		    	deferred.resolve(data);
+		     })
+		    .error(function(err, status) {   
+		    	deferred.reject(err);
+		     });
+			return promise;
+		}
+		
 		return {
-			getUsuarios : getUsuarios
+			getUsuarios : getUsuarios ,
+			find : find
 		}
 	}
 ]);

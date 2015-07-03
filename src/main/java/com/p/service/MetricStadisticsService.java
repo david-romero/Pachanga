@@ -36,6 +36,8 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.p.config.DbConfigMetricas;
+import com.p.model.Partido;
+import com.p.model.User;
 import com.p.model.metricas.MetricaHttpLogin;
 import com.p.model.metricas.MetricaHttpRequest;
 import com.p.model.metricas.MetricaHttpStatus;
@@ -493,6 +495,71 @@ public class MetricStadisticsService {
 			}
 		}
 		return list;
+	}
+	
+	@Transactional(readOnly = true)
+	public Integer getMailStadistics() {
+		Integer porcentaje = 0;
+		AggregationOperation group = Aggregation.group("id").sum("count")
+				.as("count");
+		Aggregation aggregation = Aggregation.newAggregation(group);
+		AggregationResults<DBObject> result = mongoOperation.aggregate(
+				aggregation, "email", DBObject.class);
+		if (result.getUniqueMappedResult() != null) {
+			int allRequest = Integer.parseInt(result.getUniqueMappedResult()
+					.get("count").toString());
+
+			AggregationOperation match = Aggregation.match(Criteria.where("enviado")
+					.is(true));
+			group = Aggregation.group("id").sum("count").as("count");
+			aggregation = Aggregation.newAggregation(match, group);
+			result = mongoOperation.aggregate(aggregation, "email",
+					DBObject.class);
+			int enviados = 0;
+			if (result.getUniqueMappedResult() != null) {
+				enviados = Integer.parseInt(result
+						.getUniqueMappedResult().get("count").toString());
+			}
+
+			porcentaje = (enviados * 100) / allRequest;
+
+		}
+		return porcentaje;
+	}
+
+	@Transactional(readOnly = true)
+	public Integer getProfileVisitsStadistics(User usr) {
+		Criteria criteria = Criteria.where("request").regex("/P/usuarios/profile/"+usr.getId());
+		AggregationOperation group = Aggregation.group("id").sum("count")
+				.as("total");
+		Aggregation aggregation = newAggregation(MetricaHttpRequest.class,
+				match(criteria),
+				group);
+		AggregationResults<DBObject> result = mongoOperation.aggregate(
+				aggregation, "request", DBObject.class);
+		Integer visitas = 0;
+		if (result.getUniqueMappedResult() != null) {
+			visitas = Integer.parseInt(result.getUniqueMappedResult()
+					.get("total").toString());
+		}
+		return visitas;
+	}
+	@Transactional(readOnly = true)
+	public Integer getPartidoVisitsStadistics(Partido p) {
+		Criteria criteria = Criteria.where("request").regex("/P/partido/show/"+p.getId());
+		AggregationOperation group = Aggregation.group("id").sum("count")
+				.as("total");
+		Aggregation aggregation = newAggregation(MetricaHttpRequest.class,
+				match(criteria),
+				group);
+		AggregationResults<DBObject> result = mongoOperation.aggregate(
+				aggregation, "request", DBObject.class);
+		Integer visitas = 0;
+		if (result.getUniqueMappedResult() != null) {
+			visitas = Integer.parseInt(result.getUniqueMappedResult()
+					.get("total").toString());
+		}
+		return visitas;
 	}
 
 }

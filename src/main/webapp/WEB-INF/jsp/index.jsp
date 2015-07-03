@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Index</title>
 
     <!-- Bootstrap Core CSS -->
@@ -246,8 +245,8 @@
                                 <div class="clearfix"></div>
 
                                 <div class="text-center p-20 m-t-25">
-                                    <div class="easy-pie main-pie" data-percent="75" data-easypie-chart="">
-                                        <div class="percent">45</div>
+                                    <div class="easy-pie main-pie" data-percent="${mailStadistics}" data-easypie-chart="">
+                                        <div class="percent">${mailStadistics}</div>
                                         <div class="pie-title">Total Emails Sent</div>
                                     </div>
                                 </div>
@@ -465,10 +464,7 @@
 	                                        	<button ng-if="!isPropio(partido) && isFull(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Completo">
 	                                        		<i class="md md-dnd-on"></i>
 	                                        	</button>
-	                                        	<button ng-if="!isPropio(partido) && !isFull(partido) && !isInDate(partido)"  class="btn bgm-red btn-float waves-effect waves-button waves-float" style="cursor: initial;" title="Fecha Pasada">
-	                                        		<i class="md md-timer-off"></i>
-	                                        	</button>
-	                                        	<button ng-if="isInDate(partido) && !isFull(partido) && !isPropio(partido)" ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float" title="Apuntate">
+	                                        	<button ng-if="!isFull(partido) && !isPropio(partido)" ng-click="apuntarseAPartido(partido.id)" class="btn bgm-cyan btn-float waves-effect waves-button waves-float" title="Apuntate">
 	                                        		<i class="md md-person-add"></i>
 	                                        	</button>
 	                                       	</div>
@@ -516,7 +512,7 @@
                       <div class="col-lg-12">
                       	  <div class="clearfix"></div>
 	                      <div class="load-more" ng-class="getCssLoadMoreButton()">
-	                          <a  ng-click="loadMorePartidos()" href=""><i class="md md-refresh"></i> Mostrar M&aacute;s...</a>
+	                          <a  ng-click="loadMorePartidos()" href=""><i class="md md-refresh"></i> {{textLoadMoreButton}}</a>
 	                      </div>
 	                      <div class="clearfix"></div>
                       </div>

@@ -118,7 +118,7 @@
 		</div>	    	
 	</div>
 </div>-->
-<body class="login-content">
+<body class="login-content" ng-app="pachanga">
         <!-- Login -->
         <div class="lc-block toggled" id="l-login">
         	 <form id="formLogin" class="omb_loginForm" action="/P/secure" autocomplete="off" method="POST">
@@ -173,25 +173,26 @@
         </div>
         
         <!-- Register -->
-        <div class="lc-block" id="l-register">     	
-            <div class="input-group m-b-20">
-                <span class="input-group-addon"><i class="md md-person"></i></span>
-                <div class="fg-line">
-                    <input class="form-control" placeholder="Username" type="text">
-                </div>
-            </div>
-            
+        <div class="lc-block" id="l-register" ng-controller="ProfileController as vm">     	
+            <!--<form method="post" action="#">
             <div class="input-group m-b-20">
                 <span class="input-group-addon"><i class="md md-mail"></i></span>
                 <div class="fg-line">
-                    <input class="form-control" placeholder="Email Address" type="text">
+                    <input class="form-control" ng-model="email" placeholder="Email" type="text">
                 </div>
             </div>
             
             <div class="input-group m-b-20">
                 <span class="input-group-addon"><i class="md md-accessibility"></i></span>
                 <div class="fg-line">
-                    <input class="form-control" placeholder="Password" type="password">
+                    <input class="form-control" ng-model="password" placeholder="Contraseña" type="password">
+                </div>
+            </div>
+            
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="md md-accessibility"></i></span>
+                <div class="fg-line">
+                    <input class="form-control" ng-model="confirmPassword" placeholder="Confirmar Contraseña" type="password">
                 </div>
             </div>
             
@@ -201,12 +202,17 @@
                 <label>
                     <input value="" type="checkbox">
                     <i class="input-helper"></i>
-                    Accept the license agreement
+                    Aceptar condiciones de uso
                 </label>
             </div>
             
-            <a href="" class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></a>
-            
+            <a href="" ng-click="registerUser()" class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></a>
+            -->
+            <form ng-submit="vm.onRegister()" novalidate>
+			    <formly-form model="vm.model" fields="vm.rentalFields" form="vm.rentalForm">
+			    	<button type="submit"" ng-disabled="vm.rentalForm.$invalid" class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></button>
+			    </formly-form>
+			</form>
             <ul class="login-navigation">
                 <li data-block="#l-login" class="bgm-green">Login</li>
                 <li data-block="#l-forget-password" class="bgm-orange">Forgot Password?</li>
@@ -214,17 +220,22 @@
         </div>
         
         <!-- Forgot Password -->
-        <div class="lc-block" id="l-forget-password">
+        <div class="lc-block" id="l-forget-password" ng-controller="ProfileController as vm">
             <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu risus. Curabitur commodo lorem fringilla enim feugiat commodo sed ac lacus.</p>
-            
+            <!-- 
             <div class="input-group m-b-20">
                 <span class="input-group-addon"><i class="md md-email"></i></span>
                 <div class="fg-line">
                     <input class="form-control" placeholder="Email Address" type="text">
                 </div>
-            </div>
+            </div>-->
+            <form ng-submit="vm.onRemember()" novalidate>
+			    <formly-form model="vm.remember" fields="vm.rememberFields" form="vm.rememberForm">
+			    	<button type="submit" ng-disabled="vm.rememberForm.$invalid" class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></button>
+			    </formly-form>
+			</form>
             
-            <a  href=""  class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></a>
+            <!-- <a  href=""  class="btn btn-login btn-danger btn-float waves-effect waves-button waves-float"><i class="md md-arrow-forward"></i></a>-->
             
             <ul class="login-navigation">
                 <li data-block="#l-login" class="bgm-green">Login</li>
@@ -282,6 +293,50 @@
     <script src="/P/resources/js/waves.min.js"></script>
     <!-- Functions -->
     <script src="/P/resources/js/functions.js"></script>
+    
+    <!-- Bootstrap Growl -->
+    <script src="/P/resources/js/bootstrap-growl.min.js"></script>
+    
+        <!-- ANGULAR JS -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-resource.js"></script>
+    
+    
+    <!-- Angular JS App -->
+    <script src="/P/resources/js/controllers/pachanga.js"></script>
+    
+    <!-- Angular JS Controllers -->
+    <script src="/P/resources/js/controllers/profileController.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/usuarioService.js"></script>
+    
+    <!-- Angular JS Services -->
+    <script src="/P/resources/js/services/profileService.js"></script>
+    
+    <!-- Fullcalendar  (Needed for Angular App Injection) -->
+    <script src="/P/resources/js/calendar.js"></script>
+    
+    <!-- Angular Bootstrap DateTimePicker (Needed for Angular App Injection) -->
+    <script src="/P/resources/js/datetimepicker.js"></script>
+    
+    <!-- apiCheck is used by formly to validate its api -->
+    <script src="//rawgit.com/kentcdodds/apiCheck.js/master/dist/api-check.js"></script>
+
+    <!-- This is the current state of master for formly core. -->
+    <script src="//rawgit.com/formly-js/angular-formly/master/dist/formly.js"></script>
+    
+    <!-- This is the current state of master for the bootstrap templates -->
+    <script src="//rawgit.com/formly-js/angular-formly-templates-bootstrap/master/dist/angular-formly-templates-bootstrap.js"></script>
+    
+	<!-- BCRYPT Algorithm -->
+    <script src="/P/resources/js/bCrypt.js"></script>
+    <!-- BCRYPT Algorithm -->
+    <script src="/P/resources/js/isaac.js"></script>
+
     
 </body>
 </html>
