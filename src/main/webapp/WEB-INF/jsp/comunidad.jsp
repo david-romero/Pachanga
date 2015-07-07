@@ -205,8 +205,8 @@
 		                                        <div class="dash-widget-title">{{partido.titulo}}</div>
 		                                        <img ng-src="{{partido.urlImagen}}" alt="">
 		                                        <div class="main-item">
-		                                            <small>{{partido.lugar.titulo}} - {{partido.fechaRepresentacion}}</small>
-		                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i></small></h2>
+		                                            <small>{{partido.lugar.titulo}} <div ng-if="partido.lugar != undefined">-</div> {{partido.fechaRepresentacion}}</small>
+		                                            <h2>{{partido.precio}}&euro;<small>{{ (partido.plazas * 1) - (partido.jugadores.length * 1) }} <i class="md md-account-child"></i>&nbsp;{{partido.fecha}}</small></h2>
 		                                        </div>
 		                                        <sec:authorize access="isAuthenticated()" >
 		                                        	<div ng-if="!comprobarSiEstaApuntado(partido,'${user.username}')">

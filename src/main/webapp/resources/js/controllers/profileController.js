@@ -9,6 +9,7 @@ angular.module('pachanga').controller('ProfileController',
 				$scope.karma = [1,2,3,4,5]
 				$scope.paginaNovedades = 1;
 				$scope.novedades = [];
+				$scope.limit = {};
 				$scope.comentario = {
 						contenido : ""
 				};
@@ -21,6 +22,9 @@ angular.module('pachanga').controller('ProfileController',
 						5 : 0
 				}
 				$scope.numeroKarmaVotes = $scope.karmaVotes[0];
+				
+				$scope.userSigned = {};
+				
 				$scope.getProfileTabCss = function(tab){
 					var cssClass = "";
 					if ( tab == $scope.activeTab ){
@@ -111,12 +115,26 @@ angular.module('pachanga').controller('ProfileController',
 				    });
 				}
 				
+				$scope.getTvType = function(novedad){
+					var tvType = "text";
+					if ( novedad.tipo ){
+						if ( novedad.tipo == 'PARTIDO' ){
+							tvType = "image";
+						}else if ( novedad.tipo == 'GRUPO' ){
+							tvType = "video";
+						}
+					}
+					return tvType;
+				}
+				
 				$scope.getNovedades = function( idUsuario ){
+					$scope.userSigned.id = idUsuario;
 					profileService.getNovedades(idUsuario,$scope.paginaNovedades)
 			        .then(function(data) {
 			        	for ( var i = 0; i < data.content.length ; i++ ){
 			        		data.content[i].views = 0;
 			        		$scope.novedades.push(data.content[i]);
+			        		$scope.limit[''+data.content[i].id] = 3;
 			        	}
 			        	$scope.paginaNovedades++;
 				    })
@@ -124,6 +142,20 @@ angular.module('pachanga').controller('ProfileController',
 				    	console.log(error);
 				    	notify('Se ha producido un error obteniendo las novedades...', 'inverse');
 				    });
+				}
+				
+				$scope.getLimitComentarios = function(novedad){
+					var limit = 3;
+					if ( $scope.limit[''+ novedad.id] ){
+						limit = $scope.limit[''+ novedad.id];
+					}
+					return limit;
+				}
+				
+				$scope.disableLimit = function(novedad){
+					if ( $scope.limit[''+ novedad.id] ){
+						$scope.limit[''+ novedad.id] = novedad.comentarios.length;
+					}
 				}
 				
 				$scope.sendNovedad = function(){
@@ -161,9 +193,10 @@ angular.module('pachanga').controller('ProfileController',
 				        .then(function(novedad) {
 				        	for ( var i = 0; i < $scope.novedades.length ; i++ ){
 				        		if ( $scope.novedades[i].id == novedad.id ){
-				        			$scope.novedades[i].comentarios = novedad.comentarios;
+				        			$scope.novedades[i] = novedad;
 				        		}
 				        	}
+				        	angular.element( document.querySelector('#comentario-'+idNovedad))[0].value = '';
 					    })
 					    .catch(function(error) {
 					    	console.log(error);

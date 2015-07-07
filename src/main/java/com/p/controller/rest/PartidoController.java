@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.p.controller.AbstractController;
+import com.p.infrastructure.exceptions.HorarioNoCompatibleException;
 import com.p.model.Categoria;
 import com.p.model.Grupo;
 import com.p.model.Partido;
@@ -47,8 +48,6 @@ import com.p.service.UsersService;
 @RequestMapping(value = "/rest/partido")
 @Transactional
 public class PartidoController extends AbstractController{
-
-	static int cursor = 1;
 	
 	@Autowired
 	protected PartidoService partidoService;
@@ -213,6 +212,10 @@ public class PartidoController extends AbstractController{
 					}
 					commitTransaction();
 					response = new ResponseEntity<Partido>(partido, HttpStatus.OK);
+				}catch(HorarioNoCompatibleException e){
+					log.error(e);
+					rollbackTransaction();
+					response = new ResponseEntity<Partido>(partido, HttpStatus.CONFLICT);
 				}catch(Exception e){
 					log.error(e);
 					rollbackTransaction();

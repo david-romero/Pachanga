@@ -9,6 +9,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -171,9 +173,20 @@ public abstract class AbstractController {
 		return usr;
 	}
 	
+	/**
+	 * Devuelve el email del usuario logueado en la aplicacion
+	 * 
+	 * @return
+	 */
 	protected String findUsernameUserSigned() {
-		return ((org.springframework.security.core.userdetails.User) SecurityContextHolder
-				.getContext().getAuthentication().getPrincipal()).getUsername();
+		Authentication auth =
+		SecurityContextHolder
+		.getContext().getAuthentication();
+		if ( (auth instanceof AnonymousAuthenticationToken) ){
+			return ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+		}else{
+			return "Anonymous";
+		}
 	}
 
 }

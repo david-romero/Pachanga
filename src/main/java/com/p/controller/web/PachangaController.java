@@ -1,10 +1,16 @@
 package com.p.controller.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,6 +217,31 @@ public class PachangaController extends AbstractController{
 			rollbackTransaction();
 		}
 		return usr;
+	}
+	
+	@RequestMapping(value = "/getPartidoImage/{id}")
+	public void getUserImage(HttpServletResponse response,
+			@PathVariable("id") Integer id) throws IOException {
+
+		response.setContentType("image/jpeg");
+		byte[] buffer = null;
+		try {
+			beginTransaction(true);
+			buffer = partidoService.findImagen(id);
+			commitTransaction();
+		} catch (Exception e) {
+			log.error(e);
+			rollbackTransaction();
+		}
+		if (buffer == null  || buffer.length == 0) {
+			int number = id % 4;
+			number++;
+			InputStream in = this.getClass().getResourceAsStream("/partidos/futbol/" + (number)+".jpg");
+
+			buffer = IOUtils.toByteArray(in);
+		} 
+		InputStream in1 = new ByteArrayInputStream(buffer);
+		IOUtils.copy(in1, response.getOutputStream());
 	}
 	
 }

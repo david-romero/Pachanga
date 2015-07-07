@@ -377,17 +377,17 @@
                             </div><!-- TAB 1 -->
                             <div ng-if="activeTab == 2"><!-- Start TAB 2 -->
                             	<div class="timeline" ng-init="getNovedades(${user.id})">
-	                                <div class="t-view" data-tv-type="text" ng-repeat="novedad in novedades track by $index">
+	                                <div class="t-view" data-tv-type="{{getTvType(novedad)}}" ng-repeat="novedad in novedades track by $index">
 	                                    <div class="tv-header media">
 	                                        <a href="/P/usuarios/profile/{{novedad.emisor.id}}" class="tvh-user pull-left">
 	                                            <img class="img-responsive" ng-src="/P/usuarios/getUserImage/{{novedad.emisor.id}}" alt="">
 	                                        </a>
 	                                        <div class="media-body p-t-5">
-	                                            <strong class="d-block">Malinda Hollaway</strong>
+	                                            <strong class="d-block">{{novedad.emisor.screenName}}</strong>
 	                                            <small class="c-gray">{{novedad.fechaRepresentacion}}</small>
 	                                        </div>
 	                                        
-	                                        <ul class="actions m-t-20 hidden-xs">
+	                                        <ul class="actions m-t-20 hidden-xs" ng-if="novedad.usuario.id == userSigned.id">
 	                                            <li class="dropdown">
 	                                                <a href="" data-toggle="dropdown">
 	                                                    <i class="md md-more-vert"></i>
@@ -405,6 +405,13 @@
 	                                        </ul>
 	                                    </div>
 	                                    <div class="tv-body">
+		                                    <div ng-if="novedad.tipo == 'PARTIDO'" class="lightbox m-b-20">
+	                                            <div data-src="img/headers/sm/4.png">
+	                                                <div class="lightbox-item pull-left">
+	                                                    <img ng-src="img/headers/sm/4.png" alt="">
+	                                                </div>
+	                                            </div>
+	                                        </div>
 	                                        <p>
 	                                        	{{novedad.contenido}}
 	                                        </p>
@@ -418,19 +425,19 @@
 	                                            <li class="tvbs-views"><i class="md md-remove-red-eye"></i> {{novedad.views}} <span class="hidden-xs">Visitas</span></li>
 	                                        </ul>
 	                                        
-	                                        <a ng-if="novedad.comentarios.length > 3" class="tvc-more" href=""><i class="md md-mode-comment"></i> Ver los {{novedad.comentarios.length}} Comentarios</a>
+	                                        <a ng-if="novedad.comentarios.length > 3" ng-click="disableLimit(novedad)" class="tvc-more" href=""><i class="md md-mode-comment"></i> Ver los {{novedad.comentarios.length}} Comentarios</a>
 	                                    </div>
 	
 	                                    <div class="tv-comments">
 	                                    	<form name="sendComentarioToNovedad" >
 	                                        <ul class="tvc-lists">
 	                                        	
-	                                            <li class="media" ng-if="novedad.comentarios" ng-repeat="comentario in novedad.comentarios | limitTo:3">
+	                                            <li class="media" ng-if="novedad.comentarios" ng-repeat="comentario in novedad.comentarios | limitTo: getLimitComentarios(novedad) ">
 	                                                <a href="/P/usuarios/profile/{{comentario.emisor.id}}" class="tvh-user pull-left">
 	                                                    <img class="img-responsive" ng-src="/P/usuarios/getUserImage/{{comentario.emisor.id}}" alt="">
 	                                                </a>
 	                                                <div class="media-body">
-	                                                    <strong class="d-block">David Peiterson</strong>
+	                                                    <strong class="d-block">{{comentario.emisor.screenName}}</strong>
 	                                                    <small class="c-gray">{{comentario.fechaRepresentacion}}</small>
 	                                                    
 	                                                    <div class="m-t-10">{{comentario.contenido}}</div>

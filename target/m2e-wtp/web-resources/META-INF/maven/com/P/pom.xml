@@ -41,6 +41,12 @@
 			<version>${spring.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
 		<!-- Spring + aspects -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -107,7 +113,6 @@
 			<artifactId>jackson-datatype-hibernate4</artifactId>
 			<version>2.5.3</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>log4j</groupId>
@@ -441,6 +446,29 @@
 		        </exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- Java Mail API -->
+	    <dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.3</version>
+	    </dependency>
+	    
+		<!-- Java Mail API -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		
+		<!-- Cache -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		
+		
 		
 		
 	</dependencies>

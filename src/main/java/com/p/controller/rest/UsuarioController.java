@@ -2,6 +2,8 @@ package com.p.controller.rest;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,6 +277,12 @@ public class UsuarioController extends AbstractController {
 			log.error(e);
 			rollbackTransaction();
 		}
+		Stream<Comentario> whitoutDuplicates = novedad.getComentarios().stream().distinct();
+		novedad.setComentarios(whitoutDuplicates.sorted( (e1 ,e2) ->{
+			//DESC e2.compare.e1
+			//ASC e1.compare.e2
+			return e2.getFecha().compareTo(e1.getFecha());
+		}).collect(Collectors.toList()));
 		return novedad;
 	}
 	

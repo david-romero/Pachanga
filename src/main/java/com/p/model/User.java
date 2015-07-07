@@ -97,6 +97,10 @@ public class User extends PropietarioPartido {
     @Transient
     private float karma;
     
+    @Transient
+    @JsonProperty(value="screenName")
+    private String screenName;
+    
     @NotNull
     private String avatar;
 
@@ -194,6 +198,21 @@ public class User extends PropietarioPartido {
 	public float getKarma() {
 		
 		return karma;
+	}
+	
+	public String getScreenName(){
+		StringBuilder builder = new StringBuilder();
+		if ( getFirstName() != null && !getFirstName().isEmpty() ){
+			builder.append(getFirstName());
+			if ( getLastName() != null && !getLastName().isEmpty() ){
+				builder.append(" ");
+				builder.append(getLastName());
+			}
+		}else{
+			builder.append(getEmail().split("@")[0]);
+		}
+		builder.append(" ");
+		return builder.toString();
 	}
 
 	@Transient

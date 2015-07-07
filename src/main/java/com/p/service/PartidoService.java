@@ -1,21 +1,23 @@
 package com.p.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.google.common.collect.Lists;
+import com.p.infrastructure.exceptions.HorarioNoCompatibleException;
 import com.p.model.Partido;
 import com.p.model.User;
 import com.p.model.repositories.PartidoRepository;
@@ -32,6 +34,9 @@ public class PartidoService {
 	
 	@Autowired
 	private MetricService metricService;
+	
+	@Autowired
+	private NovedadService novedadService;
 
 	private static final int PAGE_SIZE = 4;
 
@@ -95,22 +100,21 @@ public class PartidoService {
 			metricService.savePartido();
 			if ( p.getPropietario() instanceof User ){
 				metricService.savePartidoUsuario(( (User) p.getPropietario()));
+				if ( p.isPublico() ){
+					novedadService.create(p);
+				}
 			}
 		}
 		return repository.save(p);
 	}
 	@Transactional
-	public Partido apuntarse(Partido partido, User user) {
+	public Partido apuntarse(Partido partido, User user) throws HorarioNoCompatibleException {
 		Assert.isTrue(!partido.getJugadores().contains(user));
 		/*
 		 * Tras comprobar que no esta apuntado ya a ese partido deberiamos comprobar si ya tiene 
 		 * partidos ese dia. En caso de que los tuviera notificarselo
 		 */
-		LocalDate fechaPartido = partido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		LocalDateTime fechaInicioDia = LocalDateTime.of(fechaPartido.getYear() , fechaPartido.getMonth(), fechaPartido.getDayOfMonth(), 0, 0);
-		LocalDateTime fechaFinDia = fechaInicioDia.plusHours(23).plusMinutes(59);
-		Collection<Partido> partidosEseDia = repository.getAllApuntadoEnDia(user.getId(),Date.from(fechaInicioDia.atZone(ZoneId.systemDefault()).toInstant()),
-				Date.from(fechaFinDia.atZone(ZoneId.systemDefault()).toInstant()));
+		gestionarDisponibilidad(partido, user);
 		partido.getJugadores().add(user);
 		
 		user.getPartidosJugados().add(partido);
@@ -118,8 +122,36 @@ public class PartidoService {
 		userService.save(user);
 		partido.setPlazasOcupadas(partido.getPlazasOcupadas() + 1);
 		partido = save(partido);
-		
+		if ( partido.getPropietario() instanceof User && !( (User) partido.getPropietario()).equals(user) ){
+			novedadService.create(partido,user);
+		}
 		return partido;
+	}
+	/**
+	 * @param partido
+	 * @param user
+	 * @throws HorarioNoCompatibleException 
+	 */
+	protected void gestionarDisponibilidad(Partido partido, User user) throws HorarioNoCompatibleException {
+		LocalDateTime fechaPartido = partido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime fechaInicioDia = LocalDateTime.of(fechaPartido.getYear() , fechaPartido.getMonth(), fechaPartido.getDayOfMonth(), 0, 0);
+		LocalDateTime fechaFinDia = fechaInicioDia.plusHours(23).plusMinutes(59);
+		Collection<Partido> partidosEseDia = repository.getAllApuntadoEnDia(user,Date.from(fechaInicioDia.atZone(ZoneId.systemDefault()).toInstant()),
+				Date.from(fechaFinDia.atZone(ZoneId.systemDefault()).toInstant()));
+		if ( partidosEseDia.size() > 3 ){
+			throw new HorarioNoCompatibleException("No puedes jugar más de tres partidos en un día... No eres superman :)");
+		}else{
+			if ( partidosEseDia.size() > 0 ){
+				Stream<Partido> partidosConDistanciaPequena = partidosEseDia.parallelStream().filter(partidoYaApuntado ->{
+					LocalDateTime fechaPartidoYaApuntado = partidoYaApuntado.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+					long hours = fechaPartido.until( fechaPartidoYaApuntado, ChronoUnit.HOURS);
+					return hours == 0L || hours == 1L;
+				});
+				if ( partidosConDistanciaPequena.count() > 0L ){
+					throw new HorarioNoCompatibleException("Tienes un partido a la misma hora... Revisa tu calendario :)");
+				}
+			}
+		}
 	}
 	@Transactional(readOnly=true)
 	public Page<Partido> findAllRelacionados(com.p.model.modelAux.Page page) {
@@ -164,6 +196,14 @@ public class PartidoService {
 		userService.save(usuarioAEliminar);
 		
 		return pachanga;
+	}
+
+	
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public byte[] findImagen(Integer id) {
+		Assert.notNull(id);
+		Assert.isTrue(id > 0);
+		return repository.findImage(id);
 	}
 
 }

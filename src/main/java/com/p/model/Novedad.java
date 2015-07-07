@@ -9,6 +9,8 @@ import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -53,8 +55,16 @@ public class Novedad extends BaseEntity {
 	@ManyToOne(optional = true)
 	protected User emisor;
 
+	@Valid
+	@ManyToOne(optional = true)
+	protected Partido partido;
+
+	@Valid
+	@ManyToOne(optional = true)
+	protected Grupo grupo;
+
 	@NotNull
-	@OneToMany(fetch=FetchType.EAGER,mappedBy = "novedad", cascade = { CascadeType.REMOVE })
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "novedad", cascade = { CascadeType.REMOVE })
 	@SortNatural
 	@OrderBy(clause = "FECHA DESC")
 	@Valid
@@ -70,6 +80,10 @@ public class Novedad extends BaseEntity {
 	@NotNull
 	@Min(0)
 	private Integer likes;
+
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private NovedadType tipo;
 
 	public User getUsuario() {
 		return usuario;
@@ -127,6 +141,34 @@ public class Novedad extends BaseEntity {
 
 	public void setLikes(Integer likes) {
 		this.likes = likes;
+	}
+
+	public NovedadType getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(NovedadType tipo) {
+		this.tipo = tipo;
+	}
+
+	public Partido getPartido() {
+		return partido;
+	}
+
+	public void setPartido(Partido partido) {
+		this.partido = partido;
+	}
+
+	public Grupo getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}
+
+	public enum NovedadType {
+		NOTICIA, PARTIDO, GRUPO
 	}
 
 }

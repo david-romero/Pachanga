@@ -3,7 +3,6 @@ package com.p.model;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -166,10 +165,11 @@ public class Partido extends BaseEntity{
 
 	public String getUrlImagen() {
 		if ( imagen == null || imagen.length == 0 ){
-			Random rd = new Random();
-			urlImagen = "/P/resources/imgs/partidos/futbol/" + (rd.nextInt(4)+1)+".jpg";
+			int number = getId() % 4;
+			number++;
+			urlImagen = "/P/resources/imgs/partidos/futbol/" +number + ".jpg";
 		}else{
-			urlImagen = "/P/usuarios/getUserImage/" + getId();
+			urlImagen = "/P/partido/getPartidoImage/" + getId();
 		}
 		return urlImagen;
 	}
